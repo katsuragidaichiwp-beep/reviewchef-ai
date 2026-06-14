@@ -1,0 +1,2547 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ReviewChef AI - 飲食店レビュー運用MVP</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f5f7f6;
+        --panel: #ffffff;
+        --panel-strong: #edf6f4;
+        --text: #17211f;
+        --muted: #60706c;
+        --line: #dbe5e2;
+        --brand: #0f766e;
+        --brand-strong: #0b5f59;
+        --brand-soft: #d8f1ed;
+        --danger: #b42318;
+        --danger-soft: #fde7e3;
+        --warn: #a15c07;
+        --warn-soft: #fff0cf;
+        --ok: #147647;
+        --ok-soft: #def7e9;
+        --shadow: 0 10px 28px rgba(22, 33, 31, 0.08);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: var(--bg);
+        color: var(--text);
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", "Hiragino Sans", "Yu Gothic UI", Meiryo, sans-serif;
+      }
+
+      button,
+      input,
+      select,
+      textarea {
+        font: inherit;
+      }
+
+      button {
+        cursor: pointer;
+      }
+
+      .app {
+        display: grid;
+        grid-template-columns: 248px minmax(0, 1fr);
+        min-height: 100vh;
+      }
+
+      .sidebar {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        padding: 22px 16px;
+        background: #10201d;
+        color: #f4fffc;
+        overflow-y: auto;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 26px;
+      }
+
+      .logo-mark {
+        display: grid;
+        width: 36px;
+        height: 36px;
+        place-items: center;
+        border-radius: 8px;
+        background: var(--brand);
+        color: white;
+        font-weight: 800;
+      }
+
+      .logo strong {
+        display: block;
+        font-size: 16px;
+      }
+
+      .logo span {
+        display: block;
+        margin-top: 2px;
+        color: #aac4be;
+        font-size: 12px;
+      }
+
+      .nav {
+        display: grid;
+        gap: 6px;
+      }
+
+      .nav button {
+        width: 100%;
+        padding: 10px 11px;
+        border: 0;
+        border-radius: 8px;
+        background: transparent;
+        color: #d9ebe7;
+        text-align: left;
+      }
+
+      .nav button.active,
+      .nav button:hover {
+        background: rgba(255, 255, 255, 0.11);
+        color: #ffffff;
+      }
+
+      .sidebar-block {
+        margin-top: 26px;
+        padding-top: 18px;
+        border-top: 1px solid rgba(255, 255, 255, 0.13);
+      }
+
+      .sidebar-label {
+        margin: 0 0 10px;
+        color: #aac4be;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+      }
+
+      .store-list {
+        display: grid;
+        gap: 6px;
+      }
+
+      .store-filter {
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+        width: 100%;
+        padding: 9px 10px;
+        border: 0;
+        border-radius: 8px;
+        background: transparent;
+        color: #d9ebe7;
+        text-align: left;
+      }
+
+      .store-filter.active,
+      .store-filter:hover {
+        background: rgba(255, 255, 255, 0.11);
+        color: #ffffff;
+      }
+
+      .main {
+        min-width: 0;
+        padding: 24px;
+      }
+
+      .topbar {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 18px;
+        margin-bottom: 18px;
+      }
+
+      .eyebrow {
+        margin: 0 0 6px;
+        color: var(--brand-strong);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin-top: 0;
+      }
+
+      h1 {
+        margin-bottom: 7px;
+        font-size: 28px;
+        line-height: 1.2;
+        letter-spacing: 0;
+      }
+
+      .lead {
+        max-width: 780px;
+        margin-bottom: 0;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 8px;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 38px;
+        padding: 8px 12px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #ffffff;
+        color: var(--text);
+        font-weight: 700;
+        text-decoration: none;
+      }
+
+      .btn:hover {
+        border-color: #b7c8c3;
+        background: #f9fbfa;
+      }
+
+      .btn.primary {
+        border-color: var(--brand);
+        background: var(--brand);
+        color: #ffffff;
+      }
+
+      .btn.primary:hover {
+        background: var(--brand-strong);
+      }
+
+      .btn.danger {
+        border-color: #efb2a9;
+        background: #fff7f5;
+        color: var(--danger);
+      }
+
+      .btn.small {
+        min-height: 32px;
+        padding: 6px 10px;
+        font-size: 13px;
+      }
+
+      .metrics {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+
+      .metric {
+        padding: 15px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        box-shadow: var(--shadow);
+      }
+
+      .metric span {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .metric strong {
+        display: block;
+        font-size: 25px;
+        line-height: 1.1;
+      }
+
+      .metric em {
+        display: block;
+        margin-top: 8px;
+        color: var(--muted);
+        font-size: 12px;
+        font-style: normal;
+      }
+
+      .content-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.25fr) minmax(320px, 0.75fr);
+        gap: 14px;
+        align-items: start;
+      }
+
+      .panel {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        box-shadow: var(--shadow);
+      }
+
+      .panel-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 15px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .panel-header h2 {
+        margin-bottom: 4px;
+        font-size: 16px;
+      }
+
+      .panel-header p {
+        margin-bottom: 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
+      .panel-body {
+        padding: 15px;
+      }
+
+      .toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 12px;
+      }
+
+      .input,
+      .select,
+      .textarea {
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #ffffff;
+        color: var(--text);
+      }
+
+      .input,
+      .select {
+        height: 38px;
+        padding: 7px 10px;
+      }
+
+      .toolbar .input {
+        flex: 1 1 220px;
+      }
+
+      .toolbar .select {
+        flex: 0 1 170px;
+      }
+
+      .textarea {
+        min-height: 116px;
+        padding: 10px;
+        line-height: 1.55;
+        resize: vertical;
+      }
+
+      .review-list {
+        display: grid;
+        gap: 10px;
+      }
+
+      .review-card {
+        width: 100%;
+        padding: 13px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #ffffff;
+        text-align: left;
+      }
+
+      .review-card:hover,
+      .review-card.active {
+        border-color: #8bbeb6;
+        background: #f7fcfb;
+      }
+
+      .review-top {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 9px;
+      }
+
+      .review-title {
+        min-width: 0;
+      }
+
+      .review-title strong {
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .review-meta {
+        margin-top: 4px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .rating {
+        flex: 0 0 auto;
+        font-weight: 800;
+      }
+
+      .comment {
+        display: -webkit-box;
+        margin: 0 0 10px;
+        overflow: hidden;
+        color: #364642;
+        font-size: 13px;
+        line-height: 1.55;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+      }
+
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        min-height: 24px;
+        padding: 3px 8px;
+        border-radius: 999px;
+        background: #eef3f1;
+        color: #455550;
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .chip.p0,
+      .chip.p1 {
+        background: var(--danger-soft);
+        color: var(--danger);
+      }
+
+      .chip.p2 {
+        background: var(--warn-soft);
+        color: var(--warn);
+      }
+
+      .chip.p3,
+      .chip.ok {
+        background: var(--ok-soft);
+        color: var(--ok);
+      }
+
+      .chip.brand {
+        background: var(--brand-soft);
+        color: var(--brand-strong);
+      }
+
+      .detail-title {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+
+      .detail-title h3 {
+        margin-bottom: 4px;
+        font-size: 18px;
+      }
+
+      .detail-section {
+        margin-top: 15px;
+        padding-top: 14px;
+        border-top: 1px solid var(--line);
+      }
+
+      .detail-section h3 {
+        margin-bottom: 8px;
+        font-size: 14px;
+      }
+
+      .detail-section p,
+      .detail-section li {
+        color: #354743;
+        font-size: 13px;
+        line-height: 1.6;
+      }
+
+      .detail-section ul {
+        margin: 8px 0 0;
+        padding-left: 18px;
+      }
+
+      .reply-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 10px;
+      }
+
+      .empty {
+        padding: 28px;
+        border: 1px dashed #b9c9c4;
+        border-radius: 8px;
+        color: var(--muted);
+        text-align: center;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      .task-list,
+      .notification-list,
+      .settings-grid,
+      .form-grid {
+        display: grid;
+        gap: 12px;
+      }
+
+      .task,
+      .notification,
+      .setting-card {
+        padding: 13px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #ffffff;
+      }
+
+      .task.done {
+        opacity: 0.62;
+      }
+
+      .task h3,
+      .notification h3,
+      .setting-card h3 {
+        margin-bottom: 6px;
+        font-size: 15px;
+      }
+
+      .task p,
+      .notification p,
+      .setting-card p {
+        margin-bottom: 9px;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.55;
+      }
+
+      .field {
+        display: grid;
+        gap: 6px;
+      }
+
+      .field label {
+        color: #354743;
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      .two-col {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .three-col {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .meo-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+        gap: 14px;
+        align-items: start;
+      }
+
+      .score-card {
+        display: grid;
+        gap: 10px;
+        padding: 15px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel-strong);
+      }
+
+      .score-row {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .score {
+        font-size: 34px;
+        font-weight: 850;
+        line-height: 1;
+      }
+
+      .progress {
+        height: 10px;
+        overflow: hidden;
+        border-radius: 999px;
+        background: #d5e3df;
+      }
+
+      .progress span {
+        display: block;
+        height: 100%;
+        border-radius: inherit;
+        background: var(--brand);
+      }
+
+      .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        font-size: 13px;
+      }
+
+      .data-table th,
+      .data-table td {
+        padding: 10px;
+        border-bottom: 1px solid var(--line);
+        text-align: left;
+        vertical-align: top;
+      }
+
+      .data-table th {
+        background: #f1f6f4;
+        color: #42534f;
+        font-size: 12px;
+      }
+
+      .data-table tr:last-child td {
+        border-bottom: 0;
+      }
+
+      .rank {
+        font-weight: 850;
+      }
+
+      .rank.up {
+        color: var(--ok);
+      }
+
+      .rank.down {
+        color: var(--danger);
+      }
+
+      .checklist,
+      .post-list,
+      .competitor-list,
+      .service-patterns,
+      .audit-list,
+      .operation-list {
+        display: grid;
+        gap: 10px;
+      }
+
+      .check-item,
+      .post-card,
+      .competitor-card,
+      .service-card,
+      .audit-card,
+      .operation-card {
+        padding: 13px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #ffffff;
+      }
+
+      .service-card.active {
+        border-color: #7bb8ae;
+        background: #f4fbf9;
+      }
+
+      .check-item.done {
+        opacity: 0.64;
+      }
+
+      .check-item h3,
+      .post-card h3,
+      .competitor-card h3,
+      .service-card h3,
+      .audit-card h3,
+      .operation-card h3 {
+        margin-bottom: 6px;
+        font-size: 15px;
+      }
+
+      .check-item p,
+      .post-card p,
+      .competitor-card p,
+      .service-card p,
+      .audit-card p,
+      .operation-card p {
+        margin-bottom: 9px;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.55;
+      }
+
+      .heatmap {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .heat-cell {
+        min-height: 78px;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid var(--line);
+        background: #ffffff;
+      }
+
+      .heat-cell.good {
+        background: var(--ok-soft);
+        border-color: #9ad8b8;
+      }
+
+      .heat-cell.warn {
+        background: var(--warn-soft);
+        border-color: #f4d58a;
+      }
+
+      .heat-cell.bad {
+        background: var(--danger-soft);
+        border-color: #efb2a9;
+      }
+
+      .heat-cell strong {
+        display: block;
+        margin-bottom: 6px;
+      }
+
+      .heat-cell span {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .import-box {
+        display: grid;
+        gap: 10px;
+        padding: 14px;
+        border: 1px dashed #9eb8b2;
+        border-radius: 8px;
+        background: #f7fbfa;
+      }
+
+      .toast {
+        position: fixed;
+        right: 18px;
+        bottom: 18px;
+        z-index: 20;
+        max-width: min(420px, calc(100vw - 36px));
+        padding: 12px 14px;
+        border: 1px solid #a8d8ce;
+        border-radius: 8px;
+        background: #effcf8;
+        color: #12443d;
+        box-shadow: var(--shadow);
+        font-size: 14px;
+      }
+
+      @media (max-width: 1080px) {
+        .app {
+          grid-template-columns: 1fr;
+        }
+
+        .sidebar {
+          position: static;
+          height: auto;
+        }
+
+        .nav,
+        .store-list {
+          grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+        }
+
+        .metrics {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .content-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .meo-grid,
+        .three-col {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .main {
+          padding: 16px;
+        }
+
+        .topbar,
+        .panel-header,
+        .detail-title {
+          display: grid;
+        }
+
+        .actions {
+          justify-content: stretch;
+        }
+
+        .btn {
+          width: 100%;
+        }
+
+        .metrics,
+        .two-col,
+        .three-col {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <aside class="sidebar">
+        <div class="logo" aria-label="ReviewChef AI">
+          <div class="logo-mark">R</div>
+          <div>
+            <strong>ReviewChef AI</strong>
+            <span>飲食店レビュー運用MVP</span>
+          </div>
+        </div>
+
+        <nav class="nav" aria-label="主要画面">
+          <button class="active" data-view-button="dashboard">ダッシュボード</button>
+          <button data-view-button="reviews">レビュー受信箱</button>
+          <button data-view-button="tasks">改善タスク</button>
+          <button data-view-button="meo">MEO施策</button>
+          <button data-view-button="notifications">通知キュー</button>
+          <button data-view-button="settings">設定</button>
+        </nav>
+
+        <div class="sidebar-block">
+          <p class="sidebar-label">店舗フィルタ</p>
+          <div class="store-list" id="storeFilters"></div>
+        </div>
+      </aside>
+
+      <main class="main">
+        <section class="topbar">
+          <div>
+            <p class="eyebrow">GOOGLE REVIEW OPERATIONS</p>
+            <h1>低評価レビューを見逃さず、返信と改善まで回す</h1>
+            <p class="lead">
+              Googleレビューを取り込み、リスク判定、返信案生成、管理者通知、店舗改善タスク化までをローカルで試せるMVPです。
+            </p>
+          </div>
+          <div class="actions">
+            <button class="btn" id="resetDemoBtn">デモデータに戻す</button>
+            <button class="btn" data-view-button="meo">MEO施策を見る</button>
+            <button class="btn primary" data-view-button="reviews">レビューを処理する</button>
+          </div>
+        </section>
+
+        <section class="metrics" aria-label="主要指標">
+          <div class="metric">
+            <span>平均評価</span>
+            <strong id="avgRating">-</strong>
+            <em id="reviewCount">レビュー 0件</em>
+          </div>
+          <div class="metric">
+            <span>要対応レビュー</span>
+            <strong id="urgentCount">0</strong>
+            <em>P0/P1 を優先表示</em>
+          </div>
+          <div class="metric">
+            <span>返信率</span>
+            <strong id="replyRate">0%</strong>
+            <em id="replyCount">返信済み 0件</em>
+          </div>
+          <div class="metric">
+            <span>改善タスク</span>
+            <strong id="taskCount">0</strong>
+            <em id="openTaskCount">未完了 0件</em>
+          </div>
+        </section>
+
+        <section id="view-dashboard" data-view class="content-grid">
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <h2>優先レビュー</h2>
+                <p>危険度の高い順に、今日見るべきレビューを並べています。</p>
+              </div>
+              <button class="btn small" data-view-button="reviews">すべて見る</button>
+            </div>
+            <div class="panel-body">
+              <div class="review-list" id="priorityReviews"></div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <h2>本日の運用メモ</h2>
+                <p>レビューから自動生成された改善ポイントです。</p>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="task-list" id="dashboardTasks"></div>
+            </div>
+          </div>
+        </section>
+
+        <section id="view-reviews" data-view class="content-grid hidden">
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <h2>レビュー受信箱</h2>
+                <p>CSV取り込み、手動追加、返信案の確認ができます。</p>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="toolbar">
+                <input class="input" id="searchInput" placeholder="レビュー本文・投稿者・店舗名で検索" />
+                <select class="select" id="priorityFilter" aria-label="優先度">
+                  <option value="all">すべての優先度</option>
+                  <option value="P0">P0 即時対応</option>
+                  <option value="P1">P1 当日対応</option>
+                  <option value="P2">P2 通常対応</option>
+                  <option value="P3">P3 自動返信候補</option>
+                </select>
+                <select class="select" id="statusFilter" aria-label="状態">
+                  <option value="all">すべての状態</option>
+                  <option value="new">未対応</option>
+                  <option value="drafted">返信案あり</option>
+                  <option value="needs_approval">承認待ち</option>
+                  <option value="replied">返信済み</option>
+                </select>
+              </div>
+
+              <div class="import-box">
+                <strong>CSV取り込み</strong>
+                <p class="lead">
+                  列名は <code>store,rating,author,comment,createdAt</code> に対応しています。Google API接続前でも運用フローを試せます。
+                </p>
+                <input class="input" id="csvInput" type="file" accept=".csv,text/csv" />
+              </div>
+
+              <div class="detail-section">
+                <h3>手動でレビューを追加</h3>
+                <div class="form-grid">
+                  <div class="two-col">
+                    <div class="field">
+                      <label for="manualStore">店舗</label>
+                      <input class="input" id="manualStore" value="渋谷店" />
+                    </div>
+                    <div class="field">
+                      <label for="manualRating">星評価</label>
+                      <select class="select" id="manualRating">
+                        <option value="5">5</option>
+                        <option value="4">4</option>
+                        <option value="3">3</option>
+                        <option value="2">2</option>
+                        <option value="1">1</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="two-col">
+                    <div class="field">
+                      <label for="manualAuthor">投稿者</label>
+                      <input class="input" id="manualAuthor" value="ゲスト" />
+                    </div>
+                    <div class="field">
+                      <label for="manualDate">投稿日</label>
+                      <input class="input" id="manualDate" type="date" />
+                    </div>
+                  </div>
+                  <div class="field">
+                    <label for="manualComment">レビュー本文</label>
+                    <textarea class="textarea" id="manualComment" placeholder="レビュー本文を入力"></textarea>
+                  </div>
+                  <button class="btn primary" id="addReviewBtn">レビューを追加して分析</button>
+                </div>
+              </div>
+
+              <div class="detail-section">
+                <h3>一覧</h3>
+                <div class="review-list" id="reviewList"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel" id="detailPanel">
+            <div class="panel-header">
+              <div>
+                <h2>レビュー詳細</h2>
+                <p>返信案を編集し、承認・返信済みにできます。</p>
+              </div>
+            </div>
+            <div class="panel-body" id="reviewDetail"></div>
+          </div>
+        </section>
+
+        <section id="view-tasks" data-view class="panel hidden">
+          <div class="panel-header">
+            <div>
+              <h2>店舗改善タスク</h2>
+              <p>低評価レビューの論点を、現場で潰せるタスクに変換します。</p>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="task-list" id="taskList"></div>
+          </div>
+        </section>
+
+        <section id="view-meo" data-view class="hidden">
+          <div class="meo-grid">
+            <div class="panel">
+              <div class="panel-header">
+                <div>
+                  <h2>MEO施策ボード</h2>
+                  <p>順位計測、GBP改善、競合比較、投稿計画を1画面にまとめています。</p>
+                </div>
+              </div>
+              <div class="panel-body">
+                <div class="service-patterns" id="servicePatterns"></div>
+
+                <div class="score-card">
+                  <div class="score-row">
+                    <div>
+                      <h3>MEO運用スコア</h3>
+                      <p>プロフィール充実度、返信率、順位ギャップから算出した優先度です。</p>
+                    </div>
+                    <div class="score" id="meoScore">-</div>
+                  </div>
+                  <div class="progress" aria-label="MEO運用スコア">
+                    <span id="meoScoreBar" style="width: 0%"></span>
+                  </div>
+                  <div class="chips" id="meoScoreChips"></div>
+                </div>
+
+                <div class="detail-section">
+                  <h3>多地点順位ヒートマップ</h3>
+                  <div class="heatmap" id="rankHeatmap"></div>
+                </div>
+
+                <div class="detail-section">
+                  <h3>キーワード順位トラッキング</h3>
+                  <div class="toolbar">
+                    <input class="input" id="keywordInput" placeholder="例: 渋谷 ランチ ハンバーグ" />
+                    <input class="input" id="areaInput" placeholder="計測エリア 例: 渋谷駅" />
+                    <button class="btn primary" id="addKeywordBtn">キーワード追加</button>
+                  </div>
+                  <div id="keywordTable"></div>
+                </div>
+
+                <div class="detail-section">
+                  <h3>GBP改善チェック</h3>
+                  <div class="checklist" id="profileChecklist"></div>
+                </div>
+
+                <div class="detail-section">
+                  <h3>サイテーション/NAP監査</h3>
+                  <div class="audit-list" id="citationAudit"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-header">
+                <div>
+                  <h2>競合・投稿プラン</h2>
+                  <p>上位店との差分と、今週のGoogle投稿案です。</p>
+                </div>
+              </div>
+              <div class="panel-body">
+                <div class="detail-section" style="margin-top: 0; padding-top: 0; border-top: 0">
+                  <h3>競合比較</h3>
+                  <div class="competitor-list" id="competitorList"></div>
+                </div>
+
+                <div class="detail-section">
+                  <h3>今週のGoogle投稿案</h3>
+                  <div class="post-list" id="postPlan"></div>
+                </div>
+
+                <div class="detail-section">
+                  <h3>クリエイティブABテスト</h3>
+                  <div class="post-list" id="creativeTests"></div>
+                </div>
+
+                <div class="detail-section">
+                  <h3>運用代行カレンダー</h3>
+                  <div class="operation-list" id="operationCalendar"></div>
+                </div>
+
+                <div class="detail-section">
+                  <h3>優先施策</h3>
+                  <div class="task-list" id="meoActionList"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="view-notifications" data-view class="panel hidden">
+          <div class="panel-header">
+            <div>
+              <h2>通知キュー</h2>
+              <p>LINEやSlackに送る想定の通知文を確認できます。</p>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="notification-list" id="notificationList"></div>
+          </div>
+        </section>
+
+        <section id="view-settings" data-view class="panel hidden">
+          <div class="panel-header">
+            <div>
+              <h2>運用設定</h2>
+              <p>返信トーン、自動返信条件、通知先の想定設定です。</p>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="settings-grid">
+              <div class="setting-card">
+                <h3>ブランドトーン</h3>
+                <p>返信案の文体に反映されます。</p>
+                <div class="two-col">
+                  <div class="field">
+                    <label for="businessName">ブランド名</label>
+                    <input class="input" id="businessName" />
+                  </div>
+                  <div class="field">
+                    <label for="replyTone">返信トーン</label>
+                    <select class="select" id="replyTone">
+                      <option value="warm">温かく丁寧</option>
+                      <option value="formal">落ち着いた丁寧語</option>
+                      <option value="brief">短く簡潔</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="setting-card">
+                <h3>自動返信ルール</h3>
+                <p>本番ではGoogle APIへ投稿する前に、店舗の明示的な同意と監査ログを残します。</p>
+                <div class="two-col">
+                  <div class="field">
+                    <label for="autoReplyEnabled">低リスク自動返信</label>
+                    <select class="select" id="autoReplyEnabled">
+                      <option value="false">無効</option>
+                      <option value="true">有効</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label for="autoReplyMinRating">自動返信の最低評価</label>
+                    <select class="select" id="autoReplyMinRating">
+                      <option value="5">星5のみ</option>
+                      <option value="4">星4以上</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="setting-card">
+                <h3>通知設定</h3>
+                <p>ここでは保存のみ行います。実送信はLINE Messaging APIやSlack Webhook接続後に有効化します。</p>
+                <div class="field">
+                  <label for="notificationWebhook">Webhook URL</label>
+                  <input class="input" id="notificationWebhook" placeholder="https://example.com/webhook" />
+                </div>
+              </div>
+
+              <button class="btn primary" id="saveSettingsBtn">設定を保存して再分析</button>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div class="toast hidden" id="toast" role="status"></div>
+
+    <script>
+      const STORAGE_KEY = "reviewchef-mvp-state-v1";
+
+      const issueMap = [
+        { key: "健康被害", terms: ["食中毒", "腹痛", "下痢", "嘔吐", "病院", "救急", "体調", "吐き気"] },
+        { key: "アレルギー", terms: ["アレルギー", "アレルゲン", "蕁麻疹"] },
+        { key: "異物混入", terms: ["異物", "髪の毛", "虫", "ガラス", "プラスチック", "カビ"] },
+        { key: "接客", terms: ["接客", "店員", "スタッフ", "態度", "無愛想", "失礼"] },
+        { key: "待ち時間", terms: ["待ち", "遅い", "提供", "予約", "並ん"] },
+        { key: "料理品質", terms: ["冷め", "まず", "味", "塩辛", "焦げ", "量", "ぬる"] },
+        { key: "清潔さ", terms: ["汚", "清潔", "床", "トイレ", "臭"] },
+        { key: "価格", terms: ["高い", "値段", "価格", "コスパ"] },
+        { key: "法務・返金", terms: ["返金", "弁護士", "訴え", "警察", "保健所", "詐欺"] },
+      ];
+
+      const positiveTerms = ["美味", "おいし", "最高", "また", "丁寧", "親切", "満足", "おすすめ", "雰囲気", "良かっ"];
+      const negativeTerms = ["最悪", "二度と", "ひど", "遅い", "まず", "汚", "失礼", "冷め", "高い", "残念"];
+      const criticalIssues = new Set(["健康被害", "アレルギー", "異物混入", "法務・返金"]);
+
+      const demoState = {
+        settings: {
+          businessName: "ReviewChef食堂",
+          replyTone: "warm",
+          autoReplyEnabled: false,
+          autoReplyMinRating: 5,
+          notificationWebhook: "",
+        },
+        selectedStore: "all",
+        selectedReviewId: "r-001",
+        currentView: "dashboard",
+        selectedServicePattern: "epress",
+        reviews: [
+          {
+            id: "r-001",
+            store: "渋谷店",
+            rating: 1,
+            author: "M.K.",
+            comment: "昨日の夜に利用しました。料理に髪の毛のような異物が入っていて、スタッフに伝えても対応が雑でした。正直かなり残念です。",
+            createdAt: "2026-06-14",
+            status: "needs_approval",
+          },
+          {
+            id: "r-002",
+            store: "新宿店",
+            rating: 5,
+            author: "佐藤",
+            comment: "ランチで行きました。ハンバーグが美味しく、スタッフさんも丁寧でした。また行きます。",
+            createdAt: "2026-06-13",
+            status: "drafted",
+          },
+          {
+            id: "r-003",
+            store: "渋谷店",
+            rating: 2,
+            author: "Aoi",
+            comment: "予約していたのに30分以上待ちました。料理は良かったですが、案内が遅くて残念でした。",
+            createdAt: "2026-06-12",
+            status: "needs_approval",
+          },
+          {
+            id: "r-004",
+            store: "横浜店",
+            rating: 5,
+            author: "Local Guide",
+            comment: "雰囲気がよく、デザートまで全部おいしかったです。",
+            createdAt: "2026-06-12",
+            status: "new",
+          },
+          {
+            id: "r-005",
+            store: "新宿店",
+            rating: 1,
+            author: "匿名",
+            comment: "食後に腹痛がありました。原因は分かりませんが、衛生面が不安です。保健所にも相談しようと思います。",
+            createdAt: "2026-06-11",
+            status: "needs_approval",
+          },
+        ],
+        tasks: [],
+        meo: {
+          servicePatterns: [
+            {
+              id: "epress",
+              name: "EPRESS MEO型",
+              source: "EPRESS MEO",
+              focus: "一元管理・口コミ・サイテーション",
+              body: "GBP運用、口コミ対策、外部媒体連携、データ分析をまとめて管理する運用パッケージ。",
+              features: ["GBP一括管理", "口コミ対策", "Yext/媒体連携", "サイテーション監査"],
+            },
+            {
+              id: "dash",
+              name: "MEO Dash!型",
+              source: "MEO Dash!",
+              focus: "順位計測・多地点分析・ABテスト",
+              body: "順位取得、競合比較、商圏エリアの多地点順位、クリエイティブ改善を重視する運用型。",
+              features: ["順位ダッシュボード", "多地点ヒートマップ", "競合順位比較", "クリエイティブABテスト"],
+            },
+            {
+              id: "white-link",
+              name: "ホワイトリンク型",
+              source: "ホワイトリンク",
+              focus: "GBP最適化・外部施策・店舗別支援",
+              body: "SEOや広告運用の知見を活かし、店舗ごとの特徴に合わせてGBPと外部評価を改善する型。",
+              features: ["GBP最適化", "外部対策", "店舗別施策", "費用対効果レポート"],
+            },
+          ],
+          keywords: [
+            {
+              id: "kw-001",
+              keyword: "渋谷 ランチ ハンバーグ",
+              area: "渋谷駅",
+              intent: "ランチ",
+              targetRank: 3,
+              ranks: {
+                渋谷店: { current: 7, previous: 10 },
+                新宿店: { current: 11, previous: 12 },
+                横浜店: { current: 15, previous: 13 },
+              },
+            },
+            {
+              id: "kw-002",
+              keyword: "新宿 ディナー 個室",
+              area: "新宿三丁目",
+              intent: "ディナー",
+              targetRank: 3,
+              ranks: {
+                渋谷店: { current: 13, previous: 14 },
+                新宿店: { current: 4, previous: 6 },
+                横浜店: { current: 18, previous: 17 },
+              },
+            },
+            {
+              id: "kw-003",
+              keyword: "横浜 カフェ デザート",
+              area: "横浜駅",
+              intent: "カフェ",
+              targetRank: 3,
+              ranks: {
+                渋谷店: { current: 16, previous: 15 },
+                新宿店: { current: 14, previous: 16 },
+                横浜店: { current: 5, previous: 8 },
+              },
+            },
+          ],
+          competitors: [
+            { name: "駅前グリル", rank: 2, rating: 4.3, reviews: 428, photos: 186, posts: 6, strength: "写真投稿と口コミ数が強い" },
+            { name: "街角ビストロ", rank: 3, rating: 4.1, reviews: 312, photos: 141, posts: 4, strength: "季節メニュー投稿が多い" },
+            { name: "キッチン青葉", rank: 6, rating: 4.5, reviews: 188, photos: 92, posts: 2, strength: "評価は高いが投稿頻度は低い" },
+          ],
+          profileItems: [
+            { id: "profile-category", title: "主要カテゴリ・追加カテゴリを見直す", area: "プロフィール", priority: "P1", done: true },
+            { id: "profile-hours", title: "祝日・臨時営業時間を更新する", area: "プロフィール", priority: "P0", done: false },
+            { id: "profile-menu", title: "人気メニューと価格を最新化する", area: "メニュー", priority: "P1", done: false },
+            { id: "profile-photo", title: "料理・外観・店内写真を10枚追加する", area: "写真", priority: "P1", done: false },
+            { id: "profile-post", title: "週1回のGoogle投稿を予約する", area: "投稿", priority: "P2", done: false },
+            { id: "profile-qa", title: "Q&Aの未回答を確認する", area: "Q&A", priority: "P2", done: true },
+            { id: "profile-nap", title: "店名・住所・電話番号の表記ゆれを確認する", area: "外部施策", priority: "P2", done: false },
+          ],
+          citations: [
+            { id: "google", medium: "Google Business Profile", status: "ok", name: "ReviewChef食堂 渋谷店", phone: "一致", address: "一致" },
+            { id: "site", medium: "公式サイト", status: "ok", name: "ReviewChef食堂", phone: "一致", address: "一致" },
+            { id: "instagram", medium: "Instagram", status: "warn", name: "ReviewChef Shokudo", phone: "未掲載", address: "一致" },
+            { id: "gourmet", medium: "グルメサイト", status: "bad", name: "Review Chef 食堂", phone: "旧番号", address: "表記ゆれ" },
+          ],
+          creativeTests: [
+            { id: "ab-photo", title: "料理写真ABテスト", metric: "投稿クリック率", a: "ハンバーグ寄り写真", b: "店内＋料理の利用シーン写真", winner: "B", lift: "+18%" },
+            { id: "ab-post", title: "投稿文ABテスト", metric: "経路検索タップ", a: "メニュー訴求", b: "混雑しにくい時間帯訴求", winner: "B", lift: "+11%" },
+          ],
+        },
+      };
+
+      let state = loadState();
+
+      const els = {
+        storeFilters: document.getElementById("storeFilters"),
+        avgRating: document.getElementById("avgRating"),
+        reviewCount: document.getElementById("reviewCount"),
+        urgentCount: document.getElementById("urgentCount"),
+        replyRate: document.getElementById("replyRate"),
+        replyCount: document.getElementById("replyCount"),
+        taskCount: document.getElementById("taskCount"),
+        openTaskCount: document.getElementById("openTaskCount"),
+        priorityReviews: document.getElementById("priorityReviews"),
+        dashboardTasks: document.getElementById("dashboardTasks"),
+        reviewList: document.getElementById("reviewList"),
+        reviewDetail: document.getElementById("reviewDetail"),
+        taskList: document.getElementById("taskList"),
+        meoScore: document.getElementById("meoScore"),
+        meoScoreBar: document.getElementById("meoScoreBar"),
+        meoScoreChips: document.getElementById("meoScoreChips"),
+        servicePatterns: document.getElementById("servicePatterns"),
+        rankHeatmap: document.getElementById("rankHeatmap"),
+        keywordInput: document.getElementById("keywordInput"),
+        areaInput: document.getElementById("areaInput"),
+        addKeywordBtn: document.getElementById("addKeywordBtn"),
+        keywordTable: document.getElementById("keywordTable"),
+        profileChecklist: document.getElementById("profileChecklist"),
+        citationAudit: document.getElementById("citationAudit"),
+        competitorList: document.getElementById("competitorList"),
+        postPlan: document.getElementById("postPlan"),
+        creativeTests: document.getElementById("creativeTests"),
+        operationCalendar: document.getElementById("operationCalendar"),
+        meoActionList: document.getElementById("meoActionList"),
+        notificationList: document.getElementById("notificationList"),
+        searchInput: document.getElementById("searchInput"),
+        priorityFilter: document.getElementById("priorityFilter"),
+        statusFilter: document.getElementById("statusFilter"),
+        csvInput: document.getElementById("csvInput"),
+        manualStore: document.getElementById("manualStore"),
+        manualRating: document.getElementById("manualRating"),
+        manualAuthor: document.getElementById("manualAuthor"),
+        manualDate: document.getElementById("manualDate"),
+        manualComment: document.getElementById("manualComment"),
+        addReviewBtn: document.getElementById("addReviewBtn"),
+        resetDemoBtn: document.getElementById("resetDemoBtn"),
+        businessName: document.getElementById("businessName"),
+        replyTone: document.getElementById("replyTone"),
+        autoReplyEnabled: document.getElementById("autoReplyEnabled"),
+        autoReplyMinRating: document.getElementById("autoReplyMinRating"),
+        notificationWebhook: document.getElementById("notificationWebhook"),
+        saveSettingsBtn: document.getElementById("saveSettingsBtn"),
+        toast: document.getElementById("toast"),
+      };
+
+      function loadState() {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (!saved) return structuredClone(demoState);
+        try {
+          const parsed = JSON.parse(saved);
+          return normalizeState(parsed);
+        } catch {
+          return structuredClone(demoState);
+        }
+      }
+
+      function normalizeState(saved) {
+        const defaults = structuredClone(demoState);
+        const merged = {
+          ...defaults,
+          ...saved,
+          settings: { ...defaults.settings, ...(saved.settings || {}) },
+          selectedServicePattern: saved.selectedServicePattern || defaults.selectedServicePattern,
+          meo: {
+            ...defaults.meo,
+            ...(saved.meo || {}),
+            servicePatterns: saved.meo?.servicePatterns || defaults.meo.servicePatterns,
+            keywords: saved.meo?.keywords || defaults.meo.keywords,
+            competitors: saved.meo?.competitors || defaults.meo.competitors,
+            profileItems: saved.meo?.profileItems || defaults.meo.profileItems,
+            citations: saved.meo?.citations || defaults.meo.citations,
+            creativeTests: saved.meo?.creativeTests || defaults.meo.creativeTests,
+          },
+        };
+        const viewIds = new Set(["dashboard", "reviews", "tasks", "meo", "notifications", "settings"]);
+        if (!viewIds.has(merged.currentView)) merged.currentView = "dashboard";
+        return merged;
+      }
+
+      function saveState() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      }
+
+      function analyzeReview(review) {
+        const text = review.comment || "";
+        const issues = issueMap.filter((item) => item.terms.some((term) => text.includes(term))).map((item) => item.key);
+        const hasCritical = issues.some((issue) => criticalIssues.has(issue));
+        const hasNegative = negativeTerms.some((term) => text.includes(term));
+        const hasPositive = positiveTerms.some((term) => text.includes(term));
+
+        let priority = "P3";
+        if (hasCritical) priority = "P0";
+        else if (review.rating <= 2 || hasNegative) priority = "P1";
+        else if (review.rating === 3 || (hasPositive && hasNegative)) priority = "P2";
+
+        const sentiment =
+          review.rating >= 4 && !hasNegative ? "好意的" : review.rating <= 2 || hasNegative ? "不満" : "中立";
+
+        const autoEligible =
+          review.rating >= Number(state.settings.autoReplyMinRating) &&
+          priority === "P3" &&
+          !hasCritical &&
+          !hasNegative;
+
+        return {
+          priority,
+          sentiment,
+          issues: issues.length ? issues : [review.rating >= 4 ? "好意的な体験" : "要確認"],
+          autoEligible,
+          summary: buildSummary(review, issues, priority, sentiment),
+          riskReason: buildRiskReason(review, issues, priority),
+          replyDraft: buildReplyDraft(review, issues, priority),
+          notificationText: buildNotificationText(review, issues, priority),
+        };
+      }
+
+      function buildSummary(review, issues, priority, sentiment) {
+        const issueText = issues.length ? issues.join("・") : sentiment;
+        if (priority === "P0") return `${issueText}に関する重大な指摘があります。公開返信より先に事実確認が必要です。`;
+        if (priority === "P1") return `${issueText}への不満が含まれます。当日中の確認と返信を推奨します。`;
+        if (priority === "P2") return `${issueText}について改善余地があります。返信と店舗内共有を行うとよさそうです。`;
+        return `好意的なレビューです。短く自然な感謝返信の候補です。`;
+      }
+
+      function buildRiskReason(review, issues, priority) {
+        if (priority === "P0") {
+          return "健康被害、異物混入、アレルギー、返金・法務に関わる可能性があるため、自動返信を止めています。";
+        }
+        if (priority === "P1") {
+          return "低評価または強い不満表現が含まれるため、店長または本部の確認を推奨します。";
+        }
+        if (priority === "P2") {
+          return "内容は重大ではありませんが、返信文で改善姿勢を示すと印象回復につながります。";
+        }
+        return review.rating >= Number(state.settings.autoReplyMinRating)
+          ? "低リスクの好意的レビューです。自動返信候補として扱えます。"
+          : "好意的ですが、自動返信の星評価条件を満たしていません。";
+      }
+
+      function buildReplyDraft(review, issues, priority) {
+        const name = state.settings.businessName || review.store;
+        const tone = state.settings.replyTone;
+        const greeting = tone === "brief" ? "ご来店ありがとうございます。" : `${name}をご利用いただき、ありがとうございます。`;
+
+        if (priority === "P0") {
+          return `${greeting}\nこのたびはご不安なお気持ちにさせてしまい、誠に申し訳ございません。いただいた内容は店舗責任者に共有し、事実確認を進めます。差し支えなければ、ご来店日時やお席、注文内容を店舗までお知らせください。今後の対応と改善に活かしてまいります。`;
+        }
+
+        if (priority === "P1") {
+          const issue = issues[0] && issues[0] !== "要確認" ? `特に${issues[0]}について` : "ご指摘いただいた点について";
+          return `${greeting}\n${issue}ご期待に沿えず申し訳ございません。いただいたご意見は店舗内で共有し、接客や提供体制の見直しに活かします。貴重なお声をお寄せいただきありがとうございました。`;
+        }
+
+        if (priority === "P2") {
+          return `${greeting}\n率直なご感想をお寄せいただきありがとうございます。良かった点は励みにしつつ、ご指摘いただいた点は店舗内で確認し、より快適にお過ごしいただけるよう改善してまいります。`;
+        }
+
+        if (tone === "brief") {
+          return `ご来店ありがとうございます。温かいお言葉を励みに、またお楽しみいただけるよう努めます。`;
+        }
+
+        if (tone === "formal") {
+          return `${greeting}\n高い評価と温かいお言葉を賜り、誠にありがとうございます。今後もご満足いただける料理とサービスを提供できるよう努めてまいります。`;
+        }
+
+        return `${greeting}\nうれしいお言葉をありがとうございます。お食事や接客を楽しんでいただけたようで、スタッフ一同とても励みになります。またのご来店を心よりお待ちしております。`;
+      }
+
+      function buildNotificationText(review, issues, priority) {
+        return [
+          `【${priority}レビュー通知】${review.store}`,
+          `星評価: ${review.rating}`,
+          `投稿者: ${review.author}`,
+          `論点: ${issues.length ? issues.join(" / ") : "要確認"}`,
+          `本文: ${review.comment}`,
+          `推奨: ${priority === "P0" ? "公開返信前に店舗責任者が事実確認" : "当日中に返信案を確認"}`,
+        ].join("\n");
+      }
+
+      function enrichReviews(reviews = state.reviews) {
+        return reviews.map((review) => ({ ...review, analysis: analyzeReview(review) }));
+      }
+
+      function getFilteredReviews() {
+        const query = (els.searchInput.value || "").trim().toLowerCase();
+        const priority = els.priorityFilter.value;
+        const status = els.statusFilter.value;
+        return enrichReviews()
+          .filter((review) => state.selectedStore === "all" || review.store === state.selectedStore)
+          .filter((review) => priority === "all" || review.analysis.priority === priority)
+          .filter((review) => status === "all" || review.status === status)
+          .filter((review) => {
+            if (!query) return true;
+            const haystack = `${review.store} ${review.author} ${review.comment}`.toLowerCase();
+            return haystack.includes(query);
+          })
+          .sort((a, b) => priorityWeight(a.analysis.priority) - priorityWeight(b.analysis.priority));
+      }
+
+      function priorityWeight(priority) {
+        return { P0: 0, P1: 1, P2: 2, P3: 3 }[priority] ?? 9;
+      }
+
+      function render() {
+        state.tasks = buildTasks();
+        saveState();
+        renderViews();
+        renderStoreFilters();
+        renderMetrics();
+        renderDashboard();
+        renderReviews();
+        renderDetail();
+        renderTasks();
+        renderMeo();
+        renderNotifications();
+        renderSettings();
+      }
+
+      function renderViews() {
+        document.querySelectorAll("[data-view]").forEach((view) => view.classList.add("hidden"));
+        const activeView = document.getElementById(`view-${state.currentView}`) || document.getElementById("view-dashboard");
+        activeView.classList.remove("hidden");
+        document.querySelectorAll("[data-view-button]").forEach((button) => {
+          button.classList.toggle("active", button.dataset.viewButton === state.currentView);
+        });
+      }
+
+      function renderStoreFilters() {
+        const stores = ["all", ...new Set(state.reviews.map((review) => review.store))];
+        els.storeFilters.innerHTML = stores
+          .map((store) => {
+            const count = store === "all" ? state.reviews.length : state.reviews.filter((review) => review.store === store).length;
+            const label = store === "all" ? "全店舗" : store;
+            return `<button class="store-filter ${state.selectedStore === store ? "active" : ""}" data-store="${store}">
+              <span>${escapeHtml(label)}</span><span>${count}</span>
+            </button>`;
+          })
+          .join("");
+      }
+
+      function renderMetrics() {
+        const reviews = enrichReviews().filter((review) => state.selectedStore === "all" || review.store === state.selectedStore);
+        const total = reviews.length;
+        const avg = total ? reviews.reduce((sum, review) => sum + Number(review.rating), 0) / total : 0;
+        const urgent = reviews.filter((review) => ["P0", "P1"].includes(review.analysis.priority) && review.status !== "replied").length;
+        const replied = reviews.filter((review) => review.status === "replied").length;
+        const tasks = buildTasks().filter((task) => state.selectedStore === "all" || task.store === state.selectedStore);
+        const openTasks = tasks.filter((task) => !task.done).length;
+
+        els.avgRating.textContent = total ? avg.toFixed(1) : "-";
+        els.reviewCount.textContent = `レビュー ${total}件`;
+        els.urgentCount.textContent = urgent;
+        els.replyRate.textContent = total ? `${Math.round((replied / total) * 100)}%` : "0%";
+        els.replyCount.textContent = `返信済み ${replied}件`;
+        els.taskCount.textContent = tasks.length;
+        els.openTaskCount.textContent = `未完了 ${openTasks}件`;
+      }
+
+      function renderDashboard() {
+        const priorityReviews = enrichReviews()
+          .filter((review) => state.selectedStore === "all" || review.store === state.selectedStore)
+          .filter((review) => review.status !== "replied")
+          .sort((a, b) => priorityWeight(a.analysis.priority) - priorityWeight(b.analysis.priority))
+          .slice(0, 5);
+
+        els.priorityReviews.innerHTML = priorityReviews.length
+          ? priorityReviews.map(renderReviewCard).join("")
+          : `<div class="empty">要対応レビューはありません。</div>`;
+
+        const tasks = buildTasks()
+          .filter((task) => state.selectedStore === "all" || task.store === state.selectedStore)
+          .filter((task) => !task.done)
+          .slice(0, 4);
+        els.dashboardTasks.innerHTML = tasks.length ? tasks.map(renderTask).join("") : `<div class="empty">未完了タスクはありません。</div>`;
+      }
+
+      function renderReviews() {
+        const reviews = getFilteredReviews();
+        els.reviewList.innerHTML = reviews.length ? reviews.map(renderReviewCard).join("") : `<div class="empty">条件に合うレビューはありません。</div>`;
+      }
+
+      function renderReviewCard(review) {
+        const isActive = state.selectedReviewId === review.id;
+        const { priority, sentiment, issues, autoEligible } = review.analysis;
+        return `<button class="review-card ${isActive ? "active" : ""}" data-review-id="${review.id}">
+          <div class="review-top">
+            <div class="review-title">
+              <strong>${escapeHtml(review.store)} / ${escapeHtml(review.author)}</strong>
+              <div class="review-meta">${escapeHtml(review.createdAt)}・${statusLabel(review.status)}</div>
+            </div>
+            <div class="rating">${"★".repeat(Number(review.rating))}${"☆".repeat(5 - Number(review.rating))}</div>
+          </div>
+          <p class="comment">${escapeHtml(review.comment)}</p>
+          <div class="chips">
+            <span class="chip ${priority.toLowerCase()}">${priorityLabel(priority)}</span>
+            <span class="chip">${sentiment}</span>
+            ${issues.slice(0, 2).map((issue) => `<span class="chip brand">${escapeHtml(issue)}</span>`).join("")}
+            ${autoEligible ? `<span class="chip ok">自動返信候補</span>` : ""}
+          </div>
+        </button>`;
+      }
+
+      function renderDetail() {
+        const review = enrichReviews().find((item) => item.id === state.selectedReviewId) || enrichReviews()[0];
+        if (!review) {
+          els.reviewDetail.innerHTML = `<div class="empty">レビューを選択してください。</div>`;
+          return;
+        }
+
+        state.selectedReviewId = review.id;
+        const { analysis } = review;
+        els.reviewDetail.innerHTML = `
+          <div class="detail-title">
+            <div>
+              <h3>${escapeHtml(review.store)} / ${escapeHtml(review.author)}</h3>
+              <div class="review-meta">${escapeHtml(review.createdAt)}・星${review.rating}・${statusLabel(review.status)}</div>
+            </div>
+            <span class="chip ${analysis.priority.toLowerCase()}">${priorityLabel(analysis.priority)}</span>
+          </div>
+          <p>${escapeHtml(review.comment)}</p>
+          <div class="chips">
+            <span class="chip">${analysis.sentiment}</span>
+            ${analysis.issues.map((issue) => `<span class="chip brand">${escapeHtml(issue)}</span>`).join("")}
+            ${analysis.autoEligible ? `<span class="chip ok">自動返信候補</span>` : ""}
+          </div>
+
+          <div class="detail-section">
+            <h3>AI要約</h3>
+            <p>${escapeHtml(analysis.summary)}</p>
+            <p>${escapeHtml(analysis.riskReason)}</p>
+          </div>
+
+          <div class="detail-section">
+            <h3>返信案</h3>
+            <textarea class="textarea" id="replyEditor">${escapeHtml(review.replyDraft || analysis.replyDraft)}</textarea>
+            <div class="reply-actions">
+              <button class="btn" data-action="copy-reply" data-id="${review.id}">返信文をコピー</button>
+              <button class="btn" data-action="save-draft" data-id="${review.id}">下書き保存</button>
+              <button class="btn primary" data-action="mark-replied" data-id="${review.id}">承認して返信済みにする</button>
+              <button class="btn danger" data-action="needs-approval" data-id="${review.id}">承認待ちに戻す</button>
+            </div>
+          </div>
+
+          <div class="detail-section">
+            <h3>通知文</h3>
+            <p>${escapeHtml(analysis.notificationText).replaceAll("\n", "<br>")}</p>
+            <button class="btn small" data-action="copy-notification" data-id="${review.id}">通知文をコピー</button>
+          </div>
+        `;
+      }
+
+      function buildTasks() {
+        const existing = new Map((state.tasks || []).map((task) => [task.id, task]));
+        const grouped = new Map();
+
+        enrichReviews().forEach((review) => {
+          review.analysis.issues
+            .filter((issue) => !["好意的な体験", "要確認"].includes(issue))
+            .forEach((issue) => {
+              const id = `${review.store}-${issue}`;
+              const current = grouped.get(id) || {
+                id,
+                store: review.store,
+                issue,
+                count: 0,
+                priority: review.analysis.priority,
+                examples: [],
+                done: existing.get(id)?.done || false,
+              };
+              current.count += 1;
+              current.priority =
+                priorityWeight(review.analysis.priority) < priorityWeight(current.priority)
+                  ? review.analysis.priority
+                  : current.priority;
+              current.examples.push(review.comment);
+              grouped.set(id, current);
+            });
+        });
+
+        return Array.from(grouped.values()).sort((a, b) => priorityWeight(a.priority) - priorityWeight(b.priority) || b.count - a.count);
+      }
+
+      function renderTasks() {
+        const tasks = buildTasks().filter((task) => state.selectedStore === "all" || task.store === state.selectedStore);
+        els.taskList.innerHTML = tasks.length ? tasks.map(renderTask).join("") : `<div class="empty">改善タスクはまだありません。</div>`;
+      }
+
+      function renderTask(task) {
+        const suggestion = taskSuggestion(task.issue);
+        return `<div class="task ${task.done ? "done" : ""}">
+          <div class="chips">
+            <span class="chip ${task.priority.toLowerCase()}">${priorityLabel(task.priority)}</span>
+            <span class="chip brand">${escapeHtml(task.store)}</span>
+            <span class="chip">${task.count}件</span>
+          </div>
+          <h3>${escapeHtml(task.issue)}を確認する</h3>
+          <p>${escapeHtml(suggestion)}</p>
+          <p>例: ${escapeHtml(task.examples[0]).slice(0, 90)}</p>
+          <button class="btn small" data-action="toggle-task" data-id="${task.id}">
+            ${task.done ? "未完了に戻す" : "対応済みにする"}
+          </button>
+        </div>`;
+      }
+
+      function renderMeo() {
+        const storeLabel = state.selectedStore === "all" ? "全店舗" : state.selectedStore;
+        const score = calculateMeoScore();
+        const keywordRows = buildKeywordRows();
+        const topThreeCount = keywordRows.filter((row) => row.current <= 3).length;
+        const profileItems = state.meo.profileItems || [];
+        const doneCount = profileItems.filter((item) => item.done).length;
+
+        els.meoScore.textContent = score;
+        els.meoScoreBar.style.width = `${score}%`;
+        els.meoScoreChips.innerHTML = `
+          <span class="chip brand">${escapeHtml(storeLabel)}</span>
+          <span class="chip ${score >= 75 ? "ok" : score >= 55 ? "p2" : "p1"}">${meoScoreLabel(score)}</span>
+          <span class="chip">上位3位 ${topThreeCount}/${keywordRows.length}</span>
+          <span class="chip">GBP ${doneCount}/${profileItems.length}</span>
+        `;
+
+        renderServicePatterns();
+        renderRankHeatmap(keywordRows);
+        renderKeywordTable(keywordRows);
+        renderProfileChecklist(profileItems);
+        renderCitationAudit();
+        renderCompetitors();
+        renderPostPlan();
+        renderCreativeTests();
+        renderOperationCalendar();
+        renderMeoActions(score, keywordRows, profileItems);
+      }
+
+      function renderServicePatterns() {
+        els.servicePatterns.innerHTML = (state.meo.servicePatterns || [])
+          .map(
+            (pattern) => `<div class="service-card ${state.selectedServicePattern === pattern.id ? "active" : ""}">
+              <div class="chips">
+                <span class="chip brand">参考: ${escapeHtml(pattern.source)}</span>
+                <span class="chip">${escapeHtml(pattern.focus)}</span>
+              </div>
+              <h3>${escapeHtml(pattern.name)}</h3>
+              <p>${escapeHtml(pattern.body)}</p>
+              <div class="chips">
+                ${pattern.features.map((feature) => `<span class="chip">${escapeHtml(feature)}</span>`).join("")}
+              </div>
+              <div class="reply-actions">
+                <button class="btn small" data-action="select-service-pattern" data-id="${pattern.id}">
+                  ${state.selectedServicePattern === pattern.id ? "選択中" : "この型で見る"}
+                </button>
+              </div>
+            </div>`,
+          )
+          .join("");
+      }
+
+      function renderRankHeatmap(rows) {
+        const selected = rows[0] || { keyword: "追跡キーワード", current: 12 };
+        const points = ["北西", "北", "北東", "西", "中心", "東", "南西", "南", "南東"];
+        els.rankHeatmap.innerHTML = points
+          .map((point, index) => {
+            const offset = [3, 1, 4, 2, 0, 3, 5, 2, 4][index];
+            const rank = Math.min(20, Math.max(1, selected.current + offset - (selected.delta > 0 ? 1 : 0)));
+            const tone = rank <= 3 ? "good" : rank <= 8 ? "warn" : "bad";
+            return `<div class="heat-cell ${tone}">
+              <strong>${rank}位</strong>
+              <span>${escapeHtml(point)} / ${escapeHtml(selected.area)}</span>
+            </div>`;
+          })
+          .join("");
+      }
+
+      function renderCitationAudit() {
+        els.citationAudit.innerHTML = (state.meo.citations || [])
+          .map(
+            (item) => `<div class="audit-card">
+              <div class="chips">
+                <span class="chip ${item.status === "ok" ? "ok" : item.status === "warn" ? "p2" : "p1"}">${citationStatusLabel(item.status)}</span>
+                <span class="chip brand">${escapeHtml(item.medium)}</span>
+              </div>
+              <h3>${escapeHtml(item.name)}</h3>
+              <p>電話番号: ${escapeHtml(item.phone)} / 住所: ${escapeHtml(item.address)}</p>
+              <button class="btn small" data-action="fix-citation" data-id="${item.id}">
+                ${item.status === "ok" ? "確認済み" : "修正済みにする"}
+              </button>
+            </div>`,
+          )
+          .join("");
+      }
+
+      function renderCreativeTests() {
+        els.creativeTests.innerHTML = (state.meo.creativeTests || [])
+          .map(
+            (test) => `<div class="post-card">
+              <div class="chips">
+                <span class="chip brand">${escapeHtml(test.metric)}</span>
+                <span class="chip ok">勝ち案 ${escapeHtml(test.winner)}</span>
+                <span class="chip">${escapeHtml(test.lift)}</span>
+              </div>
+              <h3>${escapeHtml(test.title)}</h3>
+              <p>A: ${escapeHtml(test.a)} / B: ${escapeHtml(test.b)}</p>
+              <button class="btn small" data-action="copy-ab-test" data-id="${test.id}">勝ち案を投稿案にする</button>
+            </div>`,
+          )
+          .join("");
+      }
+
+      function renderOperationCalendar() {
+        const pattern = state.selectedServicePattern;
+        const operations = [
+          { day: "月", title: "順位・競合チェック", body: pattern === "dash" ? "多地点順位と競合順位を確認し、落ちた地点を抽出。" : "主要キーワードの順位を確認。" },
+          { day: "火", title: "GBP情報更新", body: pattern === "epress" ? "媒体連携を前提に、営業時間・メニュー・NAPを一括確認。" : "営業時間、メニュー、カテゴリを更新。" },
+          { day: "水", title: "口コミ返信", body: "低評価は承認制、高評価はテンプレートで短時間処理。" },
+          { day: "木", title: "投稿・写真改善", body: pattern === "dash" ? "ABテストの勝ち案を反映して投稿・写真を更新。" : "おすすめメニューと来店シーンを投稿。" },
+          { day: "金", title: "外部施策・レポート", body: pattern === "white-link" ? "サイテーションと外部評価を確認し、店舗別の改善提案を作成。" : "週次レポートと次週アクションを作成。" },
+        ];
+        els.operationCalendar.innerHTML = operations
+          .map(
+            (item) => `<div class="operation-card">
+              <div class="chips">
+                <span class="chip brand">${escapeHtml(item.day)}曜</span>
+              </div>
+              <h3>${escapeHtml(item.title)}</h3>
+              <p>${escapeHtml(item.body)}</p>
+            </div>`,
+          )
+          .join("");
+      }
+
+      function calculateMeoScore() {
+        const reviews = enrichReviews().filter((review) => state.selectedStore === "all" || review.store === state.selectedStore);
+        const total = reviews.length;
+        const replied = reviews.filter((review) => review.status === "replied").length;
+        const urgent = reviews.filter((review) => ["P0", "P1"].includes(review.analysis.priority) && review.status !== "replied").length;
+        const replyRate = total ? replied / total : 0;
+
+        const profileItems = state.meo.profileItems || [];
+        const profileRate = profileItems.length ? profileItems.filter((item) => item.done).length / profileItems.length : 0;
+        const keywordRows = buildKeywordRows();
+        const avgRank = keywordRows.length
+          ? keywordRows.reduce((sum, row) => sum + Math.min(row.current, 20), 0) / keywordRows.length
+          : 12;
+        const rankScore = Math.max(8, 35 - Math.max(0, avgRank - 3) * 2.5);
+        const score = Math.round(profileRate * 35 + replyRate * 25 + rankScore + 5 - urgent * 5);
+        return Math.max(8, Math.min(100, score));
+      }
+
+      function buildKeywordRows() {
+        const stores = getActiveStores();
+        return (state.meo.keywords || []).map((item) => {
+          const storeRanks = stores
+            .map((store) => ({ store, ...(item.ranks?.[store] || { current: 20, previous: 20 }) }))
+            .sort((a, b) => a.current - b.current);
+          const rank = storeRanks[0] || { store: "未設定", current: 20, previous: 20 };
+          return {
+            id: item.id,
+            keyword: item.keyword,
+            area: item.area,
+            intent: item.intent,
+            targetRank: item.targetRank,
+            store: rank.store,
+            current: rank.current,
+            previous: rank.previous,
+            delta: rank.previous - rank.current,
+          };
+        });
+      }
+
+      function getActiveStores() {
+        if (state.selectedStore !== "all") return [state.selectedStore];
+        return [...new Set(state.reviews.map((review) => review.store))];
+      }
+
+      function renderKeywordTable(rows) {
+        if (!rows.length) {
+          els.keywordTable.innerHTML = `<div class="empty">追跡キーワードがありません。</div>`;
+          return;
+        }
+        els.keywordTable.innerHTML = `
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>キーワード</th>
+                <th>計測エリア</th>
+                <th>対象店舗</th>
+                <th>現在順位</th>
+                <th>変化</th>
+                <th>次の打ち手</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rows
+                .map(
+                  (row) => `<tr>
+                    <td><strong>${escapeHtml(row.keyword)}</strong><br><span class="review-meta">${escapeHtml(row.intent || "未分類")}</span></td>
+                    <td>${escapeHtml(row.area)}</td>
+                    <td>${escapeHtml(row.store)}</td>
+                    <td><span class="rank ${row.current <= 3 ? "up" : row.current >= 10 ? "down" : ""}">${row.current}位</span></td>
+                    <td>${rankDeltaLabel(row.delta)}</td>
+                    <td>${escapeHtml(keywordSuggestion(row))}</td>
+                    <td><button class="btn small" data-action="remove-keyword" data-id="${row.id}">削除</button></td>
+                  </tr>`,
+                )
+                .join("")}
+            </tbody>
+          </table>`;
+      }
+
+      function renderProfileChecklist(items) {
+        els.profileChecklist.innerHTML = items.length
+          ? items
+              .map(
+                (item) => `<div class="check-item ${item.done ? "done" : ""}">
+                  <div class="chips">
+                    <span class="chip ${item.priority.toLowerCase()}">${priorityLabel(item.priority)}</span>
+                    <span class="chip brand">${escapeHtml(item.area)}</span>
+                  </div>
+                  <h3>${escapeHtml(item.title)}</h3>
+                  <p>${escapeHtml(profileSuggestion(item.id))}</p>
+                  <button class="btn small" data-action="toggle-profile-item" data-id="${item.id}">
+                    ${item.done ? "未完了に戻す" : "完了にする"}
+                  </button>
+                </div>`,
+              )
+              .join("")
+          : `<div class="empty">GBP改善項目がありません。</div>`;
+      }
+
+      function renderCompetitors() {
+        const reviews = enrichReviews().filter((review) => state.selectedStore === "all" || review.store === state.selectedStore);
+        const avgRating = reviews.length
+          ? reviews.reduce((sum, review) => sum + Number(review.rating), 0) / reviews.length
+          : 0;
+        const ownReviewCount = reviews.length;
+        const ownPhotoEstimate = (state.meo.profileItems || []).find((item) => item.id === "profile-photo")?.done ? 100 : 42;
+
+        els.competitorList.innerHTML = (state.meo.competitors || [])
+          .map((competitor) => {
+            const reviewGap = Math.max(0, competitor.reviews - ownReviewCount);
+            const photoGap = Math.max(0, competitor.photos - ownPhotoEstimate);
+            const ratingGap = Math.max(0, competitor.rating - avgRating).toFixed(1);
+            return `<div class="competitor-card">
+              <div class="chips">
+                <span class="chip brand">${competitor.rank}位</span>
+                <span class="chip">★${competitor.rating}</span>
+                <span class="chip">${competitor.reviews}件</span>
+              </div>
+              <h3>${escapeHtml(competitor.name)}</h3>
+              <p>${escapeHtml(competitor.strength)}</p>
+              <p>差分: 口コミ +${reviewGap}件 / 写真 +${photoGap}枚 / 評価差 +${ratingGap}</p>
+            </div>`;
+          })
+          .join("");
+      }
+
+      function renderPostPlan() {
+        const posts = buildPostPlan();
+        els.postPlan.innerHTML = posts
+          .map(
+            (post) => `<div class="post-card">
+              <div class="chips">
+                <span class="chip brand">${escapeHtml(post.type)}</span>
+                <span class="chip">${escapeHtml(post.timing)}</span>
+              </div>
+              <h3>${escapeHtml(post.title)}</h3>
+              <p>${escapeHtml(post.body)}</p>
+              <button class="btn small" data-action="copy-post" data-id="${post.id}">投稿案をコピー</button>
+            </div>`,
+          )
+          .join("");
+      }
+
+      function renderMeoActions(score, keywordRows, profileItems) {
+        const actions = buildMeoActions(score, keywordRows, profileItems);
+        els.meoActionList.innerHTML = actions.length
+          ? actions
+              .map(
+                (action) => `<div class="task">
+                  <div class="chips">
+                    <span class="chip ${action.priority.toLowerCase()}">${priorityLabel(action.priority)}</span>
+                    <span class="chip brand">${escapeHtml(action.area)}</span>
+                  </div>
+                  <h3>${escapeHtml(action.title)}</h3>
+                  <p>${escapeHtml(action.body)}</p>
+                </div>`,
+              )
+              .join("")
+          : `<div class="empty">優先施策はありません。</div>`;
+      }
+
+      function buildPostPlan() {
+        const storeLabel = state.selectedStore === "all" ? "各店舗" : state.selectedStore;
+        const topIssues = buildTasks()
+          .filter((task) => state.selectedStore === "all" || task.store === state.selectedStore)
+          .slice(0, 2)
+          .map((task) => task.issue);
+        const hasPositive = enrichReviews().some(
+          (review) => (state.selectedStore === "all" || review.store === state.selectedStore) && review.rating >= 4,
+        );
+
+        return [
+          {
+            id: "post-lunch",
+            type: "集客投稿",
+            timing: "週前半",
+            title: `${storeLabel}の今週おすすめメニュー`,
+            body: "人気メニュー、価格、写真、予約導線を入れて投稿。検索キーワードとメニュー名を自然に含める。",
+          },
+          {
+            id: "post-review",
+            type: "信頼獲得",
+            timing: "週後半",
+            title: hasPositive ? "お客様の声を活かした紹介投稿" : "店舗のこだわり紹介",
+            body: hasPositive
+              ? "高評価レビューで褒められた料理・接客を、引用ではなく要約して紹介する。"
+              : "料理、空間、スタッフのこだわりを写真付きで投稿し、来店前の不安を減らす。",
+          },
+          {
+            id: "post-improvement",
+            type: "改善発信",
+            timing: "必要時",
+            title: topIssues.length ? `${topIssues.join("・")}の改善を伝える投稿` : "営業時間・予約案内の再告知",
+            body: topIssues.length
+              ? "低評価レビューで出た論点を内部改善し、責任ある範囲で改善済みポイントとして発信する。"
+              : "営業時間、予約方法、混雑しにくい時間帯を案内して来店前の摩擦を減らす。",
+          },
+        ];
+      }
+
+      function buildMeoActions(score, keywordRows, profileItems) {
+        const actions = [];
+        const worstKeyword = [...keywordRows].sort((a, b) => b.current - a.current)[0];
+        const undoneProfile = profileItems.find((item) => !item.done && ["P0", "P1"].includes(item.priority));
+        const urgentReviews = enrichReviews().filter(
+          (review) => ["P0", "P1"].includes(review.analysis.priority) && review.status !== "replied",
+        ).length;
+
+        if (undoneProfile) {
+          actions.push({
+            priority: undoneProfile.priority,
+            area: undoneProfile.area,
+            title: undoneProfile.title,
+            body: profileSuggestion(undoneProfile.id),
+          });
+        }
+        if (worstKeyword && worstKeyword.current > 8) {
+          actions.push({
+            priority: "P1",
+            area: "順位計測",
+            title: `${worstKeyword.keyword}の順位改善`,
+            body: keywordSuggestion(worstKeyword),
+          });
+        }
+        if (urgentReviews) {
+          actions.push({
+            priority: "P1",
+            area: "口コミ",
+            title: "未対応の低評価レビューを先に処理する",
+            body: "低評価レビューの放置は来店前の不安につながるため、返信案の承認と店舗改善タスク化を優先します。",
+          });
+        }
+        if (score >= 75) {
+          actions.push({
+            priority: "P2",
+            area: "運用",
+            title: "順位上位キーワードの横展開",
+            body: "上位化しているキーワードに近いメニュー名・駅名・利用シーンを増やし、投稿と写真説明に反映します。",
+          });
+        }
+        return actions.slice(0, 4);
+      }
+
+      function keywordSuggestion(row) {
+        if (row.current <= row.targetRank) return "上位維持。写真追加と投稿継続で順位変動を監視。";
+        if (row.delta > 0) return "改善傾向。関連メニュー投稿と口コミ返信を継続。";
+        if (row.current >= 10) return "GBPカテゴリ、メニュー、写真説明、投稿文に検索意図を自然に反映。";
+        return "競合の写真・投稿頻度を確認し、週1投稿と人気メニュー写真を追加。";
+      }
+
+      function profileSuggestion(id) {
+        const suggestions = {
+          "profile-category": "業態と検索意図に近いカテゴリを選び、不要なカテゴリを増やしすぎないようにします。",
+          "profile-hours": "祝日・臨時休業・ランチ/ディナーの時間を更新し、来店前の不一致を減らします。",
+          "profile-menu": "価格、写真、人気メニュー名を揃え、検索語句と来店判断に効く情報を増やします。",
+          "profile-photo": "料理、外観、入口、席、スタッフの写真を追加し、競合より情報量を増やします。",
+          "profile-post": "季節メニュー、空席、イベント、改善報告を週1で投稿します。",
+          "profile-qa": "予約、個室、子連れ、支払い、アレルギー対応などの質問を確認します。",
+          "profile-nap": "公式サイト、SNS、グルメサイトの店名・住所・電話番号表記を統一します。",
+        };
+        return suggestions[id] || "Googleビジネスプロフィールの不足情報を更新します。";
+      }
+
+      function rankDeltaLabel(delta) {
+        if (delta > 0) return `<span class="rank up">+${delta}</span>`;
+        if (delta < 0) return `<span class="rank down">${delta}</span>`;
+        return `<span class="rank">±0</span>`;
+      }
+
+      function meoScoreLabel(score) {
+        if (score >= 75) return "運用良好";
+        if (score >= 55) return "改善余地あり";
+        return "優先対応";
+      }
+
+      function citationStatusLabel(status) {
+        return {
+          ok: "一致",
+          warn: "要確認",
+          bad: "要修正",
+        }[status] || status;
+      }
+
+      function getGeneratedRanks(baseRank) {
+        const stores = [...new Set(state.reviews.map((review) => review.store))];
+        return stores.reduce((ranks, store, index) => {
+          ranks[store] = {
+            current: Math.min(20, Math.max(1, baseRank + index * 3)),
+            previous: Math.min(20, Math.max(1, baseRank + index * 3 + 2)),
+          };
+          return ranks;
+        }, {});
+      }
+
+      function taskSuggestion(issue) {
+        const suggestions = {
+          健康被害: "来店日時、注文内容、調理記録、同時間帯の問い合わせ有無を確認し、必要に応じて責任者が直接連絡します。",
+          アレルギー: "メニュー表記、スタッフ説明、提供時の確認フローを見直します。",
+          異物混入: "該当メニューの仕込み、盛り付け、提供前確認、厨房清掃のチェックリストを確認します。",
+          接客: "該当時間帯のシフトと接客フローを確認し、声かけ・謝罪・引き継ぎの基準を共有します。",
+          待ち時間: "予約枠、ピーク時の案内、提供遅延時の声かけタイミングを見直します。",
+          料理品質: "温度、味、盛り付け、提供時間を確認し、再現性のある改善点に落とします。",
+          清潔さ: "トイレ、床、テーブル、入口周りの巡回頻度と記録方法を見直します。",
+          価格: "メニュー説明、量、セット内容、写真との整合性を確認します。",
+          "法務・返金": "事実確認を優先し、返金・補償を示唆する公開返信は避け、責任者対応に切り替えます。",
+        };
+        return suggestions[issue] || "レビュー本文を確認し、店舗内で再発防止策を共有します。";
+      }
+
+      function renderNotifications() {
+        const notifications = enrichReviews()
+          .filter((review) => ["P0", "P1"].includes(review.analysis.priority))
+          .filter((review) => state.selectedStore === "all" || review.store === state.selectedStore)
+          .sort((a, b) => priorityWeight(a.analysis.priority) - priorityWeight(b.analysis.priority));
+
+        els.notificationList.innerHTML = notifications.length
+          ? notifications
+              .map(
+                (review) => `<div class="notification">
+                  <div class="chips">
+                    <span class="chip ${review.analysis.priority.toLowerCase()}">${priorityLabel(review.analysis.priority)}</span>
+                    <span class="chip brand">${escapeHtml(review.store)}</span>
+                  </div>
+                  <h3>${escapeHtml(review.author)}さんのレビュー</h3>
+                  <p>${escapeHtml(review.analysis.notificationText).replaceAll("\n", "<br>")}</p>
+                  <button class="btn small" data-action="copy-notification" data-id="${review.id}">通知文をコピー</button>
+                </div>`,
+              )
+              .join("")
+          : `<div class="empty">送信対象の通知はありません。</div>`;
+      }
+
+      function renderSettings() {
+        els.businessName.value = state.settings.businessName;
+        els.replyTone.value = state.settings.replyTone;
+        els.autoReplyEnabled.value = String(state.settings.autoReplyEnabled);
+        els.autoReplyMinRating.value = String(state.settings.autoReplyMinRating);
+        els.notificationWebhook.value = state.settings.notificationWebhook;
+      }
+
+      function parseCsv(text) {
+        const rows = [];
+        let row = [];
+        let value = "";
+        let quoted = false;
+        for (let i = 0; i < text.length; i += 1) {
+          const char = text[i];
+          const next = text[i + 1];
+          if (char === '"' && quoted && next === '"') {
+            value += '"';
+            i += 1;
+          } else if (char === '"') {
+            quoted = !quoted;
+          } else if (char === "," && !quoted) {
+            row.push(value);
+            value = "";
+          } else if ((char === "\n" || char === "\r") && !quoted) {
+            if (char === "\r" && next === "\n") i += 1;
+            row.push(value);
+            if (row.some((cell) => cell.trim())) rows.push(row);
+            row = [];
+            value = "";
+          } else {
+            value += char;
+          }
+        }
+        row.push(value);
+        if (row.some((cell) => cell.trim())) rows.push(row);
+
+        const [header, ...dataRows] = rows;
+        if (!header) return [];
+        const columns = header.map((cell) => cell.trim());
+        return dataRows.map((cells) => {
+          const record = {};
+          columns.forEach((column, index) => {
+            record[column] = cells[index] || "";
+          });
+          return record;
+        });
+      }
+
+      function addReviews(records) {
+        const now = Date.now();
+        const reviews = records
+          .filter((record) => record.comment || record.口コミ || record.review)
+          .map((record, index) => ({
+            id: `r-${now}-${index}`,
+            store: record.store || record.店舗 || record.location || "未設定店舗",
+            rating: clampRating(record.rating || record.評価 || record.star || 3),
+            author: record.author || record.投稿者 || record.reviewer || "ゲスト",
+            comment: record.comment || record.口コミ || record.review || "",
+            createdAt: record.createdAt || record.date || record.投稿日 || new Date().toISOString().slice(0, 10),
+            status: "new",
+          }));
+        state.reviews = [...reviews, ...state.reviews];
+        if (reviews[0]) state.selectedReviewId = reviews[0].id;
+        autoDraftNewReviews();
+      }
+
+      function autoDraftNewReviews() {
+        state.reviews = state.reviews.map((review) => {
+          const analysis = analyzeReview(review);
+          if (review.status !== "new") return review;
+          if (state.settings.autoReplyEnabled && analysis.autoEligible) {
+            return { ...review, status: "replied", replyDraft: analysis.replyDraft, repliedAt: new Date().toISOString() };
+          }
+          return { ...review, status: analysis.autoEligible ? "drafted" : "needs_approval", replyDraft: analysis.replyDraft };
+        });
+      }
+
+      function clampRating(value) {
+        const number = Number(value);
+        if (Number.isNaN(number)) return 3;
+        return Math.min(5, Math.max(1, Math.round(number)));
+      }
+
+      function statusLabel(status) {
+        return {
+          new: "未対応",
+          drafted: "返信案あり",
+          needs_approval: "承認待ち",
+          replied: "返信済み",
+        }[status] || status;
+      }
+
+      function priorityLabel(priority) {
+        return {
+          P0: "P0 即時対応",
+          P1: "P1 当日対応",
+          P2: "P2 通常対応",
+          P3: "P3 自動返信候補",
+        }[priority] || priority;
+      }
+
+      function showToast(message) {
+        els.toast.textContent = message;
+        els.toast.classList.remove("hidden");
+        window.clearTimeout(showToast.timer);
+        showToast.timer = window.setTimeout(() => els.toast.classList.add("hidden"), 2600);
+      }
+
+      async function copyText(text) {
+        try {
+          await navigator.clipboard.writeText(text);
+          showToast("コピーしました。");
+        } catch {
+          showToast("コピーできませんでした。テキストを選択してコピーしてください。");
+        }
+      }
+
+      function escapeHtml(value) {
+        return String(value || "")
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
+      }
+
+      document.addEventListener("click", (event) => {
+        const viewButton = event.target.closest("[data-view-button]");
+        if (viewButton) {
+          state.currentView = viewButton.dataset.viewButton;
+          render();
+          return;
+        }
+
+        const storeButton = event.target.closest("[data-store]");
+        if (storeButton) {
+          state.selectedStore = storeButton.dataset.store;
+          render();
+          return;
+        }
+
+        const reviewButton = event.target.closest("[data-review-id]");
+        if (reviewButton) {
+          state.selectedReviewId = reviewButton.dataset.reviewId;
+          state.currentView = "reviews";
+          render();
+          return;
+        }
+
+        const action = event.target.closest("[data-action]");
+        if (!action) return;
+
+        const id = action.dataset.id;
+        if (action.dataset.action === "copy-reply") {
+          const review = enrichReviews().find((item) => item.id === id);
+          const editor = document.getElementById("replyEditor");
+          copyText(editor?.value || review?.replyDraft || review?.analysis.replyDraft || "");
+        }
+        if (action.dataset.action === "save-draft") {
+          const editor = document.getElementById("replyEditor");
+          state.reviews = state.reviews.map((review) =>
+            review.id === id ? { ...review, status: "drafted", replyDraft: editor.value } : review,
+          );
+          showToast("返信案を保存しました。");
+          render();
+        }
+        if (action.dataset.action === "mark-replied") {
+          const editor = document.getElementById("replyEditor");
+          state.reviews = state.reviews.map((review) =>
+            review.id === id
+              ? { ...review, status: "replied", replyDraft: editor.value, repliedAt: new Date().toISOString() }
+              : review,
+          );
+          showToast("返信済みにしました。本番ではここでGoogleへ投稿します。");
+          render();
+        }
+        if (action.dataset.action === "needs-approval") {
+          state.reviews = state.reviews.map((review) =>
+            review.id === id ? { ...review, status: "needs_approval" } : review,
+          );
+          showToast("承認待ちに戻しました。");
+          render();
+        }
+        if (action.dataset.action === "copy-notification") {
+          const review = enrichReviews().find((item) => item.id === id);
+          copyText(review.analysis.notificationText);
+        }
+        if (action.dataset.action === "toggle-task") {
+          state.tasks = buildTasks().map((task) => (task.id === id ? { ...task, done: !task.done } : task));
+          showToast("タスク状態を更新しました。");
+          render();
+        }
+        if (action.dataset.action === "select-service-pattern") {
+          state.selectedServicePattern = id;
+          showToast("参考パターンを切り替えました。");
+          render();
+        }
+        if (action.dataset.action === "remove-keyword") {
+          state.meo.keywords = (state.meo.keywords || []).filter((keyword) => keyword.id !== id);
+          showToast("追跡キーワードを削除しました。");
+          render();
+        }
+        if (action.dataset.action === "toggle-profile-item") {
+          state.meo.profileItems = (state.meo.profileItems || []).map((item) =>
+            item.id === id ? { ...item, done: !item.done } : item,
+          );
+          showToast("GBP改善チェックを更新しました。");
+          render();
+        }
+        if (action.dataset.action === "fix-citation") {
+          state.meo.citations = (state.meo.citations || []).map((item) =>
+            item.id === id ? { ...item, status: "ok", phone: "一致", address: "一致" } : item,
+          );
+          showToast("NAP監査項目を修正済みにしました。");
+          render();
+        }
+        if (action.dataset.action === "copy-post") {
+          const post = buildPostPlan().find((item) => item.id === id);
+          copyText(`${post.title}\n${post.body}`);
+        }
+        if (action.dataset.action === "copy-ab-test") {
+          const test = (state.meo.creativeTests || []).find((item) => item.id === id);
+          copyText(`${test.title}: 勝ち案${test.winner}\n${test.winner === "A" ? test.a : test.b}\n指標: ${test.metric} ${test.lift}`);
+        }
+      });
+
+      [els.searchInput, els.priorityFilter, els.statusFilter].forEach((el) => {
+        el.addEventListener("input", render);
+      });
+
+      els.csvInput.addEventListener("change", async (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+        const text = await file.text();
+        const records = parseCsv(text);
+        addReviews(records);
+        showToast(`${records.length}件のCSV行を読み込みました。`);
+        event.target.value = "";
+        render();
+      });
+
+      els.addReviewBtn.addEventListener("click", () => {
+        const comment = els.manualComment.value.trim();
+        if (!comment) {
+          showToast("レビュー本文を入力してください。");
+          return;
+        }
+        addReviews([
+          {
+            store: els.manualStore.value.trim() || "未設定店舗",
+            rating: els.manualRating.value,
+            author: els.manualAuthor.value.trim() || "ゲスト",
+            comment,
+            createdAt: els.manualDate.value || new Date().toISOString().slice(0, 10),
+          },
+        ]);
+        els.manualComment.value = "";
+        state.currentView = "reviews";
+        showToast("レビューを追加しました。");
+        render();
+      });
+
+      els.addKeywordBtn.addEventListener("click", () => {
+        const keyword = els.keywordInput.value.trim();
+        const area = els.areaInput.value.trim() || "商圏中心";
+        if (!keyword) {
+          showToast("追跡するキーワードを入力してください。");
+          return;
+        }
+        const baseRank = Math.floor(Math.random() * 9) + 4;
+        state.meo.keywords = [
+          {
+            id: `kw-${Date.now()}`,
+            keyword,
+            area,
+            intent: keyword.includes("ランチ") ? "ランチ" : keyword.includes("ディナー") ? "ディナー" : "集客",
+            targetRank: 3,
+            ranks: getGeneratedRanks(baseRank),
+          },
+          ...(state.meo.keywords || []),
+        ];
+        els.keywordInput.value = "";
+        els.areaInput.value = "";
+        showToast("追跡キーワードを追加しました。");
+        render();
+      });
+
+      els.resetDemoBtn.addEventListener("click", () => {
+        state = structuredClone(demoState);
+        autoDraftNewReviews();
+        showToast("デモデータに戻しました。");
+        render();
+      });
+
+      els.saveSettingsBtn.addEventListener("click", () => {
+        state.settings = {
+          businessName: els.businessName.value.trim() || "ReviewChef食堂",
+          replyTone: els.replyTone.value,
+          autoReplyEnabled: els.autoReplyEnabled.value === "true",
+          autoReplyMinRating: Number(els.autoReplyMinRating.value),
+          notificationWebhook: els.notificationWebhook.value.trim(),
+        };
+        autoDraftNewReviews();
+        showToast("設定を保存し、レビューを再分析しました。");
+        render();
+      });
+
+      els.manualDate.value = new Date().toISOString().slice(0, 10);
+      autoDraftNewReviews();
+      render();
+    </script>
+  </body>
+</html>
