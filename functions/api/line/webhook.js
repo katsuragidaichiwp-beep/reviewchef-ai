@@ -31,6 +31,8 @@ const DEMO_REVIEWS = [
   },
 ];
 
+const POST_IDEA_KEYWORDS = ["投稿", "おすすめ", "空席", "イベント", "臨時", "営業時間", "素材", "写真"];
+
 export async function onRequestGet({ request, env }) {
   const url = new URL(request.url);
   return jsonResponse({
@@ -42,6 +44,7 @@ export async function onRequestGet({ request, env }) {
     fieldInterface: "LINE Flex Message + postback",
     staffPreviewUrl: `${url.origin}/?view=staff`,
     adminLoginUrl: `${url.origin}/?view=reviews&source=line-admin-login`,
+    supportedCommands: ["レビュー", "確認", "管理者", "投稿素材", "おすすめ", "空席", "ヘルプ"],
   });
 }
 
@@ -98,23 +101,30 @@ async function handleLineEvent(event, accessToken, origin) {
     return replyMessage(accessToken, event.replyToken, [
       {
         type: "text",
-        text: "ReviewChef AIと連携しました。\n「レビュー」と送ると現場確認カードをLINE上で確認できます。\n管理者はカード内の「管理者ログイン」からWeb管理者画面へ進みます。",
+        text: "ReviewChef AIと連携しました。\n現場ではLINE上でレビュー確認と投稿素材共有を行えます。",
+        quickReply: buildQuickReply(),
       },
+      ...buildHelpMessages(origin),
     ]);
   }
 
   if (event.type !== "message" || event.message?.type !== "text") return;
 
-  const text = event.message.text || "";
+  const text = String(event.message.text || "").trim();
   const messages =
     text.includes("レビュー") || text.includes("確認")
       ? buildReviewMessages(origin)
       : text.includes("管理者")
         ? buildAdminLoginMessages(origin)
+      : POST_IDEA_KEYWORDS.some((keyword) => text.includes(keyword))
+        ? buildPostIdeaMessages(origin, text)
+      : text.includes("ヘルプ") || text.includes("使い方")
+        ? buildHelpMessages(origin)
       : [
           {
             type: "text",
-            text: "「レビュー」と送ると未確認レビューの確認カードを表示します。「管理者」と送ると管理者ログインURLを表示します。",
+            text: "「レビュー」で未確認レビュー、「投稿素材」でGBP投稿素材、「管理者」で管理者ログインを表示します。",
+            quickReply: buildQuickReply(),
           },
         ];
 
@@ -127,6 +137,7 @@ function buildReviewMessages(origin) {
     {
       type: "text",
       text: `未確認レビューが${DEMO_REVIEWS.length}件あります。\nまずは優先度が高いものから確認してください。`,
+      quickReply: buildQuickReply(),
     },
     {
       type: "flex",
@@ -197,11 +208,42 @@ function buildReviewMessages(origin) {
   ];
 }
 
+function buildPostIdeaMessages(origin, text) {
+  const cleaned = text.replace(/^投稿素材[:：\s]*/, "").trim();
+  const summary = cleaned || "今日のおすすめ、空席、イベント、臨時営業時間などを送ってください。";
+  return [
+    {
+      type: "text",
+      text: cleaned
+        ? `投稿素材を受け付けました。\n\n${summary}\n\n管理者画面のGBP投稿キューで下書き化・承認公開する想定です。`
+        : "投稿素材の例:\n投稿素材 今日のおすすめは季節野菜のハンバーグです。19時以降に空席があります。",
+      quickReply: buildQuickReply(),
+    },
+    {
+      type: "template",
+      altText: "GBP投稿キューを開く",
+      template: {
+        type: "buttons",
+        title: "GBP投稿素材",
+        text: "管理者はスマホブラウザで投稿キューを確認できます。",
+        actions: [
+          {
+            type: "uri",
+            label: "投稿キューを開く",
+            uri: `${origin}/?view=gbp-posts&source=line-field-post`,
+          },
+        ],
+      },
+    },
+  ];
+}
+
 function buildAdminLoginMessages(origin) {
   return [
     {
       type: "text",
       text: "管理者権限がある方は、以下からWeb管理者画面を開いてください。本番ではGoogleログインと店舗ロールで判定します。",
+      quickReply: buildQuickReply(),
     },
     {
       type: "template",
@@ -220,6 +262,34 @@ function buildAdminLoginMessages(origin) {
       },
     },
   ];
+}
+
+function buildHelpMessages(origin) {
+  return [
+    {
+      type: "text",
+      text: [
+        "現場者向けコマンド",
+        "・レビュー: 未確認レビューを表示",
+        "・投稿素材: GBP投稿に使う素材を送信",
+        "・管理者: 管理者画面を開く",
+        "",
+        `現場者画面プレビュー: ${origin}/?view=staff`,
+      ].join("\n"),
+      quickReply: buildQuickReply(),
+    },
+  ];
+}
+
+function buildQuickReply() {
+  return {
+    items: [
+      { type: "action", action: { type: "message", label: "レビュー確認", text: "レビュー" } },
+      { type: "action", action: { type: "message", label: "投稿素材", text: "投稿素材 " } },
+      { type: "action", action: { type: "message", label: "管理者ログイン", text: "管理者" } },
+      { type: "action", action: { type: "message", label: "ヘルプ", text: "ヘルプ" } },
+    ],
+  };
 }
 
 async function replyMessage(accessToken, replyToken, messages) {
