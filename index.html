@@ -614,6 +614,11 @@
         background: #f8fbfa;
       }
 
+      .bulk-actions .review-meta {
+        flex: 1 1 240px;
+        margin-top: 0;
+      }
+
       .bulk-actions strong {
         color: var(--brand-strong);
       }
@@ -1516,6 +1521,7 @@
 
               <div class="bulk-actions">
                 <strong id="bulkSelectedCount">0件選択中</strong>
+                <span class="review-meta" id="bulkSelectionHint">一括返信する場合は、選択開始後に対象レビューへチェックを入れてください。</span>
                 <button class="btn small" data-action="select-bulk-candidates">返信候補をまとめて選択</button>
                 <button class="btn small" data-action="clear-bulk-selection">選択を解除</button>
                 <button class="btn small primary" data-action="bulk-auto-reply">選択レビューにAI返信案で返信</button>
@@ -1584,21 +1590,6 @@
                 <div class="meo-status-grid" id="clientMeoSummary"></div>
               </div>
             </div>
-
-            <div class="strategy-grid">
-              <div class="panel">
-                <div class="panel-header">
-                  <div>
-                    <h2>お店にお願いしたいこと</h2>
-                    <p>店舗側の作業は最小限。確認・素材提供・承認だけに絞ります。</p>
-                  </div>
-                </div>
-                <div class="panel-body">
-                  <div class="simple-list" id="storeRequests"></div>
-                </div>
-              </div>
-            </div>
-
             <div class="panel">
               <div class="panel-header">
                 <div>
@@ -1943,7 +1934,20 @@
                   <a class="btn primary" href="/api/google/oauth/start?storeId=demo-store">GoogleでGBP連携を開始</a>
                   <a class="btn" href="/api/system/health">連携状態を確認</a>
                 </div>
-                <p class="review-meta">本番ではOAuth callbackで取得したrefresh tokenを暗号化保存し、店舗ごとのGBP locationと紐付けます。</p>
+                <p class="review-meta">返信承認は <code>/api/reviews/:reviewId/reply</code>、GBP投稿公開は <code>/api/gbp/posts</code> に送信します。単独店舗MVPでは <code>GBP_LOCATION_NAME</code> とGoogle OAuthトークンをCloudflare環境変数に設定すると実投稿できます。</p>
+                <p class="review-meta">多店舗運用ではOAuth callbackで取得したrefresh tokenを暗号化保存し、店舗ごとのGBP locationと紐付けます。</p>
+              </div>
+
+              <div class="setting-card">
+                <h3>AI生成API</h3>
+                <p>返信文の再作成とGBP投稿案の整形は、ブラウザから直接AIキーを使わずCloudflare Functions経由で実行します。</p>
+                <div class="chips">
+                  <span class="chip brand">/api/ai/reply-draft</span>
+                  <span class="chip brand">/api/ai/gbp-post-draft</span>
+                  <span class="chip">OPENAI_API_KEY</span>
+                  <span class="chip">OPENAI_MODEL</span>
+                </div>
+                <p class="review-meta">APIキー未設定時はローカル下書きで動作し、設定後は同じボタンでOpenAI Responses APIへ接続します。</p>
               </div>
 
               <div class="setting-card">
@@ -2001,6 +2005,7 @@
         selectedStore: "all",
         selectedReviewId: "r-001",
         selectedBulkReviewIds: [],
+        bulkSelectionMode: false,
         currentView: "reviews",
         taskFilters: {
           query: "",
@@ -2292,6 +2297,7 @@
         taskCount: document.getElementById("taskCount"),
         openTaskCount: document.getElementById("openTaskCount"),
         bulkSelectedCount: document.getElementById("bulkSelectedCount"),
+        bulkSelectionHint: document.getElementById("bulkSelectionHint"),
         reviewList: document.getElementById("reviewList"),
         reviewDetail: document.getElementById("reviewDetail"),
         taskSearchInput: document.getElementById("taskSearchInput"),
@@ -2301,7 +2307,6 @@
         taskIssueFilter: document.getElementById("taskIssueFilter"),
         taskList: document.getElementById("taskList"),
         clientMeoSummary: document.getElementById("clientMeoSummary"),
-        storeRequests: document.getElementById("storeRequests"),
         meoScore: document.getElementById("meoScore"),
         meoScoreBar: document.getElementById("meoScoreBar"),
         meoScoreChips: document.getElementById("meoScoreChips"),
@@ -2376,6 +2381,7 @@
           settings: { ...defaults.settings, ...(saved.settings || {}) },
           gbpPosts: saved.gbpPosts || defaults.gbpPosts,
           selectedBulkReviewIds: saved.selectedBulkReviewIds || defaults.selectedBulkReviewIds,
+          bulkSelectionMode: Boolean(saved.bulkSelectionMode),
           taskFilters: { ...defaults.taskFilters, ...(saved.taskFilters || {}) },
           gbpComposerPreviousSummary: saved.gbpComposerPreviousSummary || "",
           gbpComposerDraftVersion: saved.gbpComposerDraftVersion || 0,
@@ -2690,12 +2696,13 @@
         const isActive = state.selectedReviewId === review.id;
         const { priority, sentiment, issues, autoEligible } = review.analysis;
         const canBulkReply = reviewCanBulkReply(review);
+        const canCheckBulk = Boolean(state.bulkSelectionMode && canBulkReply);
         const isSelected = state.selectedBulkReviewIds.includes(review.id);
         const checkboxId = `bulk-${review.id}`;
         return `<div class="review-card ${isActive ? "active" : ""} ${review.status === "replied" ? "replied" : ""}">
           <div class="review-card-tools">
-            <label class="bulk-check ${canBulkReply ? "" : "disabled"}" for="${checkboxId}">
-              <input id="${checkboxId}" type="checkbox" data-bulk-review-id="${review.id}" ${isSelected ? "checked" : ""} ${canBulkReply ? "" : "disabled"} />
+            <label class="bulk-check ${canCheckBulk ? "" : "disabled"}" for="${checkboxId}">
+              <input id="${checkboxId}" type="checkbox" data-bulk-review-id="${review.id}" ${isSelected ? "checked" : ""} ${canCheckBulk ? "" : "disabled"} />
               <span>一括返信に含める</span>
             </label>
             ${!canBulkReply && review.status !== "replied" ? `<span class="chip p0">個別確認</span>` : ""}
@@ -2716,6 +2723,7 @@
               ${issues.slice(0, 2).map((issue) => `<span class="chip brand">${escapeHtml(issue)}</span>`).join("")}
               ${review.staffStatus ? `<span class="chip ${review.staffStatus === "confirmed" ? "ok" : "p1"}">${staffStatusLabel(review.staffStatus)}</span>` : ""}
               ${review.status === "replied" ? `<span class="chip ok">返信済み</span>` : ""}
+              ${review.apiResult === "pending_api" ? `<span class="chip p2">API再送待ち</span>` : ""}
               ${autoEligible ? `<span class="chip ok">自動返信候補</span>` : ""}
             </div>
           </button>
@@ -2726,6 +2734,9 @@
         const availableIds = new Set(enrichReviews().filter(reviewCanBulkReply).map((review) => review.id));
         state.selectedBulkReviewIds = state.selectedBulkReviewIds.filter((id) => availableIds.has(id));
         els.bulkSelectedCount.textContent = `${state.selectedBulkReviewIds.length}件選択中`;
+        els.bulkSelectionHint.textContent = state.bulkSelectionMode
+          ? "対象レビューのチェックボックスをオンにすると、一括返信の対象になります。"
+          : "「返信候補をまとめて選択」を押してから、対象レビューにチェックを入れてください。";
       }
 
       function reviewCanBulkReply(review) {
@@ -2791,6 +2802,7 @@
               <button class="btn danger" data-action="needs-approval" data-id="${review.id}">承認待ちに戻す</button>
             </div>
             <p class="review-meta">本番では承認時にGoogle Business Profile APIへ返信を投稿し、監査ログを保存します。</p>
+            ${review.apiError ? `<p class="review-meta">API状態: ${escapeHtml(review.apiError)}</p>` : ""}
           </div>
         `;
       }
@@ -2937,7 +2949,6 @@
         const doneCount = profileItems.filter((item) => item.done).length;
 
         renderClientMeoSummary(score, keywordRows, profileItems);
-        renderStoreRequests();
 
         els.meoScore.textContent = score;
         els.meoScoreBar.style.width = `${score}%`;
@@ -3002,40 +3013,6 @@
               <span>${escapeHtml(card.label)}</span>
               <strong>${escapeHtml(card.value)}</strong>
               <p>${escapeHtml(card.body)}</p>
-            </div>`,
-          )
-          .join("");
-      }
-
-      function renderStoreRequests() {
-        const urgentReviews = enrichReviews().filter(
-          (review) =>
-            (state.selectedStore === "all" || review.store === state.selectedStore) &&
-            ["P0", "P1"].includes(review.analysis.priority) &&
-            review.status !== "replied",
-        ).length;
-        const requests = [
-          {
-            title: "写真素材を10枚ください",
-            body: "料理、入口、店内、席、スタッフの写真があると、GBPと投稿の改善が速くなります。",
-          },
-          {
-            title: "メニューと営業時間の変更だけ教えてください",
-            body: "公式HP、SNS、グルメサイト、GBPの情報ズレはこちらで確認します。",
-          },
-          {
-            title: urgentReviews ? `低評価レビュー${urgentReviews}件だけ確認してください` : "低評価レビューは今のところ大丈夫です",
-            body: urgentReviews
-              ? "健康被害、異物混入、返金などは公開返信前に店長確認を挟みます。"
-              : "高評価レビューは短文返信で運用し、必要時だけ確認依頼を出します。",
-          },
-        ];
-
-        els.storeRequests.innerHTML = requests
-          .map(
-            (request) => `<div class="request-card">
-              <h3>${escapeHtml(request.title)}</h3>
-              <p>${escapeHtml(request.body)}</p>
             </div>`,
           )
           .join("");
@@ -3398,6 +3375,7 @@
               post.publishedAt ? ` / 公開 ${escapeHtml(formatReplyDate(post.publishedAt))}` : ""
             }
           </p>
+          ${post.apiError ? `<p class="review-meta">API状態: ${escapeHtml(post.apiError)}</p>` : ""}
           <div class="reply-actions">
             <button class="btn small" data-action="edit-gbp-post" data-id="${post.id}">編集に入れる</button>
             ${
@@ -3896,6 +3874,96 @@
         }
       }
 
+      async function postJson(path, payload) {
+        if (!["http:", "https:"].includes(window.location.protocol)) {
+          return { ok: false, localOnly: true, error: "APIはWeb公開URLまたはローカルサーバーで有効です。" };
+        }
+
+        try {
+          const response = await fetch(path, {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+          const text = await response.text();
+          let data = {};
+          try {
+            data = text ? JSON.parse(text) : {};
+          } catch {
+            data = { raw: text };
+          }
+          return {
+            ...data,
+            ok: response.ok && data.ok !== false,
+            httpStatus: response.status,
+          };
+        } catch (error) {
+          return { ok: false, error: error.message || "APIリクエストに失敗しました。" };
+        }
+      }
+
+      async function createAiReplyDraft(review, currentDraft, version) {
+        return postJson("/api/ai/reply-draft", {
+          review: {
+            id: review.id,
+            store: review.store,
+            author: review.author,
+            rating: review.rating,
+            comment: review.comment,
+            createdAt: review.createdAt,
+          },
+          analysis: review.analysis,
+          settings: state.settings,
+          currentDraft,
+          version,
+        });
+      }
+
+      async function createAiGbpPostDraft(version) {
+        return postJson("/api/ai/gbp-post-draft", {
+          store: els.gbpPostStore.value || getActiveStores()[0] || "店舗",
+          topicType: els.gbpPostTopic.value,
+          title: els.gbpPostTitle.value.trim(),
+          summary: els.gbpPostSummary.value.trim(),
+          actionType: els.gbpPostActionType.value,
+          url: els.gbpPostUrl.value.trim(),
+          version,
+        });
+      }
+
+      async function publishReviewReply(review, comment) {
+        return postJson(`/api/reviews/${encodeURIComponent(review.id)}/reply`, {
+          action: "publish",
+          comment,
+          reviewId: review.id,
+          reviewName: review.reviewName || "",
+          store: review.store,
+          rating: review.rating,
+          author: review.author,
+        });
+      }
+
+      async function prepareGbpPost(post) {
+        return postJson("/api/gbp/posts", {
+          ...post,
+          action: "draft",
+        });
+      }
+
+      async function publishGbpPost(post) {
+        return postJson("/api/gbp/posts", {
+          ...post,
+          action: "publish",
+        });
+      }
+
+      function apiStatusLabel(result, successLabel) {
+        if (result?.ok) return successLabel;
+        if (result?.localOnly) return "ローカル表示のため、API送信はスキップしました。";
+        if (result?.httpStatus === 501) return "API環境変数が未設定です。設定後に再実行できます。";
+        return result?.error || "API連携でエラーが発生しました。";
+      }
+
       function escapeHtml(value) {
         return String(value || "")
           .replaceAll("&", "&amp;")
@@ -3914,15 +3982,22 @@
         const bulkCheckbox = event.target.closest("[data-bulk-review-id]");
         if (!bulkCheckbox) return;
         const review = enrichReviews().find((item) => item.id === bulkCheckbox.dataset.bulkReviewId);
+        if (!state.bulkSelectionMode) {
+          bulkCheckbox.checked = false;
+          showToast("先に「返信候補をまとめて選択」を押してください。");
+          return;
+        }
         if (!review || !reviewCanBulkReply(review)) {
           bulkCheckbox.checked = false;
           return;
         }
+        state.selectedReviewId = review.id;
+        state.currentView = "reviews";
         updateBulkSelection(bulkCheckbox.dataset.bulkReviewId, bulkCheckbox.checked);
         render();
       });
 
-      document.addEventListener("click", (event) => {
+      document.addEventListener("click", async (event) => {
         const viewButton = event.target.closest("[data-view-button]");
         if (viewButton) {
           state.currentView = viewButton.dataset.viewButton;
@@ -3950,12 +4025,14 @@
 
         const id = action.dataset.id;
         if (action.dataset.action === "select-bulk-candidates") {
-          state.selectedBulkReviewIds = getBulkCandidateReviews().map((review) => review.id);
-          showToast(`${state.selectedBulkReviewIds.length}件を選択しました。`);
+          state.bulkSelectionMode = true;
+          state.selectedBulkReviewIds = [];
+          showToast("一括返信したいレビューにチェックを入れてください。");
           render();
         }
         if (action.dataset.action === "clear-bulk-selection") {
           state.selectedBulkReviewIds = [];
+          state.bulkSelectionMode = false;
           showToast("選択を解除しました。");
           render();
         }
@@ -3966,20 +4043,33 @@
             showToast("一括返信できるレビューが選択されていません。");
             return;
           }
+          const apiResults = await Promise.all(
+            targets.map((target) => publishReviewReply(target, target.replyDraft || target.analysis.replyDraft)),
+          );
           const now = new Date().toISOString();
           state.reviews = state.reviews.map((review) => {
-            const enriched = targets.find((target) => target.id === review.id);
+            const targetIndex = targets.findIndex((target) => target.id === review.id);
+            const enriched = targets[targetIndex];
             if (!enriched) return review;
+            const apiResult = apiResults[targetIndex] || {};
             return {
               ...review,
               status: "replied",
               replyDraft: review.replyDraft || enriched.analysis.replyDraft,
-              repliedAt: now,
+              repliedAt: apiResult.postedAt || now,
               bulkRepliedAt: now,
+              apiResult: apiResult.ok ? "posted" : "pending_api",
+              apiError: apiResult.ok ? "" : apiStatusLabel(apiResult, ""),
             };
           });
           state.selectedBulkReviewIds = [];
-          showToast(`${targets.length}件にAI返信案で返信しました。`);
+          state.bulkSelectionMode = false;
+          const postedCount = apiResults.filter((result) => result.ok).length;
+          showToast(
+            postedCount === targets.length
+              ? `${targets.length}件をGoogleに返信しました。`
+              : `${targets.length}件を返信済みにしました。${apiStatusLabel(apiResults.find((result) => !result.ok), "")}`,
+          );
           render();
         }
         if (action.dataset.action === "copy-reply") {
@@ -3988,19 +4078,25 @@
           copyText(editor?.value || review?.replyDraft || review?.analysis.replyDraft || "");
         }
         if (action.dataset.action === "regenerate-reply") {
+          const targetReview = enrichReviews().find((review) => review.id === id);
+          if (!targetReview) return;
+          const currentDraft = document.getElementById("replyEditor")?.value || targetReview.replyDraft || targetReview.analysis.replyDraft;
+          const nextVersion = (targetReview.replyDraftVersion || 0) + 1;
+          const aiResult = await createAiReplyDraft(targetReview, currentDraft, nextVersion);
+          const nextDraft = aiResult.ok && aiResult.replyDraft ? aiResult.replyDraft : buildReplyDraftVariant(targetReview, nextVersion);
           state.reviews = state.reviews.map((review) => {
             if (review.id !== id) return review;
-            const currentDraft = document.getElementById("replyEditor")?.value || review.replyDraft || analyzeReview(review).replyDraft;
-            const nextVersion = (review.replyDraftVersion || 0) + 1;
             return {
               ...review,
               status: "drafted",
               previousReplyDraft: currentDraft,
               replyDraftVersion: nextVersion,
-              replyDraft: buildReplyDraftVariant(review, nextVersion),
+              replyDraft: nextDraft,
+              aiDraftSource: aiResult.ok ? "openai" : "local",
+              aiDraftError: aiResult.ok ? "" : apiStatusLabel(aiResult, ""),
             };
           });
-          showToast("新しいAI返信案を作成しました。");
+          showToast(aiResult.ok ? "OpenAI APIで新しい返信案を作成しました。" : "新しい返信案を作成しました。AI API未設定時はローカル案を表示します。");
           render();
         }
         if (action.dataset.action === "restore-reply-draft") {
@@ -4021,12 +4117,22 @@
         }
         if (action.dataset.action === "mark-replied") {
           const editor = document.getElementById("replyEditor");
+          const review = enrichReviews().find((item) => item.id === id);
+          if (!review || !editor) return;
+          const apiResult = await publishReviewReply(review, editor.value);
           state.reviews = state.reviews.map((review) =>
             review.id === id
-              ? { ...review, status: "replied", replyDraft: editor.value, repliedAt: new Date().toISOString() }
+              ? {
+                  ...review,
+                  status: "replied",
+                  replyDraft: editor.value,
+                  repliedAt: apiResult.postedAt || new Date().toISOString(),
+                  apiResult: apiResult.ok ? "posted" : "pending_api",
+                  apiError: apiResult.ok ? "" : apiStatusLabel(apiResult, ""),
+                }
               : review,
           );
-          showToast("返信済みにしました。本番ではここでGoogleへ投稿します。");
+          showToast(apiStatusLabel(apiResult, "Google Business Profileへ返信しました。"));
           render();
         }
         if (action.dataset.action === "needs-approval") {
@@ -4102,14 +4208,15 @@
         if (action.dataset.action === "polish-gbp-post") {
           state.gbpComposerPreviousSummary = els.gbpPostSummary.value;
           state.gbpComposerDraftVersion = (state.gbpComposerDraftVersion || 0) + 1;
-          els.gbpPostSummary.value = buildGbpPostText(
+          const aiResult = await createAiGbpPostDraft(state.gbpComposerDraftVersion);
+          els.gbpPostSummary.value = aiResult.ok && aiResult.summary ? aiResult.summary : buildGbpPostText(
             els.gbpPostTitle.value.trim(),
             els.gbpPostTopic.value,
             state.gbpComposerDraftVersion,
           );
           saveState();
           updateGbpRestoreButton();
-          showToast("新しいGBP投稿案を作成しました。");
+          showToast(aiResult.ok ? "OpenAI APIで新しいGBP投稿案を作成しました。" : "新しいGBP投稿案を作成しました。AI API未設定時はローカル案を表示します。");
         }
         if (action.dataset.action === "restore-gbp-post") {
           if (!state.gbpComposerPreviousSummary) {
@@ -4132,9 +4239,13 @@
         }
         if (action.dataset.action === "request-gbp-publish") {
           const post = readGbpPostForm("approval");
-          state.gbpPosts = [post, ...(state.gbpPosts || [])];
+          const apiResult = await prepareGbpPost(post);
+          state.gbpPosts = [
+            { ...post, apiResult: apiResult.ok ? "prepared" : "pending_api", apiError: apiResult.ok ? "" : apiStatusLabel(apiResult, "") },
+            ...(state.gbpPosts || []),
+          ];
           clearGbpPostForm();
-          showToast("公開準備に入れました。本番ではGoogle投稿APIへ送信します。");
+          showToast(apiStatusLabel(apiResult, "公開準備に入れました。GBP投稿APIの形式チェックも完了しました。"));
           render();
         }
         if (action.dataset.action === "edit-gbp-post") {
@@ -4147,10 +4258,21 @@
           }
         }
         if (action.dataset.action === "publish-gbp-post") {
+          const targetPost = (state.gbpPosts || []).find((post) => post.id === id);
+          if (!targetPost) return;
+          const apiResult = await publishGbpPost(targetPost);
           state.gbpPosts = (state.gbpPosts || []).map((post) =>
-            post.id === id ? { ...post, status: "published", publishedAt: new Date().toISOString() } : post,
+            post.id === id
+              ? {
+                  ...post,
+                  status: apiResult.ok ? "published" : post.status,
+                  publishedAt: apiResult.ok ? apiResult.result?.createTime || new Date().toISOString() : post.publishedAt,
+                  apiResult: apiResult.ok ? "published" : "pending_api",
+                  apiError: apiResult.ok ? "" : apiStatusLabel(apiResult, ""),
+                }
+              : post,
           );
-          showToast("公開済みにしました。本番ではGoogle APIの成功後に更新します。");
+          showToast(apiStatusLabel(apiResult, "Google Business Profileに店舗投稿を公開しました。"));
           render();
         }
       });
