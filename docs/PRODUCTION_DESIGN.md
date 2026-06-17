@@ -269,8 +269,8 @@ GBP投稿の状態:
 - `POST /api/gbp/posts` with `action=publish` はGoogle Business Profile `localPosts.create` へ送信
 - `GET /api/settings/integrations`
 - `GET /api/settings/integrations/gbp/status`
-- `GET /api/settings/integrations/gbp/oauth/start`
-- `GET /api/settings/integrations/gbp/oauth/callback`
+- `GET /api/google/oauth/start`
+- `GET /api/google/oauth/callback`
 
 現場者画面:
 
