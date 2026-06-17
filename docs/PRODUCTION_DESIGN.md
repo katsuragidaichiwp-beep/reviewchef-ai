@@ -13,12 +13,14 @@
 - Googleレビューの取得、要約、返信案確認
 - 期間、星数、キーワード、リスク、状態によるレビュー絞り込み
 - 低評価レビューの承認、返信投稿
+- P2/P3など自動返信候補の一括確認、除外、管理者承認後の送信
 - LINEの現場者画面から戻った確認結果の確認
 - 返信済みレビューの返信日時、投稿結果、失敗理由の確認
 - 改善タスク管理
 - GBP店舗投稿の下書き、承認、公開
-- MEO施策、キーワード、効果測定の確認
+- MEO施策、キーワード、効果測定の確認。ただしMEOの「今週やること」専用枠は置かず、改善タスクと運用代行カレンダーへ集約する
 - LINE/Slack通知先、Google連携、店舗権限の設定
+- GBP連携ステータス、接続開始、OAuth期限切れ時の再連携導線の表示
 
 ### 現場者画面
 
@@ -44,6 +46,14 @@
 5. Web管理者画面でGoogleログイン
 6. `users.role` と `store_id` でアクセス権限を判定
 7. LINEカードに紐づく `review_id` をURLに渡し、管理者画面では対象レビューを選択状態で開く
+
+### GBP連携
+
+1. 管理者画面の店舗設定または連携設定に、GBP連携ステータス、接続開始、再連携ボタンを表示する
+2. 未接続の場合、店舗オーナーまたは管理者権限を持つGoogleアカウントでGoogleログイン/OAuthを開始する
+3. `business.manage` の許可後、取得できるaccount/location一覧から対象店舗を選ぶ
+4. 選択したlocationを `stores` と `integrations` に保存し、連携済みとして表示する
+5. OAuth期限切れ、権限不足、location削除などの場合は未接続または要再連携として表示し、再連携導線から再度Googleログインへ進める
 
 ### 管理者画面から現場へ
 
@@ -80,6 +90,12 @@
 必要スコープ:
 
 - `https://www.googleapis.com/auth/business.manage`
+
+接続条件:
+
+- OAuth/Googleログインで接続する
+- 接続に使うGoogleアカウントは、対象店舗のオーナーまたは管理者権限を持つこと
+- 管理者画面で連携ステータス、接続開始、再連携を操作できること
 
 主要API:
 
@@ -129,7 +145,9 @@
 運用ルール:
 
 - P0レビューは自動返信しない
+- 一括自動返信はP2/P3など許可済み条件だけを対象にし、管理者が候補一覧から除外・承認してから送信する
 - 返金、補償、健康被害、法務リスクは公開文に断定表現を入れない
+- AI返信案/GBP投稿案を再生成する場合は新しい下書きバージョンを作り、直前案や過去案へ戻せるようにする
 - 返信/投稿の最終送信は監査ログを残す
 
 ## データモデル
@@ -141,12 +159,12 @@
 - `users`: 管理者/現場者
 - `integrations`: Google/LINE/Slack連携情報
 - `reviews`: Googleレビュー
-- `review_replies`: 返信案、承認、投稿結果
+- `review_replies`: 返信案、下書きバージョン、承認、投稿結果
 - `tasks`: 店舗改善タスク
 - `field_events`: 現場者画面からの確認結果
-- `gbp_posts`: GBP店舗投稿の下書き、承認、公開結果
+- `gbp_posts`: GBP店舗投稿の下書き、下書きバージョン、承認、公開結果
 - `media_assets`: 写真/画像素材
-- `notifications`: 通知キュー
+- `notifications`: 通知履歴、送信待ち、失敗時の再送管理
 - `audit_logs`: すべての重要操作ログ
 
 ## レビュー運用フロー
@@ -157,9 +175,11 @@
 4. P0/P1は管理者と現場者へ通知
 5. 現場者がLINE/Slackで確認結果を返す
 6. 管理者が返信案を確認
-7. Google Business Profile APIで返信投稿
-8. `review_replies.posted_at` に返信日時、Google側レスポンス、失敗時のエラーを保存
-9. 監査ログと返信済み状態を保存
+7. 返信案を再生成した場合は新しい下書きとして保存し、過去案へ戻せる状態にする
+8. 一括自動返信はP2/P3など対象条件を満たすレビューだけを候補化し、管理者が対象外レビューを除外してから承認する
+9. Google Business Profile APIで返信投稿
+10. `review_replies.posted_at` に返信日時、Google側レスポンス、失敗時のエラーを保存
+11. 監査ログと返信済み状態を保存
 
 レビュー受信箱のフィルター:
 
@@ -176,17 +196,19 @@
 1. 投稿タイプを選ぶ: 最新情報、イベント、オファー
 2. 店舗、本文、CTA、URL、公開日時、画像を入力
 3. AIが投稿文を整える
-4. 管理者が承認
-5. Google Business Profile LocalPosts APIへ送信
-6. `searchUrl`、`state`、Google側IDを保存
+4. 再生成時は新しい投稿下書きバージョンを保存し、前案へ戻せるようにする
+5. 管理者が承認
+6. Google Business Profile LocalPosts APIへ送信
+7. `searchUrl`、`state`、Google側IDを保存
 
 ### 現場者画面から投稿素材を送る
 
 1. 現場者がLINE/Slackから「今日のおすすめ」「空席」「臨時営業時間」「イベント」を送る
 2. 投稿素材として `gbp_posts` に `draft` で保存
 3. AIが管理者向け投稿文に整形
-4. 管理者画面で承認
-5. Google Business Profileへ公開
+4. 再生成時は新しい投稿下書きバージョンを保存し、前案へ戻せるようにする
+5. 管理者画面で承認
+6. Google Business Profileへ公開
 
 現場者は直接公開しない。公開権限は管理者画面だけ。
 
@@ -235,7 +257,9 @@ GBP投稿の状態:
 
 - `GET /api/reviews`
 - `POST /api/reviews/:id/reply-draft`
+- `POST /api/reviews/:id/reply-draft/regenerate`
 - `POST /api/reviews/:id/reply`
+- `POST /api/reviews/bulk-auto-reply`
 - `POST /api/reviews/:id/reply` with `action=publish` はGoogle Business Profile `reviews.updateReply` へ送信
 - `GET /api/tasks`
 - `PATCH /api/tasks/:id`
@@ -244,6 +268,9 @@ GBP投稿の状態:
 - `POST /api/gbp/posts/:id/publish`
 - `POST /api/gbp/posts` with `action=publish` はGoogle Business Profile `localPosts.create` へ送信
 - `GET /api/settings/integrations`
+- `GET /api/settings/integrations/gbp/status`
+- `GET /api/settings/integrations/gbp/oauth/start`
+- `GET /api/settings/integrations/gbp/oauth/callback`
 
 現場者画面:
 
@@ -273,7 +300,7 @@ System:
 6. Google Business Profile APIを有効化
 7. LINE DevelopersでMessaging APIチャネルを作成
 8. Cloudflare環境変数を設定
-9. 店舗ごとにGBP locationを紐付け
+9. 店舗オーナーまたは管理者権限のGoogleアカウントで管理者画面からGBP OAuth接続し、店舗ごとにGBP locationを紐付け
 10. LINE/Slack通知先を登録
 11. テストレビュー、テスト投稿、テスト通知を実行
 
@@ -293,7 +320,7 @@ System:
 ## 失敗時の設計
 
 - Google APIが失敗: `notifications` に失敗通知を残し、管理者に再実行ボタンを出す
-- LINE返信が失敗: 管理者画面の通知キューで再送可能にする
+- LINE返信が失敗: 通知履歴または対象レビュー詳細に失敗状態を出し、管理者が再送可能にする
 - OAuth期限切れ: 店舗設定に再連携ボタンを出す
 - GBP投稿が拒否: Google側の `state` とエラー内容を保存し、投稿文を修正できるようにする
 - AI生成失敗: 定型テンプレートへフォールバックする

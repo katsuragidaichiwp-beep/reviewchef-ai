@@ -13,6 +13,7 @@
         --text: #17211f;
         --muted: #60706c;
         --line: #dbe5e2;
+        --line-strong: #b9cbc6;
         --brand: #0f766e;
         --brand-strong: #0b5f59;
         --brand-soft: #d8f1ed;
@@ -239,6 +240,13 @@
         background: #f9fbfa;
       }
 
+      .btn:disabled {
+        cursor: not-allowed;
+        border-color: #dce7e3;
+        background: #f5f8f7;
+        color: #8ca09a;
+      }
+
       .btn.primary {
         border-color: var(--brand);
         background: var(--brand);
@@ -270,7 +278,7 @@
 
       .metric {
         padding: 15px;
-        border: 1px solid var(--line);
+        border: 1px solid var(--line-strong);
         border-radius: 8px;
         background: var(--panel);
         box-shadow: var(--shadow);
@@ -442,7 +450,7 @@
       }
 
       .panel {
-        border: 1px solid var(--line);
+        border: 1px solid var(--line-strong);
         border-radius: 8px;
         background: var(--panel);
         box-shadow: var(--shadow);
@@ -453,13 +461,29 @@
         align-items: flex-start;
         justify-content: space-between;
         gap: 12px;
-        padding: 15px;
-        border-bottom: 1px solid var(--line);
+        padding: 16px;
+        border-bottom: 1px solid var(--line-strong);
+        background: #f8fbfa;
       }
 
       .panel-header h2 {
-        margin-bottom: 4px;
-        font-size: 16px;
+        position: relative;
+        margin-bottom: 5px;
+        padding-left: 11px;
+        color: #10201d;
+        font-size: 18px;
+        line-height: 1.25;
+      }
+
+      .panel-header h2::before {
+        position: absolute;
+        top: 2px;
+        bottom: 2px;
+        left: 0;
+        width: 4px;
+        border-radius: 999px;
+        background: var(--brand);
+        content: "";
       }
 
       .panel-header p {
@@ -518,8 +542,8 @@
 
       .review-card {
         width: 100%;
-        padding: 13px;
-        border: 1px solid var(--line);
+        padding: 12px;
+        border: 1px solid var(--line-strong);
         border-radius: 8px;
         background: #ffffff;
         text-align: left;
@@ -534,6 +558,62 @@
       .review-card.replied {
         border-color: #9ad8b8;
         background: #f3fbf6;
+      }
+
+      .review-card-main {
+        display: block;
+        width: 100%;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        color: inherit;
+        text-align: left;
+      }
+
+      .review-card-tools {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 10px;
+        padding-bottom: 9px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .bulk-check {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        color: #31433f;
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      .bulk-check input {
+        width: 16px;
+        height: 16px;
+        accent-color: var(--brand);
+      }
+
+      .bulk-check.disabled {
+        color: var(--muted);
+        opacity: 0.62;
+      }
+
+      .bulk-actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 12px;
+        padding: 12px;
+        border: 1px solid var(--line-strong);
+        border-radius: 8px;
+        background: #f8fbfa;
+      }
+
+      .bulk-actions strong {
+        color: var(--brand-strong);
       }
 
       .review-top {
@@ -647,6 +727,8 @@
       }
 
       .detail-section h3 {
+        padding-left: 10px;
+        border-left: 4px solid var(--brand-soft);
         margin-bottom: 8px;
         font-size: 14px;
       }
@@ -694,7 +776,7 @@
       .notification,
       .setting-card {
         padding: 13px;
-        border: 1px solid var(--line);
+        border: 1px solid var(--line-strong);
         border-radius: 8px;
         background: #ffffff;
       }
@@ -764,7 +846,7 @@
       .simple-action,
       .request-card {
         padding: 14px;
-        border: 1px solid var(--line);
+        border: 1px solid var(--line-strong);
         border-radius: 8px;
         background: #ffffff;
       }
@@ -846,7 +928,7 @@
       .role-card,
       .staff-task-card {
         padding: 14px;
-        border: 1px solid var(--line);
+        border: 1px solid var(--line-strong);
         border-radius: 8px;
         background: #ffffff;
       }
@@ -1069,7 +1151,7 @@
       .audit-card,
       .operation-card {
         padding: 13px;
-        border: 1px solid var(--line);
+        border: 1px solid var(--line-strong);
         border-radius: 8px;
         background: #ffffff;
       }
@@ -1326,7 +1408,6 @@
           <button data-view-button="tasks">改善タスク</button>
           <button data-view-button="meo">MEO施策</button>
           <button data-view-button="gbp-posts">GBP投稿</button>
-          <button data-view-button="notifications">通知キュー</button>
           <button data-view-button="settings">設定</button>
         </nav>
 
@@ -1344,12 +1425,6 @@
             <p class="lead">
               Googleレビューを取り込み、返信案生成、管理者通知、GBP最適化、HP/SNS導線、レビュー獲得施策、効果測定までを試せる飲食店向けMVPです。
             </p>
-          </div>
-          <div class="actions">
-            <button class="btn" id="resetDemoBtn">デモデータに戻す</button>
-            <button class="btn" data-view-button="meo">MEO施策を見る</button>
-            <button class="btn" data-view-button="gbp-posts">GBP投稿を作る</button>
-            <button class="btn primary" data-view-button="reviews">レビューを処理する</button>
           </div>
         </section>
 
@@ -1427,6 +1502,13 @@
                 </select>
               </div>
 
+              <div class="bulk-actions">
+                <strong id="bulkSelectedCount">0件選択中</strong>
+                <button class="btn small" data-action="select-bulk-candidates">返信候補をまとめて選択</button>
+                <button class="btn small" data-action="clear-bulk-selection">選択を解除</button>
+                <button class="btn small primary" data-action="bulk-auto-reply">選択レビューにAI返信案で返信</button>
+              </div>
+
               <div class="review-list" id="reviewList"></div>
             </div>
           </div>
@@ -1469,18 +1551,6 @@
             </div>
 
             <div class="strategy-grid">
-              <div class="panel">
-                <div class="panel-header">
-                  <div>
-                    <h2>今週やること</h2>
-                    <p>専門用語を抜きにして、来店につながる順番で並べています。</p>
-                  </div>
-                </div>
-                <div class="panel-body">
-                  <div class="simple-list" id="simpleMeoActions"></div>
-                </div>
-              </div>
-
               <div class="panel">
                 <div class="panel-header">
                   <div>
@@ -1665,6 +1735,7 @@
 
                 <div class="reply-actions">
                   <button class="btn" data-action="polish-gbp-post">AIで投稿案を整える</button>
+                  <button class="btn" data-action="restore-gbp-post" id="restoreGbpPostBtn">一つ前の投稿案に戻す</button>
                   <button class="btn" data-action="save-gbp-draft">下書き保存</button>
                   <button class="btn primary" data-action="request-gbp-publish">承認して公開準備</button>
                 </div>
@@ -1767,18 +1838,6 @@
           </div>
         </section>
 
-        <section id="view-notifications" data-view class="panel hidden">
-          <div class="panel-header">
-            <div>
-              <h2>通知キュー</h2>
-              <p>LINEやSlackに送る想定の通知文を確認できます。</p>
-            </div>
-          </div>
-          <div class="panel-body">
-            <div class="notification-list" id="notificationList"></div>
-          </div>
-        </section>
-
         <section id="view-settings" data-view class="panel hidden">
           <div class="panel-header">
             <div>
@@ -1838,6 +1897,21 @@
               </div>
 
               <div class="setting-card">
+                <h3>Google/GBP連携</h3>
+                <p>実運用では、店舗オーナーまたは管理者権限を持つGoogleアカウントでOAuthログインし、ReviewChef AIにGBPのレビュー返信・店舗投稿権限を許可します。</p>
+                <div class="chips">
+                  <span class="chip p2">未連携</span>
+                  <span class="chip brand">OAuth</span>
+                  <span class="chip">business.manage</span>
+                </div>
+                <div class="reply-actions">
+                  <a class="btn primary" href="/api/google/oauth/start?storeId=demo-store">GoogleでGBP連携を開始</a>
+                  <a class="btn" href="/api/system/health">連携状態を確認</a>
+                </div>
+                <p class="review-meta">本番ではOAuth callbackで取得したrefresh tokenを暗号化保存し、店舗ごとのGBP locationと紐付けます。</p>
+              </div>
+
+              <div class="setting-card">
                 <h3>LINE実機確認</h3>
                 <p>現場者画面はLINE上で完結します。管理者権限があるユーザーだけ、LINEの「管理者ログイン」からスマホブラウザでWeb管理者画面へ進みます。</p>
                 <div class="chips">
@@ -1863,7 +1937,7 @@
     <div class="toast hidden" id="toast" role="status"></div>
 
     <script>
-      const STORAGE_KEY = "reviewchef-mvp-state-v3";
+      const STORAGE_KEY = "reviewchef-mvp-state-v4";
 
       const issueMap = [
         { key: "健康被害", terms: ["食中毒", "腹痛", "下痢", "嘔吐", "病院", "救急", "体調", "吐き気"] },
@@ -1891,8 +1965,11 @@
         },
         selectedStore: "all",
         selectedReviewId: "r-001",
+        selectedBulkReviewIds: [],
         currentView: "reviews",
         selectedServicePattern: "epress",
+        gbpComposerPreviousSummary: "",
+        gbpComposerDraftVersion: 0,
         reviews: [
           {
             id: "r-001",
@@ -2172,11 +2249,11 @@
         replyCount: document.getElementById("replyCount"),
         taskCount: document.getElementById("taskCount"),
         openTaskCount: document.getElementById("openTaskCount"),
+        bulkSelectedCount: document.getElementById("bulkSelectedCount"),
         reviewList: document.getElementById("reviewList"),
         reviewDetail: document.getElementById("reviewDetail"),
         taskList: document.getElementById("taskList"),
         clientMeoSummary: document.getElementById("clientMeoSummary"),
-        simpleMeoActions: document.getElementById("simpleMeoActions"),
         storeRequests: document.getElementById("storeRequests"),
         meoScore: document.getElementById("meoScore"),
         meoScoreBar: document.getElementById("meoScoreBar"),
@@ -2206,6 +2283,7 @@
         gbpPostUrl: document.getElementById("gbpPostUrl"),
         gbpPostStartDate: document.getElementById("gbpPostStartDate"),
         gbpPostEndDate: document.getElementById("gbpPostEndDate"),
+        restoreGbpPostBtn: document.getElementById("restoreGbpPostBtn"),
         gbpPostList: document.getElementById("gbpPostList"),
         staffTasks: document.getElementById("staffTasks"),
         staffPhoneStatus: document.getElementById("staffPhoneStatus"),
@@ -2217,14 +2295,12 @@
         fieldPostIdeaType: document.getElementById("fieldPostIdeaType"),
         fieldPostIdeaInput: document.getElementById("fieldPostIdeaInput"),
         fieldPostIdeaBtn: document.getElementById("fieldPostIdeaBtn"),
-        notificationList: document.getElementById("notificationList"),
         searchInput: document.getElementById("searchInput"),
         dateFilter: document.getElementById("dateFilter"),
         ratingFilter: document.getElementById("ratingFilter"),
         priorityFilter: document.getElementById("priorityFilter"),
         statusFilter: document.getElementById("statusFilter"),
         csvInput: document.getElementById("csvInput"),
-        resetDemoBtn: document.getElementById("resetDemoBtn"),
         businessName: document.getElementById("businessName"),
         replyTone: document.getElementById("replyTone"),
         autoReplyEnabled: document.getElementById("autoReplyEnabled"),
@@ -2252,6 +2328,9 @@
           ...saved,
           settings: { ...defaults.settings, ...(saved.settings || {}) },
           gbpPosts: saved.gbpPosts || defaults.gbpPosts,
+          selectedBulkReviewIds: saved.selectedBulkReviewIds || defaults.selectedBulkReviewIds,
+          gbpComposerPreviousSummary: saved.gbpComposerPreviousSummary || "",
+          gbpComposerDraftVersion: saved.gbpComposerDraftVersion || 0,
           selectedServicePattern: saved.selectedServicePattern || defaults.selectedServicePattern,
           meo: {
             ...defaults.meo,
@@ -2271,7 +2350,7 @@
             creativeTests: saved.meo?.creativeTests || defaults.meo.creativeTests,
           },
         };
-        const viewIds = new Set(["reviews", "tasks", "meo", "gbp-posts", "staff", "notifications", "settings"]);
+        const viewIds = new Set(["reviews", "tasks", "meo", "gbp-posts", "staff", "settings"]);
         if (!viewIds.has(merged.currentView)) merged.currentView = "reviews";
         return merged;
       }
@@ -2284,7 +2363,7 @@
         const params = new URLSearchParams(window.location.search);
         const view = params.get("view");
         const reviewId = params.get("review");
-        const viewIds = new Set(["reviews", "tasks", "meo", "gbp-posts", "staff", "notifications", "settings"]);
+        const viewIds = new Set(["reviews", "tasks", "meo", "gbp-posts", "staff", "settings"]);
         const nextState = viewIds.has(view) ? { ...initialState, currentView: view } : { ...initialState };
         if (reviewId && nextState.reviews?.some((review) => review.id === reviewId)) {
           nextState.selectedReviewId = reviewId;
@@ -2375,6 +2454,36 @@
         }
 
         return `${greeting}\nうれしいお言葉をありがとうございます。お食事や接客を楽しんでいただけたようで、スタッフ一同とても励みになります。またのご来店を心よりお待ちしております。`;
+      }
+
+      function buildReplyDraftVariant(review, variantIndex = 0) {
+        const analysis = analyzeReview(review);
+        const base = buildReplyDraft(review, analysis.issues, analysis.priority);
+        const variants = {
+          P0: [
+            "いただいた内容は責任者が確認し、店舗内の記録と照らし合わせて対応いたします。",
+            "公開の場で断定せず、まずは事実確認と再発防止の確認を進めてまいります。",
+            "ご不安な点を真摯に受け止め、確認できた内容から順に改善へつなげます。",
+          ],
+          P1: [
+            "次回はより安心してご利用いただけるよう、当日の運営体制を見直します。",
+            "ご指摘の時間帯を確認し、同じことが起きないよう店舗内で共有します。",
+            "率直なお声を改善の機会として受け止め、接客と提供品質の確認を進めます。",
+          ],
+          P2: [
+            "いただいたご感想はスタッフにも共有し、より心地よい体験づくりに活かします。",
+            "良かった点を伸ばしつつ、気になった点も店舗内で確認して改善します。",
+            "次回はさらに満足いただけるよう、細かな点まで見直してまいります。",
+          ],
+          P3: [
+            "またお近くにお越しの際は、ぜひお立ち寄りください。",
+            "次回も気持ちよくお過ごしいただけるよう、スタッフ一同努めてまいります。",
+            "温かいお声を励みに、これからも料理とサービスを磨いてまいります。",
+          ],
+        };
+        const pool = variants[analysis.priority] || variants.P3;
+        const suffix = pool[variantIndex % pool.length];
+        return `${base}\n${suffix}`;
       }
 
       function buildNotificationText(review, issues, priority) {
@@ -2477,8 +2586,8 @@
         renderTasks();
         renderMeo();
         renderGbpPosts();
+        updateGbpRestoreButton();
         renderStaffView();
-        renderNotifications();
         renderSettings();
       }
 
@@ -2525,31 +2634,57 @@
 
       function renderReviews() {
         const reviews = getFilteredReviews();
+        renderBulkSummary();
         els.reviewList.innerHTML = reviews.length ? reviews.map(renderReviewCard).join("") : `<div class="empty">条件に合うレビューはありません。</div>`;
       }
 
       function renderReviewCard(review) {
         const isActive = state.selectedReviewId === review.id;
         const { priority, sentiment, issues, autoEligible } = review.analysis;
-        return `<button class="review-card ${isActive ? "active" : ""} ${review.status === "replied" ? "replied" : ""}" data-review-id="${review.id}">
-          <div class="review-top">
-            <div class="review-title">
-              <strong>${escapeHtml(review.store)} / ${escapeHtml(review.author)}</strong>
-              <div class="review-meta">${escapeHtml(formatReviewDate(review.createdAt))}・${statusLabel(review.status)}</div>
-              ${review.status === "replied" ? `<span class="reply-stamp">返信済み ${escapeHtml(formatReplyDate(review.repliedAt))}</span>` : ""}
+        const canBulkReply = reviewCanBulkReply(review);
+        const isSelected = state.selectedBulkReviewIds.includes(review.id);
+        return `<div class="review-card ${isActive ? "active" : ""} ${review.status === "replied" ? "replied" : ""}">
+          <div class="review-card-tools">
+            <label class="bulk-check ${canBulkReply ? "" : "disabled"}">
+              <input type="checkbox" data-bulk-review-id="${review.id}" ${isSelected ? "checked" : ""} ${canBulkReply ? "" : "disabled"} />
+              一括返信に含める
+            </label>
+            ${!canBulkReply && review.status !== "replied" ? `<span class="chip p0">個別確認</span>` : ""}
+          </div>
+          <button class="review-card-main" data-review-id="${review.id}">
+            <div class="review-top">
+              <div class="review-title">
+                <strong>${escapeHtml(review.store)} / ${escapeHtml(review.author)}</strong>
+                <div class="review-meta">${escapeHtml(formatReviewDate(review.createdAt))}・${statusLabel(review.status)}</div>
+                ${review.status === "replied" ? `<span class="reply-stamp">返信済み ${escapeHtml(formatReplyDate(review.repliedAt))}</span>` : ""}
+              </div>
+              <div class="rating">${"★".repeat(Number(review.rating))}${"☆".repeat(5 - Number(review.rating))}</div>
             </div>
-            <div class="rating">${"★".repeat(Number(review.rating))}${"☆".repeat(5 - Number(review.rating))}</div>
-          </div>
-          <p class="comment">${escapeHtml(review.comment)}</p>
-          <div class="chips">
-            <span class="chip ${priority.toLowerCase()}">${priorityLabel(priority)}</span>
-            <span class="chip">${sentiment}</span>
-            ${issues.slice(0, 2).map((issue) => `<span class="chip brand">${escapeHtml(issue)}</span>`).join("")}
-            ${review.staffStatus ? `<span class="chip ${review.staffStatus === "confirmed" ? "ok" : "p1"}">${staffStatusLabel(review.staffStatus)}</span>` : ""}
-            ${review.status === "replied" ? `<span class="chip ok">返信済み</span>` : ""}
-            ${autoEligible ? `<span class="chip ok">自動返信候補</span>` : ""}
-          </div>
-        </button>`;
+            <p class="comment">${escapeHtml(review.comment)}</p>
+            <div class="chips">
+              <span class="chip ${priority.toLowerCase()}">${priorityLabel(priority)}</span>
+              <span class="chip">${sentiment}</span>
+              ${issues.slice(0, 2).map((issue) => `<span class="chip brand">${escapeHtml(issue)}</span>`).join("")}
+              ${review.staffStatus ? `<span class="chip ${review.staffStatus === "confirmed" ? "ok" : "p1"}">${staffStatusLabel(review.staffStatus)}</span>` : ""}
+              ${review.status === "replied" ? `<span class="chip ok">返信済み</span>` : ""}
+              ${autoEligible ? `<span class="chip ok">自動返信候補</span>` : ""}
+            </div>
+          </button>
+        </div>`;
+      }
+
+      function renderBulkSummary() {
+        const availableIds = new Set(enrichReviews().filter(reviewCanBulkReply).map((review) => review.id));
+        state.selectedBulkReviewIds = state.selectedBulkReviewIds.filter((id) => availableIds.has(id));
+        els.bulkSelectedCount.textContent = `${state.selectedBulkReviewIds.length}件選択中`;
+      }
+
+      function reviewCanBulkReply(review) {
+        return review.status !== "replied" && review.analysis.priority !== "P0";
+      }
+
+      function getBulkCandidateReviews() {
+        return getFilteredReviews().filter(reviewCanBulkReply);
       }
 
       function renderDetail() {
@@ -2594,6 +2729,7 @@
             <textarea class="textarea" id="replyEditor">${escapeHtml(review.replyDraft || analysis.replyDraft)}</textarea>
             <div class="reply-actions">
               <button class="btn" data-action="regenerate-reply" data-id="${review.id}">AI返信案を再作成</button>
+              ${review.previousReplyDraft ? `<button class="btn" data-action="restore-reply-draft" data-id="${review.id}">一つ前の案に戻す</button>` : ""}
               <button class="btn" data-action="save-draft" data-id="${review.id}">下書き保存</button>
               <button class="btn primary" data-action="mark-replied" data-id="${review.id}">承認してGoogleに投稿</button>
               <button class="btn" data-action="copy-reply" data-id="${review.id}">コピー</button>
@@ -2609,6 +2745,7 @@
         const grouped = new Map();
 
         enrichReviews().forEach((review) => {
+          if (review.analysis.autoEligible || review.analysis.priority === "P3") return;
           review.analysis.issues
             .filter((issue) => !["好意的な体験", "要確認"].includes(issue))
             .forEach((issue) => {
@@ -2666,7 +2803,6 @@
         const doneCount = profileItems.filter((item) => item.done).length;
 
         renderClientMeoSummary(score, keywordRows, profileItems);
-        renderSimpleMeoActions(keywordRows, profileItems);
         renderStoreRequests();
 
         els.meoScore.textContent = score;
@@ -2732,45 +2868,6 @@
               <span>${escapeHtml(card.label)}</span>
               <strong>${escapeHtml(card.value)}</strong>
               <p>${escapeHtml(card.body)}</p>
-            </div>`,
-          )
-          .join("");
-      }
-
-      function renderSimpleMeoActions(keywordRows, profileItems) {
-        const worstKeyword = [...keywordRows].sort((a, b) => b.current - a.current)[0];
-        const undoneProfile = profileItems.find((item) => !item.done && ["P0", "P1"].includes(item.priority));
-        const actions = [
-          {
-            title: "検索されたい言葉を3つに絞る",
-            body: worstKeyword
-              ? `まず「${worstKeyword.keyword}」を改善対象にします。Google投稿、メニュー、写真説明に同じ言葉を自然に入れます。`
-              : "店名、エリア、料理名、利用シーンから、狙う検索キーワードを3つだけ決めます。",
-          },
-          {
-            title: "Googleビジネスプロフィールを最新にする",
-            body: undoneProfile
-              ? `今週は「${undoneProfile.title}」を優先します。`
-              : "営業時間、メニュー、写真、カテゴリを最新に保ち、来店前の迷いを減らします。",
-          },
-          {
-            title: "口コミ返信をためない",
-            body: "低評価は確認してから返信、高評価は短く自然に返信します。返信の有無だけでも印象が変わります。",
-          },
-          {
-            title: "レビュー依頼の導線を作る",
-            body: "会計時のQR、ショップカード、モバイルオーダー後の案内で、満足したお客様に自然に投稿してもらいます。",
-          },
-        ];
-
-        els.simpleMeoActions.innerHTML = actions
-          .map(
-            (action, index) => `<div class="simple-action">
-              <div class="step-number">${index + 1}</div>
-              <div>
-                <h3>${escapeHtml(action.title)}</h3>
-                <p>${escapeHtml(action.body)}</p>
-              </div>
             </div>`,
           )
           .join("");
@@ -3218,16 +3315,28 @@
         els.gbpPostEndDate.value = "";
       }
 
-      function buildGbpPostText(title, topicType) {
+      function updateGbpRestoreButton() {
+        const canRestore = Boolean(state.gbpComposerPreviousSummary);
+        els.restoreGbpPostBtn.disabled = !canRestore;
+        els.restoreGbpPostBtn.textContent = canRestore ? "一つ前の投稿案に戻す" : "戻せる投稿案なし";
+      }
+
+      function buildGbpPostText(title, topicType, variantIndex = 0) {
         const store = els.gbpPostStore.value || "店舗";
         const theme = title || gbpTopicLabel(topicType);
+        const angles = [
+          "来店前に知りたい情報がすぐ伝わるよう、料理名・利用シーン・予約導線を短くまとめます。",
+          "検索で見つけた人がそのまま行動しやすいよう、空席・時間帯・おすすめの理由を前半に置きます。",
+          "写真と一緒に読まれる前提で、季節感、人気メニュー、来店メリットが自然に伝わる文面にします。",
+        ];
+        const angle = angles[variantIndex % angles.length];
         if (topicType === "EVENT") {
-          return `${store}からイベントのお知らせです。${theme}について、日時や対象メニューを確認のうえ、写真付きで投稿します。`;
+          return `${store}からイベントのお知らせです。\n${theme}について、開催日・対象メニュー・予約方法が分かるように案内します。${angle}`;
         }
         if (topicType === "OFFER") {
-          return `${store}の期間限定オファーです。${theme}を、来店前に伝わる短い案内文として投稿します。`;
+          return `${store}の期間限定オファーです。\n${theme}を、対象期間と利用条件が分かる短い案内文として投稿します。${angle}`;
         }
-        return `${store}からのお知らせです。${theme}を、料理名・利用シーン・予約導線が自然に伝わる投稿文に整えます。`;
+        return `${store}からのお知らせです。\n${theme}を、料理名・利用シーン・予約導線が自然に伝わる投稿文に整えます。${angle}`;
       }
 
       function gbpPostStatusLabel(status) {
@@ -3527,29 +3636,6 @@
         return suggestions[issue] || "レビュー本文を確認し、店舗内で再発防止策を共有します。";
       }
 
-      function renderNotifications() {
-        const notifications = enrichReviews()
-          .filter((review) => ["P0", "P1"].includes(review.analysis.priority))
-          .filter((review) => state.selectedStore === "all" || review.store === state.selectedStore)
-          .sort((a, b) => priorityWeight(a.analysis.priority) - priorityWeight(b.analysis.priority));
-
-        els.notificationList.innerHTML = notifications.length
-          ? notifications
-              .map(
-                (review) => `<div class="notification">
-                  <div class="chips">
-                    <span class="chip ${review.analysis.priority.toLowerCase()}">${priorityLabel(review.analysis.priority)}</span>
-                    <span class="chip brand">${escapeHtml(review.store)}</span>
-                  </div>
-                  <h3>${escapeHtml(review.author)}さんのレビュー</h3>
-                  <p>${escapeHtml(review.analysis.notificationText).replaceAll("\n", "<br>")}</p>
-                  <button class="btn small" data-action="copy-notification" data-id="${review.id}">通知文をコピー</button>
-                </div>`,
-              )
-              .join("")
-          : `<div class="empty">送信対象の通知はありません。</div>`;
-      }
-
       function renderSettings() {
         els.businessName.value = state.settings.businessName;
         els.replyTone.value = state.settings.replyTone;
@@ -3691,6 +3777,16 @@
       }
 
       document.addEventListener("click", (event) => {
+        const bulkCheckbox = event.target.closest("[data-bulk-review-id]");
+        if (bulkCheckbox) {
+          const id = bulkCheckbox.dataset.bulkReviewId;
+          state.selectedBulkReviewIds = bulkCheckbox.checked
+            ? [...new Set([...state.selectedBulkReviewIds, id])]
+            : state.selectedBulkReviewIds.filter((reviewId) => reviewId !== id);
+          render();
+          return;
+        }
+
         const viewButton = event.target.closest("[data-view-button]");
         if (viewButton) {
           state.currentView = viewButton.dataset.viewButton;
@@ -3717,6 +3813,39 @@
         if (!action) return;
 
         const id = action.dataset.id;
+        if (action.dataset.action === "select-bulk-candidates") {
+          state.selectedBulkReviewIds = getBulkCandidateReviews().map((review) => review.id);
+          showToast(`${state.selectedBulkReviewIds.length}件を選択しました。`);
+          render();
+        }
+        if (action.dataset.action === "clear-bulk-selection") {
+          state.selectedBulkReviewIds = [];
+          showToast("選択を解除しました。");
+          render();
+        }
+        if (action.dataset.action === "bulk-auto-reply") {
+          const selected = new Set(state.selectedBulkReviewIds);
+          const targets = enrichReviews().filter((review) => selected.has(review.id) && reviewCanBulkReply(review));
+          if (!targets.length) {
+            showToast("一括返信できるレビューが選択されていません。");
+            return;
+          }
+          const now = new Date().toISOString();
+          state.reviews = state.reviews.map((review) => {
+            const enriched = targets.find((target) => target.id === review.id);
+            if (!enriched) return review;
+            return {
+              ...review,
+              status: "replied",
+              replyDraft: review.replyDraft || enriched.analysis.replyDraft,
+              repliedAt: now,
+              bulkRepliedAt: now,
+            };
+          });
+          state.selectedBulkReviewIds = [];
+          showToast(`${targets.length}件にAI返信案で返信しました。`);
+          render();
+        }
         if (action.dataset.action === "copy-reply") {
           const review = enrichReviews().find((item) => item.id === id);
           const editor = document.getElementById("replyEditor");
@@ -3725,10 +3854,25 @@
         if (action.dataset.action === "regenerate-reply") {
           state.reviews = state.reviews.map((review) => {
             if (review.id !== id) return review;
-            const analysis = analyzeReview(review);
-            return { ...review, status: "drafted", replyDraft: analysis.replyDraft };
+            const currentDraft = document.getElementById("replyEditor")?.value || review.replyDraft || analyzeReview(review).replyDraft;
+            const nextVersion = (review.replyDraftVersion || 0) + 1;
+            return {
+              ...review,
+              status: "drafted",
+              previousReplyDraft: currentDraft,
+              replyDraftVersion: nextVersion,
+              replyDraft: buildReplyDraftVariant(review, nextVersion),
+            };
           });
-          showToast("AI返信案を再作成しました。");
+          showToast("新しいAI返信案を作成しました。");
+          render();
+        }
+        if (action.dataset.action === "restore-reply-draft") {
+          state.reviews = state.reviews.map((review) => {
+            if (review.id !== id || !review.previousReplyDraft) return review;
+            return { ...review, replyDraft: review.previousReplyDraft, previousReplyDraft: "" };
+          });
+          showToast("一つ前の返信案に戻しました。");
           render();
         }
         if (action.dataset.action === "save-draft") {
@@ -3820,8 +3964,28 @@
           copyText(`${test.title}: 勝ち案${test.winner}\n${test.winner === "A" ? test.a : test.b}\n指標: ${test.metric} ${test.lift}`);
         }
         if (action.dataset.action === "polish-gbp-post") {
-          els.gbpPostSummary.value = buildGbpPostText(els.gbpPostTitle.value.trim(), els.gbpPostTopic.value);
-          showToast("投稿案を整えました。");
+          state.gbpComposerPreviousSummary = els.gbpPostSummary.value;
+          state.gbpComposerDraftVersion = (state.gbpComposerDraftVersion || 0) + 1;
+          els.gbpPostSummary.value = buildGbpPostText(
+            els.gbpPostTitle.value.trim(),
+            els.gbpPostTopic.value,
+            state.gbpComposerDraftVersion,
+          );
+          saveState();
+          updateGbpRestoreButton();
+          showToast("新しいGBP投稿案を作成しました。");
+        }
+        if (action.dataset.action === "restore-gbp-post") {
+          if (!state.gbpComposerPreviousSummary) {
+            showToast("戻せる投稿案がありません。");
+            return;
+          }
+          const current = els.gbpPostSummary.value;
+          els.gbpPostSummary.value = state.gbpComposerPreviousSummary;
+          state.gbpComposerPreviousSummary = current;
+          saveState();
+          updateGbpRestoreButton();
+          showToast("一つ前の投稿案に戻しました。");
         }
         if (action.dataset.action === "save-gbp-draft") {
           const post = readGbpPostForm("draft");
@@ -3936,13 +4100,6 @@
         state.currentView = "reviews";
         els.staffAdminPin.value = "";
         showToast("管理者画面に切り替えました。");
-        render();
-      });
-
-      els.resetDemoBtn.addEventListener("click", () => {
-        state = structuredClone(demoState);
-        autoDraftNewReviews();
-        showToast("デモデータに戻しました。");
         render();
       });
 
