@@ -585,6 +585,7 @@
         align-items: center;
         gap: 7px;
         color: #31433f;
+        cursor: pointer;
         font-size: 13px;
         font-weight: 800;
       }
@@ -596,6 +597,7 @@
       }
 
       .bulk-check.disabled {
+        cursor: not-allowed;
         color: var(--muted);
         opacity: 0.62;
       }
@@ -770,6 +772,16 @@
       .form-grid {
         display: grid;
         gap: 12px;
+      }
+
+      .task-controls {
+        display: grid;
+        gap: 10px;
+        margin-bottom: 14px;
+      }
+
+      .task-filter-bar {
+        margin-bottom: 0;
       }
 
       .task,
@@ -1532,6 +1544,29 @@
             </div>
           </div>
           <div class="panel-body">
+            <div class="task-controls">
+              <div class="toolbar task-filter-bar">
+                <input class="input" id="taskSearchInput" placeholder="タスク内容・レビュー例で検索" />
+                <select class="select" id="taskStatusFilter" aria-label="タスク対応状況">
+                  <option value="open">未対応</option>
+                  <option value="done">対応済み</option>
+                  <option value="all">すべての状態</option>
+                </select>
+                <select class="select" id="taskStoreFilter" aria-label="タスク店舗">
+                  <option value="all">すべての店舗</option>
+                </select>
+                <select class="select" id="taskPriorityFilter" aria-label="タスク優先度">
+                  <option value="all">すべての優先度</option>
+                  <option value="P0">P0 即時対応</option>
+                  <option value="P1">P1 当日対応</option>
+                  <option value="P2">P2 通常対応</option>
+                  <option value="P3">P3 自動返信候補</option>
+                </select>
+                <select class="select" id="taskIssueFilter" aria-label="タスク論点">
+                  <option value="all">すべての論点</option>
+                </select>
+              </div>
+            </div>
             <div class="task-list" id="taskList"></div>
           </div>
         </section>
@@ -1927,7 +1962,7 @@
                 </p>
               </div>
 
-              <button class="btn primary" id="saveSettingsBtn">設定を保存して再分析</button>
+              <button class="btn primary" id="saveSettingsBtn">設定を保存</button>
             </div>
           </div>
         </section>
@@ -1967,6 +2002,13 @@
         selectedReviewId: "r-001",
         selectedBulkReviewIds: [],
         currentView: "reviews",
+        taskFilters: {
+          query: "",
+          status: "open",
+          store: "all",
+          priority: "all",
+          issue: "all",
+        },
         selectedServicePattern: "epress",
         gbpComposerPreviousSummary: "",
         gbpComposerDraftVersion: 0,
@@ -2252,6 +2294,11 @@
         bulkSelectedCount: document.getElementById("bulkSelectedCount"),
         reviewList: document.getElementById("reviewList"),
         reviewDetail: document.getElementById("reviewDetail"),
+        taskSearchInput: document.getElementById("taskSearchInput"),
+        taskStatusFilter: document.getElementById("taskStatusFilter"),
+        taskStoreFilter: document.getElementById("taskStoreFilter"),
+        taskPriorityFilter: document.getElementById("taskPriorityFilter"),
+        taskIssueFilter: document.getElementById("taskIssueFilter"),
         taskList: document.getElementById("taskList"),
         clientMeoSummary: document.getElementById("clientMeoSummary"),
         storeRequests: document.getElementById("storeRequests"),
@@ -2329,6 +2376,7 @@
           settings: { ...defaults.settings, ...(saved.settings || {}) },
           gbpPosts: saved.gbpPosts || defaults.gbpPosts,
           selectedBulkReviewIds: saved.selectedBulkReviewIds || defaults.selectedBulkReviewIds,
+          taskFilters: { ...defaults.taskFilters, ...(saved.taskFilters || {}) },
           gbpComposerPreviousSummary: saved.gbpComposerPreviousSummary || "",
           gbpComposerDraftVersion: saved.gbpComposerDraftVersion || 0,
           selectedServicePattern: saved.selectedServicePattern || defaults.selectedServicePattern,
@@ -2643,11 +2691,12 @@
         const { priority, sentiment, issues, autoEligible } = review.analysis;
         const canBulkReply = reviewCanBulkReply(review);
         const isSelected = state.selectedBulkReviewIds.includes(review.id);
+        const checkboxId = `bulk-${review.id}`;
         return `<div class="review-card ${isActive ? "active" : ""} ${review.status === "replied" ? "replied" : ""}">
           <div class="review-card-tools">
-            <label class="bulk-check ${canBulkReply ? "" : "disabled"}">
-              <input type="checkbox" data-bulk-review-id="${review.id}" ${isSelected ? "checked" : ""} ${canBulkReply ? "" : "disabled"} />
-              一括返信に含める
+            <label class="bulk-check ${canBulkReply ? "" : "disabled"}" for="${checkboxId}">
+              <input id="${checkboxId}" type="checkbox" data-bulk-review-id="${review.id}" ${isSelected ? "checked" : ""} ${canBulkReply ? "" : "disabled"} />
+              <span>一括返信に含める</span>
             </label>
             ${!canBulkReply && review.status !== "replied" ? `<span class="chip p0">個別確認</span>` : ""}
           </div>
@@ -2685,6 +2734,12 @@
 
       function getBulkCandidateReviews() {
         return getFilteredReviews().filter(reviewCanBulkReply);
+      }
+
+      function updateBulkSelection(reviewId, checked) {
+        state.selectedBulkReviewIds = checked
+          ? [...new Set([...state.selectedBulkReviewIds, reviewId])]
+          : state.selectedBulkReviewIds.filter((id) => id !== reviewId);
       }
 
       function renderDetail() {
@@ -2773,8 +2828,87 @@
       }
 
       function renderTasks() {
-        const tasks = buildTasks().filter((task) => state.selectedStore === "all" || task.store === state.selectedStore);
-        els.taskList.innerHTML = tasks.length ? tasks.map(renderTask).join("") : `<div class="empty">改善タスクはまだありません。</div>`;
+        const baseTasks = buildTasks().filter((task) => state.selectedStore === "all" || task.store === state.selectedStore);
+        const filters = normalizeTaskFilters(baseTasks);
+        renderTaskFilterControls(baseTasks, filters);
+        const tasks = filterTasks(baseTasks, filters);
+        const statusLabel = {
+          open: "未対応",
+          done: "対応済み",
+          all: "条件に合う",
+        }[filters.status];
+        els.taskList.innerHTML = tasks.length
+          ? tasks.map(renderTask).join("")
+          : `<div class="empty">${statusLabel}タスクはありません。条件を変えて確認してください。</div>`;
+      }
+
+      function normalizeTaskFilters(tasks) {
+        const filters = {
+          query: "",
+          status: "open",
+          store: "all",
+          priority: "all",
+          issue: "all",
+          ...(state.taskFilters || {}),
+        };
+        const stores = new Set(tasks.map((task) => task.store));
+        const issues = new Set(tasks.map((task) => task.issue));
+        if (!["open", "done", "all"].includes(filters.status)) filters.status = "open";
+        if (filters.store !== "all" && !stores.has(filters.store)) filters.store = "all";
+        if (filters.issue !== "all" && !issues.has(filters.issue)) filters.issue = "all";
+        state.taskFilters = filters;
+        return filters;
+      }
+
+      function renderTaskFilterControls(tasks, filters) {
+        els.taskSearchInput.value = filters.query || "";
+        els.taskStatusFilter.value = filters.status;
+        els.taskPriorityFilter.value = filters.priority;
+        filters.store = syncSelectOptions(
+          els.taskStoreFilter,
+          [
+            { value: "all", label: "すべての店舗" },
+            ...[...new Set(tasks.map((task) => task.store))].sort().map((store) => ({ value: store, label: store })),
+          ],
+          filters.store,
+        );
+        filters.issue = syncSelectOptions(
+          els.taskIssueFilter,
+          [
+            { value: "all", label: "すべての論点" },
+            ...[...new Set(tasks.map((task) => task.issue))].sort().map((issue) => ({ value: issue, label: issue })),
+          ],
+          filters.issue,
+        );
+      }
+
+      function syncSelectOptions(select, options, selectedValue) {
+        const nextValue = options.some((option) => option.value === selectedValue) ? selectedValue : "all";
+        select.innerHTML = options
+          .map((option) => `<option value="${escapeHtml(option.value)}">${escapeHtml(option.label)}</option>`)
+          .join("");
+        select.value = nextValue;
+        return nextValue;
+      }
+
+      function filterTasks(tasks, filters) {
+        const query = String(filters.query || "").trim().toLowerCase();
+        return tasks
+          .filter((task) => {
+            if (filters.status === "open") return !task.done;
+            if (filters.status === "done") return task.done;
+            return true;
+          })
+          .filter((task) => filters.store === "all" || task.store === filters.store)
+          .filter((task) => filters.priority === "all" || task.priority === filters.priority)
+          .filter((task) => filters.issue === "all" || task.issue === filters.issue)
+          .filter((task) => {
+            if (!query) return true;
+            return [task.issue, task.store, task.priority, taskSuggestion(task.issue), ...(task.examples || [])]
+              .join(" ")
+              .toLowerCase()
+              .includes(query);
+          });
       }
 
       function renderTask(task) {
@@ -3776,17 +3910,19 @@
         return text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
       }
 
-      document.addEventListener("click", (event) => {
+      document.addEventListener("change", (event) => {
         const bulkCheckbox = event.target.closest("[data-bulk-review-id]");
-        if (bulkCheckbox) {
-          const id = bulkCheckbox.dataset.bulkReviewId;
-          state.selectedBulkReviewIds = bulkCheckbox.checked
-            ? [...new Set([...state.selectedBulkReviewIds, id])]
-            : state.selectedBulkReviewIds.filter((reviewId) => reviewId !== id);
-          render();
+        if (!bulkCheckbox) return;
+        const review = enrichReviews().find((item) => item.id === bulkCheckbox.dataset.bulkReviewId);
+        if (!review || !reviewCanBulkReply(review)) {
+          bulkCheckbox.checked = false;
           return;
         }
+        updateBulkSelection(bulkCheckbox.dataset.bulkReviewId, bulkCheckbox.checked);
+        render();
+      });
 
+      document.addEventListener("click", (event) => {
         const viewButton = event.target.closest("[data-view-button]");
         if (viewButton) {
           state.currentView = viewButton.dataset.viewButton;
@@ -4023,6 +4159,23 @@
         el.addEventListener("input", render);
       });
 
+      els.taskSearchInput.addEventListener("input", () => {
+        state.taskFilters = { ...(state.taskFilters || {}), query: els.taskSearchInput.value };
+        render();
+      });
+
+      [
+        ["status", els.taskStatusFilter],
+        ["store", els.taskStoreFilter],
+        ["priority", els.taskPriorityFilter],
+        ["issue", els.taskIssueFilter],
+      ].forEach(([key, el]) => {
+        el.addEventListener("change", () => {
+          state.taskFilters = { ...(state.taskFilters || {}), [key]: el.value };
+          render();
+        });
+      });
+
       els.csvInput.addEventListener("change", async (event) => {
         const file = event.target.files[0];
         if (!file) return;
@@ -4112,7 +4265,7 @@
           notificationWebhook: els.notificationWebhook.value.trim(),
         };
         autoDraftNewReviews();
-        showToast("設定を保存し、レビューを再分析しました。");
+        showToast("設定を保存しました。");
         render();
       });
 
