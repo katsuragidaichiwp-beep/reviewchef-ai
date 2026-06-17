@@ -56,6 +56,22 @@
         min-height: 100vh;
       }
 
+      .app.staff-mode {
+        display: block;
+        min-height: 100vh;
+      }
+
+      .app.staff-mode .sidebar,
+      .app.staff-mode .topbar,
+      .app.staff-mode .metrics {
+        display: none;
+      }
+
+      .app.staff-mode .main {
+        max-width: 920px;
+        margin: 0 auto;
+      }
+
       .sidebar {
         position: sticky;
         top: 0;
@@ -1232,7 +1248,6 @@
           <button data-view-button="reviews">レビュー受信箱</button>
           <button data-view-button="tasks">改善タスク</button>
           <button data-view-button="meo">MEO施策</button>
-          <button data-view-button="staff">現場スマホ</button>
           <button data-view-button="notifications">通知キュー</button>
           <button data-view-button="settings">設定</button>
         </nav>
@@ -1255,7 +1270,6 @@
           <div class="actions">
             <button class="btn" id="resetDemoBtn">デモデータに戻す</button>
             <button class="btn" data-view-button="meo">MEO施策を見る</button>
-            <button class="btn" data-view-button="staff">現場スマホを見る</button>
             <button class="btn primary" data-view-button="reviews">レビューを処理する</button>
           </div>
         </section>
@@ -1617,27 +1631,18 @@
             <div class="panel">
               <div class="panel-header">
                 <div>
-                  <h2>二層式レビュー運用</h2>
-                  <p>代表・管理者はWebで全体管理。現場スタッフはスマホでレビュー確認と事実確認だけを行います。</p>
+                  <h2>現場者画面</h2>
+                  <p>スマホでレビュー確認、店長共有、現場確認済みの報告だけを行う画面です。</p>
                 </div>
+                <button class="btn small" id="staffAdminLoginToggle">管理者画面へ</button>
               </div>
               <div class="panel-body">
-                <div class="role-grid">
-                  <div class="role-card">
-                    <div class="chips">
-                      <span class="chip brand">代表・管理者</span>
-                      <span class="chip">Web画面</span>
-                    </div>
-                    <h3>分析、返信承認、効果測定を見る</h3>
-                    <p>レビュー傾向、MEO施策、返信率、改善タスク、Before/Afterを確認し、店舗全体の運用判断をします。</p>
-                  </div>
-                  <div class="role-card">
-                    <div class="chips">
-                      <span class="chip ok">現場スタッフ</span>
-                      <span class="chip">スマホ/LINE想定</span>
-                    </div>
-                    <h3>届いたレビューを確認してワンタップ報告</h3>
-                    <p>難しい分析は見せず、事実確認、店長共有、現場確認済みの3操作だけに絞ります。</p>
+                <div class="import-box hidden" id="staffAdminLoginPanel">
+                  <strong>管理者権限チェック</strong>
+                  <p class="phone-note">本番ではGoogleログインや店舗アカウント権限で判定します。MVPではデモPINで管理者画面に戻れます。</p>
+                  <div class="toolbar">
+                    <input class="input" id="staffAdminPin" inputmode="numeric" placeholder="デモPIN: 0000" />
+                    <button class="btn primary" id="staffAdminLoginBtn">ログインして管理者画面へ</button>
                   </div>
                 </div>
               </div>
@@ -1648,7 +1653,7 @@
                 <div class="panel-header">
                   <div>
                     <h2>現場の確認事項</h2>
-                    <p>スマホ通知で依頼する内容を、現場が迷わない言葉に変換します。</p>
+                    <p>通知で依頼された内容だけ確認します。分析やMEO施策は表示しません。</p>
                   </div>
                 </div>
                 <div class="panel-body">
@@ -1659,13 +1664,13 @@
               <div class="panel">
                 <div class="panel-header">
                   <div>
-                    <h2>スタッフのスマホ画面</h2>
-                    <p>LINE通知で届く想定の軽い確認画面です。</p>
+                    <h2>LINE通知プレビュー</h2>
+                    <p>LINEやSlackで届く想定の軽い確認画面です。</p>
                   </div>
                 </div>
                 <div class="panel-body">
                   <p class="phone-note">本番ではLINE Messaging APIやSlackに接続し、ここで押した内容を管理者画面へ戻します。</p>
-                  <div class="phone-shell" aria-label="スタッフスマホ画面">
+                  <div class="phone-shell" aria-label="現場者画面">
                     <div class="phone-header">
                       <div>
                         <strong>ReviewChef通知</strong>
@@ -1749,6 +1754,20 @@
                   <label for="notificationWebhook">Webhook URL</label>
                   <input class="input" id="notificationWebhook" placeholder="https://example.com/webhook" />
                 </div>
+              </div>
+
+              <div class="setting-card">
+                <h3>LINE実機確認</h3>
+                <p>LINE DevelopersのWebhook URLに以下を設定し、Cloudflare PagesにLINEの環境変数を保存します。</p>
+                <div class="chips">
+                  <span class="chip brand">Webhook</span>
+                  <span class="chip">/api/line/webhook</span>
+                  <span class="chip brand">テスト文言</span>
+                  <span class="chip">レビュー</span>
+                </div>
+                <p style="margin-top: 10px">
+                  現場者画面URL: <code>https://reviewchef-ai.pages.dev/?view=staff</code>
+                </p>
               </div>
 
               <button class="btn primary" id="saveSettingsBtn">設定を保存して再分析</button>
@@ -2044,7 +2063,7 @@
         },
       };
 
-      let state = loadState();
+      let state = applyInitialView(loadState());
 
       const els = {
         storeFilters: document.getElementById("storeFilters"),
@@ -2090,6 +2109,10 @@
         staffTasks: document.getElementById("staffTasks"),
         staffPhoneStatus: document.getElementById("staffPhoneStatus"),
         staffPhoneFeed: document.getElementById("staffPhoneFeed"),
+        staffAdminLoginToggle: document.getElementById("staffAdminLoginToggle"),
+        staffAdminLoginPanel: document.getElementById("staffAdminLoginPanel"),
+        staffAdminPin: document.getElementById("staffAdminPin"),
+        staffAdminLoginBtn: document.getElementById("staffAdminLoginBtn"),
         notificationList: document.getElementById("notificationList"),
         searchInput: document.getElementById("searchInput"),
         priorityFilter: document.getElementById("priorityFilter"),
@@ -2154,6 +2177,12 @@
 
       function saveState() {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      }
+
+      function applyInitialView(initialState) {
+        const view = new URLSearchParams(window.location.search).get("view");
+        const viewIds = new Set(["dashboard", "reviews", "tasks", "meo", "staff", "notifications", "settings"]);
+        return viewIds.has(view) ? { ...initialState, currentView: view } : initialState;
       }
 
       function analyzeReview(review) {
@@ -2297,6 +2326,7 @@
         document.querySelectorAll("[data-view]").forEach((view) => view.classList.add("hidden"));
         const activeView = document.getElementById(`view-${state.currentView}`) || document.getElementById("view-dashboard");
         activeView.classList.remove("hidden");
+        document.querySelector(".app").classList.toggle("staff-mode", state.currentView === "staff");
         document.querySelectorAll("[data-view-button]").forEach((button) => {
           button.classList.toggle("active", button.dataset.viewButton === state.currentView);
         });
@@ -3707,6 +3737,22 @@
         els.keywordInput.value = "";
         els.areaInput.value = "";
         showToast("追跡キーワードを追加しました。");
+        render();
+      });
+
+      els.staffAdminLoginToggle.addEventListener("click", () => {
+        els.staffAdminLoginPanel.classList.toggle("hidden");
+        els.staffAdminPin.focus();
+      });
+
+      els.staffAdminLoginBtn.addEventListener("click", () => {
+        if (els.staffAdminPin.value.trim() !== "0000") {
+          showToast("管理者権限を確認できませんでした。");
+          return;
+        }
+        state.currentView = "dashboard";
+        els.staffAdminPin.value = "";
+        showToast("管理者画面に切り替えました。");
         render();
       });
 
