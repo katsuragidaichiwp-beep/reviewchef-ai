@@ -716,6 +716,234 @@
         align-items: start;
       }
 
+      .client-meo-stack {
+        display: grid;
+        gap: 14px;
+      }
+
+      .meo-status-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .status-card,
+      .simple-action,
+      .request-card {
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #ffffff;
+      }
+
+      .status-card span {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .status-card strong {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 24px;
+      }
+
+      .status-card p,
+      .simple-action p,
+      .request-card p {
+        margin-bottom: 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.55;
+      }
+
+      .simple-list {
+        display: grid;
+        gap: 10px;
+      }
+
+      .simple-action {
+        display: grid;
+        grid-template-columns: 34px minmax(0, 1fr);
+        gap: 10px;
+        align-items: start;
+      }
+
+      .step-number {
+        display: grid;
+        width: 32px;
+        height: 32px;
+        place-items: center;
+        border-radius: 999px;
+        background: var(--brand-soft);
+        color: var(--brand-strong);
+        font-weight: 850;
+      }
+
+      .simple-action h3,
+      .request-card h3 {
+        margin-bottom: 5px;
+        font-size: 15px;
+      }
+
+      .advanced-meo {
+        overflow: hidden;
+      }
+
+      .advanced-meo summary {
+        padding: 15px;
+        cursor: pointer;
+        font-weight: 850;
+      }
+
+      .advanced-meo-body {
+        padding: 15px;
+        border-top: 1px solid var(--line);
+      }
+
+      .role-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(320px, 0.8fr);
+        gap: 14px;
+        align-items: start;
+      }
+
+      .role-card,
+      .staff-task-card {
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #ffffff;
+      }
+
+      .role-card h3,
+      .staff-task-card h3 {
+        margin-bottom: 6px;
+        font-size: 15px;
+      }
+
+      .staff-task-card.done {
+        opacity: 0.64;
+      }
+
+      .role-card p,
+      .staff-task-card p,
+      .phone-note {
+        margin-bottom: 8px;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.55;
+      }
+
+      .phone-shell {
+        max-width: 390px;
+        margin: 0 auto;
+        overflow: hidden;
+        border: 1px solid #c7d6d2;
+        border-radius: 28px;
+        background: #f2f7f5;
+        box-shadow: var(--shadow);
+      }
+
+      .phone-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 16px;
+        background: #0f766e;
+        color: #ffffff;
+      }
+
+      .phone-header strong {
+        display: block;
+        font-size: 15px;
+      }
+
+      .phone-header span {
+        display: block;
+        margin-top: 2px;
+        color: #d7f7f1;
+        font-size: 12px;
+      }
+
+      .phone-body {
+        display: grid;
+        gap: 10px;
+        min-height: 540px;
+        max-height: 640px;
+        padding: 12px;
+        overflow-y: auto;
+        background: #eaf3f0;
+      }
+
+      .chat-day {
+        justify-self: center;
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: rgba(16, 32, 29, 0.12);
+        color: #4b5b57;
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .chat-bubble {
+        max-width: 94%;
+        padding: 11px;
+        border: 1px solid #d8e5e1;
+        border-radius: 14px;
+        border-top-left-radius: 4px;
+        background: #ffffff;
+      }
+
+      .chat-bubble.confirmed {
+        border-color: #9ad8b8;
+        background: #f0fbf5;
+      }
+
+      .chat-bubble.escalated {
+        border-color: #efb2a9;
+        background: #fff7f5;
+      }
+
+      .chat-bubble h3 {
+        margin-bottom: 6px;
+        font-size: 14px;
+      }
+
+      .chat-bubble p {
+        margin-bottom: 8px;
+        color: #344642;
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
+      .phone-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+        margin-top: 8px;
+      }
+
+      .phone-actions .btn {
+        min-height: 34px;
+        padding: 6px 8px;
+        font-size: 12px;
+      }
+
+      .phone-actions .btn.primary {
+        grid-column: 1 / -1;
+      }
+
+      .staff-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 0.9fr) minmax(320px, 1.1fr);
+        gap: 14px;
+        align-items: start;
+      }
+
       .score-card {
         display: grid;
         gap: 10px;
@@ -933,6 +1161,9 @@
         .meo-grid,
         .three-col,
         .strategy-grid,
+        .role-grid,
+        .staff-grid,
+        .meo-status-grid,
         .target-grid,
         .feature-grid,
         .insight-grid,
@@ -964,6 +1195,9 @@
         .metrics,
         .two-col,
         .three-col,
+        .role-grid,
+        .staff-grid,
+        .meo-status-grid,
         .target-grid,
         .feature-grid,
         .insight-grid,
@@ -998,6 +1232,7 @@
           <button data-view-button="reviews">レビュー受信箱</button>
           <button data-view-button="tasks">改善タスク</button>
           <button data-view-button="meo">MEO施策</button>
+          <button data-view-button="staff">現場スマホ</button>
           <button data-view-button="notifications">通知キュー</button>
           <button data-view-button="settings">設定</button>
         </nav>
@@ -1020,6 +1255,7 @@
           <div class="actions">
             <button class="btn" id="resetDemoBtn">デモデータに戻す</button>
             <button class="btn" data-view-button="meo">MEO施策を見る</button>
+            <button class="btn" data-view-button="staff">現場スマホを見る</button>
             <button class="btn primary" data-view-button="reviews">レビューを処理する</button>
           </div>
         </section>
@@ -1231,69 +1467,41 @@
         </section>
 
         <section id="view-meo" data-view class="hidden">
-          <div class="meo-grid">
+          <div class="client-meo-stack">
             <div class="panel">
               <div class="panel-header">
                 <div>
-                  <h2>MEO施策ボード</h2>
-                  <p>順位計測、GBP改善、競合比較、投稿計画を1画面にまとめています。</p>
+                  <h2>クライアント向けMEOレポート</h2>
+                  <p>Googleマップで「見つかる・信頼される・来店につながる」状態を、シンプルに確認できます。</p>
                 </div>
               </div>
               <div class="panel-body">
-                <div class="service-patterns" id="servicePatterns"></div>
+                <div class="meo-status-grid" id="clientMeoSummary"></div>
+              </div>
+            </div>
 
-                <div class="detail-section">
-                  <h3>提供パッケージ案</h3>
-                  <div class="plan-grid" id="pricingPlans"></div>
-                </div>
-
-                <div class="score-card">
-                  <div class="score-row">
-                    <div>
-                      <h3>MEO運用スコア</h3>
-                      <p>プロフィール充実度、返信率、順位ギャップから算出した優先度です。</p>
-                    </div>
-                    <div class="score" id="meoScore">-</div>
+            <div class="strategy-grid">
+              <div class="panel">
+                <div class="panel-header">
+                  <div>
+                    <h2>今週やること</h2>
+                    <p>専門用語を抜きにして、来店につながる順番で並べています。</p>
                   </div>
-                  <div class="progress" aria-label="MEO運用スコア">
-                    <span id="meoScoreBar" style="width: 0%"></span>
+                </div>
+                <div class="panel-body">
+                  <div class="simple-list" id="simpleMeoActions"></div>
+                </div>
+              </div>
+
+              <div class="panel">
+                <div class="panel-header">
+                  <div>
+                    <h2>お店にお願いしたいこと</h2>
+                    <p>店舗側の作業は最小限。確認・素材提供・承認だけに絞ります。</p>
                   </div>
-                  <div class="chips" id="meoScoreChips"></div>
                 </div>
-
-                <div class="detail-section">
-                  <h3>効果測定</h3>
-                  <div class="measurement-grid" id="effectMetrics"></div>
-                </div>
-
-                <div class="detail-section">
-                  <h3>多地点順位ヒートマップ</h3>
-                  <div class="heatmap" id="rankHeatmap"></div>
-                </div>
-
-                <div class="detail-section">
-                  <h3>キーワード順位トラッキング</h3>
-                  <div class="toolbar">
-                    <input class="input" id="keywordInput" placeholder="例: 渋谷 ランチ ハンバーグ" />
-                    <input class="input" id="areaInput" placeholder="計測エリア 例: 渋谷駅" />
-                    <button class="btn primary" id="addKeywordBtn">キーワード追加</button>
-                  </div>
-                  <div id="keywordTable"></div>
-                </div>
-
-                <div class="detail-section">
-                  <h3>GBP改善チェック</h3>
-                  <div class="checklist" id="profileChecklist"></div>
-                </div>
-
-                <div class="detail-section">
-                  <h3>HP/SNS/グルメサイト連携</h3>
-                  <div class="channel-list" id="channelLinks"></div>
-                </div>
-
-                <div class="detail-section">
-                  <h3>サイテーション/NAP監査</h3>
-                  <div class="audit-list" id="citationAudit"></div>
+                <div class="panel-body">
+                  <div class="simple-list" id="storeRequests"></div>
                 </div>
               </div>
             </div>
@@ -1301,39 +1509,172 @@
             <div class="panel">
               <div class="panel-header">
                 <div>
-                  <h2>競合・投稿プラン</h2>
-                  <p>上位店との差分と、今週のGoogle投稿案です。</p>
+                  <h2>効果測定</h2>
+                  <p>Before/Afterは、検索順位・返信率・レビュー獲得・導線クリックだけ見ます。</p>
                 </div>
               </div>
               <div class="panel-body">
-                <div class="detail-section" style="margin-top: 0; padding-top: 0; border-top: 0">
-                  <h3>競合比較</h3>
-                  <div class="competitor-list" id="competitorList"></div>
-                </div>
+                <div class="measurement-grid" id="effectMetrics"></div>
+              </div>
+            </div>
 
-                <div class="detail-section">
-                  <h3>レビュー獲得導線</h3>
-                  <div class="review-growth-list" id="reviewGrowthLoops"></div>
-                </div>
+            <details class="panel advanced-meo">
+              <summary>運用担当者向けの詳細を見る</summary>
+              <div class="advanced-meo-body">
+                <div class="meo-grid">
+                  <div>
+                    <div class="service-patterns" id="servicePatterns"></div>
 
-                <div class="detail-section">
-                  <h3>今週のGoogle投稿案</h3>
-                  <div class="post-list" id="postPlan"></div>
-                </div>
+                    <div class="detail-section">
+                      <h3>提供パッケージ案</h3>
+                      <div class="plan-grid" id="pricingPlans"></div>
+                    </div>
 
-                <div class="detail-section">
-                  <h3>クリエイティブABテスト</h3>
-                  <div class="post-list" id="creativeTests"></div>
-                </div>
+                    <div class="score-card">
+                      <div class="score-row">
+                        <div>
+                          <h3>MEO運用スコア</h3>
+                          <p>プロフィール充実度、返信率、順位ギャップから算出した優先度です。</p>
+                        </div>
+                        <div class="score" id="meoScore">-</div>
+                      </div>
+                      <div class="progress" aria-label="MEO運用スコア">
+                        <span id="meoScoreBar" style="width: 0%"></span>
+                      </div>
+                      <div class="chips" id="meoScoreChips"></div>
+                    </div>
 
-                <div class="detail-section">
-                  <h3>運用代行カレンダー</h3>
-                  <div class="operation-list" id="operationCalendar"></div>
-                </div>
+                    <div class="detail-section">
+                      <h3>多地点順位ヒートマップ</h3>
+                      <div class="heatmap" id="rankHeatmap"></div>
+                    </div>
 
-                <div class="detail-section">
-                  <h3>優先施策</h3>
-                  <div class="task-list" id="meoActionList"></div>
+                    <div class="detail-section">
+                      <h3>キーワード順位トラッキング</h3>
+                      <div class="toolbar">
+                        <input class="input" id="keywordInput" placeholder="例: 渋谷 ランチ ハンバーグ" />
+                        <input class="input" id="areaInput" placeholder="計測エリア 例: 渋谷駅" />
+                        <button class="btn primary" id="addKeywordBtn">キーワード追加</button>
+                      </div>
+                      <div id="keywordTable"></div>
+                    </div>
+
+                    <div class="detail-section">
+                      <h3>GBP改善チェック</h3>
+                      <div class="checklist" id="profileChecklist"></div>
+                    </div>
+
+                    <div class="detail-section">
+                      <h3>HP/SNS/グルメサイト連携</h3>
+                      <div class="channel-list" id="channelLinks"></div>
+                    </div>
+
+                    <div class="detail-section">
+                      <h3>サイテーション/NAP監査</h3>
+                      <div class="audit-list" id="citationAudit"></div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div class="detail-section" style="margin-top: 0; padding-top: 0; border-top: 0">
+                      <h3>競合比較</h3>
+                      <div class="competitor-list" id="competitorList"></div>
+                    </div>
+
+                    <div class="detail-section">
+                      <h3>レビュー獲得導線</h3>
+                      <div class="review-growth-list" id="reviewGrowthLoops"></div>
+                    </div>
+
+                    <div class="detail-section">
+                      <h3>今週のGoogle投稿案</h3>
+                      <div class="post-list" id="postPlan"></div>
+                    </div>
+
+                    <div class="detail-section">
+                      <h3>クリエイティブABテスト</h3>
+                      <div class="post-list" id="creativeTests"></div>
+                    </div>
+
+                    <div class="detail-section">
+                      <h3>運用代行カレンダー</h3>
+                      <div class="operation-list" id="operationCalendar"></div>
+                    </div>
+
+                    <div class="detail-section">
+                      <h3>優先施策</h3>
+                      <div class="task-list" id="meoActionList"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </details>
+          </div>
+        </section>
+
+        <section id="view-staff" data-view class="hidden">
+          <div class="client-meo-stack">
+            <div class="panel">
+              <div class="panel-header">
+                <div>
+                  <h2>二層式レビュー運用</h2>
+                  <p>代表・管理者はWebで全体管理。現場スタッフはスマホでレビュー確認と事実確認だけを行います。</p>
+                </div>
+              </div>
+              <div class="panel-body">
+                <div class="role-grid">
+                  <div class="role-card">
+                    <div class="chips">
+                      <span class="chip brand">代表・管理者</span>
+                      <span class="chip">Web画面</span>
+                    </div>
+                    <h3>分析、返信承認、効果測定を見る</h3>
+                    <p>レビュー傾向、MEO施策、返信率、改善タスク、Before/Afterを確認し、店舗全体の運用判断をします。</p>
+                  </div>
+                  <div class="role-card">
+                    <div class="chips">
+                      <span class="chip ok">現場スタッフ</span>
+                      <span class="chip">スマホ/LINE想定</span>
+                    </div>
+                    <h3>届いたレビューを確認してワンタップ報告</h3>
+                    <p>難しい分析は見せず、事実確認、店長共有、現場確認済みの3操作だけに絞ります。</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="staff-grid">
+              <div class="panel">
+                <div class="panel-header">
+                  <div>
+                    <h2>現場の確認事項</h2>
+                    <p>スマホ通知で依頼する内容を、現場が迷わない言葉に変換します。</p>
+                  </div>
+                </div>
+                <div class="panel-body">
+                  <div class="simple-list" id="staffTasks"></div>
+                </div>
+              </div>
+
+              <div class="panel">
+                <div class="panel-header">
+                  <div>
+                    <h2>スタッフのスマホ画面</h2>
+                    <p>LINE通知で届く想定の軽い確認画面です。</p>
+                  </div>
+                </div>
+                <div class="panel-body">
+                  <p class="phone-note">本番ではLINE Messaging APIやSlackに接続し、ここで押した内容を管理者画面へ戻します。</p>
+                  <div class="phone-shell" aria-label="スタッフスマホ画面">
+                    <div class="phone-header">
+                      <div>
+                        <strong>ReviewChef通知</strong>
+                        <span id="staffPhoneStatus">未確認レビュー</span>
+                      </div>
+                      <span>LINE想定</span>
+                    </div>
+                    <div class="phone-body" id="staffPhoneFeed"></div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1723,6 +2064,9 @@
         reviewList: document.getElementById("reviewList"),
         reviewDetail: document.getElementById("reviewDetail"),
         taskList: document.getElementById("taskList"),
+        clientMeoSummary: document.getElementById("clientMeoSummary"),
+        simpleMeoActions: document.getElementById("simpleMeoActions"),
+        storeRequests: document.getElementById("storeRequests"),
         meoScore: document.getElementById("meoScore"),
         meoScoreBar: document.getElementById("meoScoreBar"),
         meoScoreChips: document.getElementById("meoScoreChips"),
@@ -1743,6 +2087,9 @@
         creativeTests: document.getElementById("creativeTests"),
         operationCalendar: document.getElementById("operationCalendar"),
         meoActionList: document.getElementById("meoActionList"),
+        staffTasks: document.getElementById("staffTasks"),
+        staffPhoneStatus: document.getElementById("staffPhoneStatus"),
+        staffPhoneFeed: document.getElementById("staffPhoneFeed"),
         notificationList: document.getElementById("notificationList"),
         searchInput: document.getElementById("searchInput"),
         priorityFilter: document.getElementById("priorityFilter"),
@@ -1800,7 +2147,7 @@
             creativeTests: saved.meo?.creativeTests || defaults.meo.creativeTests,
           },
         };
-        const viewIds = new Set(["dashboard", "reviews", "tasks", "meo", "notifications", "settings"]);
+        const viewIds = new Set(["dashboard", "reviews", "tasks", "meo", "staff", "notifications", "settings"]);
         if (!viewIds.has(merged.currentView)) merged.currentView = "dashboard";
         return merged;
       }
@@ -1941,6 +2288,7 @@
         renderDetail();
         renderTasks();
         renderMeo();
+        renderStaffView();
         renderNotifications();
         renderSettings();
       }
@@ -2157,6 +2505,7 @@
             <span class="chip ${priority.toLowerCase()}">${priorityLabel(priority)}</span>
             <span class="chip">${sentiment}</span>
             ${issues.slice(0, 2).map((issue) => `<span class="chip brand">${escapeHtml(issue)}</span>`).join("")}
+            ${review.staffStatus ? `<span class="chip ${review.staffStatus === "confirmed" ? "ok" : "p1"}">${staffStatusLabel(review.staffStatus)}</span>` : ""}
             ${autoEligible ? `<span class="chip ok">自動返信候補</span>` : ""}
           </div>
         </button>`;
@@ -2183,6 +2532,7 @@
           <div class="chips">
             <span class="chip">${analysis.sentiment}</span>
             ${analysis.issues.map((issue) => `<span class="chip brand">${escapeHtml(issue)}</span>`).join("")}
+            ${review.staffStatus ? `<span class="chip ${review.staffStatus === "confirmed" ? "ok" : "p1"}">${staffStatusLabel(review.staffStatus)}</span>` : ""}
             ${analysis.autoEligible ? `<span class="chip ok">自動返信候補</span>` : ""}
           </div>
 
@@ -2272,6 +2622,10 @@
         const profileItems = state.meo.profileItems || [];
         const doneCount = profileItems.filter((item) => item.done).length;
 
+        renderClientMeoSummary(score, keywordRows, profileItems);
+        renderSimpleMeoActions(keywordRows, profileItems);
+        renderStoreRequests();
+
         els.meoScore.textContent = score;
         els.meoScoreBar.style.width = `${score}%`;
         els.meoScoreChips.innerHTML = `
@@ -2295,6 +2649,122 @@
         renderCreativeTests();
         renderOperationCalendar();
         renderMeoActions(score, keywordRows, profileItems);
+      }
+
+      function renderClientMeoSummary(score, keywordRows, profileItems) {
+        const reviews = enrichReviews().filter((review) => state.selectedStore === "all" || review.store === state.selectedStore);
+        const total = reviews.length;
+        const replied = reviews.filter((review) => review.status === "replied").length;
+        const replyRate = total ? Math.round((replied / total) * 100) : 0;
+        const avgRank = keywordRows.length
+          ? Math.round(keywordRows.reduce((sum, row) => sum + row.current, 0) / keywordRows.length)
+          : "-";
+        const doneCount = profileItems.filter((item) => item.done).length;
+        const profileRate = profileItems.length ? Math.round((doneCount / profileItems.length) * 100) : 0;
+        const reviewMetric = (state.meo.effectMetrics || []).find((item) => item.label.includes("レビュー獲得"));
+
+        const cards = [
+          {
+            label: "見つけてもらう力",
+            value: avgRank === "-" ? "-" : `平均${avgRank}位`,
+            body: "検索キーワード、営業時間、メニュー、写真を整えて、Googleマップで見つかる状態を作ります。",
+          },
+          {
+            label: "信頼される力",
+            value: `返信率${replyRate}%`,
+            body: "口コミ返信と低評価対応を止めず、来店前の不安を減らします。",
+          },
+          {
+            label: "来店につなげる力",
+            value: `GBP整備${profileRate}%`,
+            body: reviewMetric
+              ? `レビュー獲得は現在${reviewMetric.current}。目標${reviewMetric.target}に向けて会計時の導線を作ります。`
+              : "HP、SNS、予約、レビュー依頼への導線を整理します。",
+          },
+        ];
+
+        els.clientMeoSummary.innerHTML = cards
+          .map(
+            (card) => `<div class="status-card">
+              <span>${escapeHtml(card.label)}</span>
+              <strong>${escapeHtml(card.value)}</strong>
+              <p>${escapeHtml(card.body)}</p>
+            </div>`,
+          )
+          .join("");
+      }
+
+      function renderSimpleMeoActions(keywordRows, profileItems) {
+        const worstKeyword = [...keywordRows].sort((a, b) => b.current - a.current)[0];
+        const undoneProfile = profileItems.find((item) => !item.done && ["P0", "P1"].includes(item.priority));
+        const actions = [
+          {
+            title: "検索されたい言葉を3つに絞る",
+            body: worstKeyword
+              ? `まず「${worstKeyword.keyword}」を改善対象にします。Google投稿、メニュー、写真説明に同じ言葉を自然に入れます。`
+              : "店名、エリア、料理名、利用シーンから、狙う検索キーワードを3つだけ決めます。",
+          },
+          {
+            title: "Googleビジネスプロフィールを最新にする",
+            body: undoneProfile
+              ? `今週は「${undoneProfile.title}」を優先します。`
+              : "営業時間、メニュー、写真、カテゴリを最新に保ち、来店前の迷いを減らします。",
+          },
+          {
+            title: "口コミ返信をためない",
+            body: "低評価は確認してから返信、高評価は短く自然に返信します。返信の有無だけでも印象が変わります。",
+          },
+          {
+            title: "レビュー依頼の導線を作る",
+            body: "会計時のQR、ショップカード、モバイルオーダー後の案内で、満足したお客様に自然に投稿してもらいます。",
+          },
+        ];
+
+        els.simpleMeoActions.innerHTML = actions
+          .map(
+            (action, index) => `<div class="simple-action">
+              <div class="step-number">${index + 1}</div>
+              <div>
+                <h3>${escapeHtml(action.title)}</h3>
+                <p>${escapeHtml(action.body)}</p>
+              </div>
+            </div>`,
+          )
+          .join("");
+      }
+
+      function renderStoreRequests() {
+        const urgentReviews = enrichReviews().filter(
+          (review) =>
+            (state.selectedStore === "all" || review.store === state.selectedStore) &&
+            ["P0", "P1"].includes(review.analysis.priority) &&
+            review.status !== "replied",
+        ).length;
+        const requests = [
+          {
+            title: "写真素材を10枚ください",
+            body: "料理、入口、店内、席、スタッフの写真があると、GBPと投稿の改善が速くなります。",
+          },
+          {
+            title: "メニューと営業時間の変更だけ教えてください",
+            body: "公式HP、SNS、グルメサイト、GBPの情報ズレはこちらで確認します。",
+          },
+          {
+            title: urgentReviews ? `低評価レビュー${urgentReviews}件だけ確認してください` : "低評価レビューは今のところ大丈夫です",
+            body: urgentReviews
+              ? "健康被害、異物混入、返金などは公開返信前に店長確認を挟みます。"
+              : "高評価レビューは短文返信で運用し、必要時だけ確認依頼を出します。",
+          },
+        ];
+
+        els.storeRequests.innerHTML = requests
+          .map(
+            (request) => `<div class="request-card">
+              <h3>${escapeHtml(request.title)}</h3>
+              <p>${escapeHtml(request.body)}</p>
+            </div>`,
+          )
+          .join("");
       }
 
       function renderServicePatterns() {
@@ -2624,6 +3094,127 @@
           : `<div class="empty">優先施策はありません。</div>`;
       }
 
+      function renderStaffView() {
+        const reviews = buildStaffReviews();
+        const pendingCount = reviews.filter((review) => !review.staffStatus).length;
+        els.staffPhoneStatus.textContent = pendingCount ? `未確認 ${pendingCount}件` : "未確認なし";
+        renderStaffTasks(reviews);
+        renderStaffPhoneFeed(reviews);
+      }
+
+      function buildStaffReviews() {
+        return enrichReviews()
+          .filter((review) => state.selectedStore === "all" || review.store === state.selectedStore)
+          .filter((review) => review.status !== "replied")
+          .filter((review) => ["P0", "P1", "P2"].includes(review.analysis.priority))
+          .sort((a, b) => priorityWeight(a.analysis.priority) - priorityWeight(b.analysis.priority))
+          .slice(0, 5);
+      }
+
+      function renderStaffTasks(reviews) {
+        const urgentIssues = buildTasks()
+          .filter((task) => state.selectedStore === "all" || task.store === state.selectedStore)
+          .filter((task) => !task.done)
+          .slice(0, 3);
+        const baseTasks = urgentIssues.length
+          ? urgentIssues.map((task) => ({
+              id: task.id,
+              title: `${task.store}の${task.issue}を確認`,
+              body: staffTaskBody(task.issue),
+              done: task.done,
+              taskAction: true,
+            }))
+          : [
+              {
+                id: "staff-no-urgent",
+                title: "今日は大きな確認事項なし",
+                body: "新しい低評価レビューが届いたら、ここに確認内容を出します。",
+                done: false,
+                taskAction: false,
+              },
+            ];
+
+        const reviewCheck = {
+          id: "staff-review-check",
+          title: reviews.length ? `未確認レビュー${reviews.filter((review) => !review.staffStatus).length}件を確認` : "未確認レビューなし",
+          body: reviews.length
+            ? "スマホ通知の内容を見て、必要なものだけ店長に共有してください。"
+            : "通常の営業に集中できます。レビューが届いたら通知します。",
+          done: !reviews.length,
+          taskAction: false,
+        };
+
+        els.staffTasks.innerHTML = [reviewCheck, ...baseTasks]
+          .map(
+            (task) => `<div class="staff-task-card ${task.done ? "done" : ""}">
+              <div class="chips">
+                <span class="chip ${task.done ? "ok" : "brand"}">${task.done ? "完了" : "確認"}</span>
+              </div>
+              <h3>${escapeHtml(task.title)}</h3>
+              <p>${escapeHtml(task.body)}</p>
+              ${
+                task.taskAction
+                  ? `<button class="btn small" data-action="toggle-task" data-id="${task.id}">現場確認済みにする</button>`
+                  : ""
+              }
+            </div>`,
+          )
+          .join("");
+      }
+
+      function renderStaffPhoneFeed(reviews) {
+        if (!reviews.length) {
+          els.staffPhoneFeed.innerHTML = `
+            <div class="chat-day">今日</div>
+            <div class="chat-bubble confirmed">
+              <h3>新しい確認依頼はありません</h3>
+              <p>低評価レビューや現場確認が必要な内容が届いたら、ここに通知します。</p>
+            </div>`;
+          return;
+        }
+
+        els.staffPhoneFeed.innerHTML = [
+          `<div class="chat-day">今日</div>`,
+          ...reviews.map((review) => renderStaffBubble(review)),
+        ].join("");
+      }
+
+      function renderStaffBubble(review) {
+        const status = review.staffStatus || "pending";
+        const statusClass = status === "confirmed" ? "confirmed" : status === "escalated" ? "escalated" : "";
+        const issue = review.analysis.issues.find((item) => !["好意的な体験", "要確認"].includes(item)) || review.analysis.issues[0];
+        return `<div class="chat-bubble ${statusClass}">
+          <div class="chips">
+            <span class="chip ${review.analysis.priority.toLowerCase()}">${priorityLabel(review.analysis.priority)}</span>
+            <span class="chip brand">${escapeHtml(review.store)}</span>
+            <span class="chip">${staffStatusLabel(status)}</span>
+          </div>
+          <h3>${escapeHtml(issue)}の確認依頼</h3>
+          <p>星${review.rating} / ${escapeHtml(review.author)}さん<br>${escapeHtml(shortenText(review.comment, 92))}</p>
+          <p>${escapeHtml(staffTaskBody(issue))}</p>
+          <div class="phone-actions">
+            <button class="btn" data-action="staff-open-review" data-id="${review.id}">詳細を見る</button>
+            <button class="btn danger" data-action="staff-escalate" data-id="${review.id}">店長に共有</button>
+            <button class="btn primary" data-action="staff-confirm" data-id="${review.id}">現場確認済み</button>
+          </div>
+        </div>`;
+      }
+
+      function staffTaskBody(issue) {
+        const bodies = {
+          健康被害: "来店日時、注文内容、同じ時間帯の問い合わせ有無を確認してください。",
+          アレルギー: "メニュー表記とスタッフ説明にズレがなかったか確認してください。",
+          異物混入: "該当メニューの仕込み、盛り付け、提供前確認を見てください。",
+          接客: "該当時間帯のスタッフ対応、声かけ、引き継ぎ状況を確認してください。",
+          待ち時間: "予約枠、案内時間、提供遅れが発生した時間帯を確認してください。",
+          料理品質: "温度、味、盛り付け、提供時間に問題がなかったか確認してください。",
+          清潔さ: "トイレ、床、テーブル、入口周りの清掃状況を確認してください。",
+          価格: "メニュー説明、量、写真とのズレがなかったか確認してください。",
+          "法務・返金": "公開返信前に必ず店長へ共有してください。返金や補償は現場判断で書かないでください。",
+        };
+        return bodies[issue] || "レビュー本文を確認し、心当たりがあれば店長に共有してください。";
+      }
+
       function buildPostPlan() {
         const storeLabel = state.selectedStore === "all" ? "各店舗" : state.selectedStore;
         const topIssues = buildTasks()
@@ -2890,6 +3481,14 @@
         }[status] || status;
       }
 
+      function staffStatusLabel(status) {
+        return {
+          pending: "未確認",
+          confirmed: "現場確認済み",
+          escalated: "店長共有済み",
+        }[status] || "未確認";
+      }
+
       function priorityLabel(priority) {
         return {
           P0: "P0 即時対応",
@@ -2922,6 +3521,11 @@
           .replaceAll(">", "&gt;")
           .replaceAll('"', "&quot;")
           .replaceAll("'", "&#039;");
+      }
+
+      function shortenText(value, maxLength) {
+        const text = String(value || "");
+        return text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
       }
 
       document.addEventListener("click", (event) => {
@@ -2984,6 +3588,27 @@
         if (action.dataset.action === "copy-notification") {
           const review = enrichReviews().find((item) => item.id === id);
           copyText(review.analysis.notificationText);
+        }
+        if (action.dataset.action === "staff-open-review") {
+          state.selectedReviewId = id;
+          state.currentView = "reviews";
+          render();
+        }
+        if (action.dataset.action === "staff-confirm") {
+          state.reviews = state.reviews.map((review) =>
+            review.id === id ? { ...review, staffStatus: "confirmed", staffCheckedAt: new Date().toISOString() } : review,
+          );
+          showToast("現場確認済みにしました。管理者画面にも反映されます。");
+          render();
+        }
+        if (action.dataset.action === "staff-escalate") {
+          state.reviews = state.reviews.map((review) =>
+            review.id === id
+              ? { ...review, status: "needs_approval", staffStatus: "escalated", staffCheckedAt: new Date().toISOString() }
+              : review,
+          );
+          showToast("店長共有済みにしました。返信前確認の対象に残します。");
+          render();
         }
         if (action.dataset.action === "toggle-task") {
           state.tasks = buildTasks().map((task) => (task.id === id ? { ...task, done: !task.done } : task));
