@@ -282,6 +282,142 @@
         font-style: normal;
       }
 
+      .span-all {
+        grid-column: 1 / -1;
+      }
+
+      .strategy-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.12fr) minmax(320px, 0.88fr);
+        gap: 12px;
+      }
+
+      .target-grid,
+      .case-grid,
+      .feature-grid,
+      .insight-grid,
+      .measurement-grid,
+      .channel-list,
+      .review-growth-list,
+      .plan-grid {
+        display: grid;
+        gap: 10px;
+      }
+
+      .target-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .feature-grid,
+      .insight-grid,
+      .measurement-grid,
+      .plan-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .strategy-note,
+      .target-card,
+      .case-card,
+      .feature-card,
+      .insight-card,
+      .measurement-card,
+      .channel-card,
+      .review-growth-card,
+      .plan-card {
+        padding: 13px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #ffffff;
+      }
+
+      .strategy-note {
+        display: grid;
+        gap: 9px;
+        margin-bottom: 10px;
+        background: var(--panel-strong);
+      }
+
+      .strategy-note p,
+      .target-card p,
+      .case-card p,
+      .feature-card p,
+      .insight-card p,
+      .measurement-card p,
+      .channel-card p,
+      .review-growth-card p,
+      .plan-card p {
+        margin-bottom: 8px;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.55;
+      }
+
+      .target-card h3,
+      .case-card h3,
+      .feature-card h3,
+      .insight-card h3,
+      .measurement-card h3,
+      .channel-card h3,
+      .review-growth-card h3,
+      .plan-card h3 {
+        margin-bottom: 6px;
+        font-size: 15px;
+      }
+
+      .before-after {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+        gap: 8px;
+        align-items: center;
+        padding: 10px 0;
+        border-top: 1px solid var(--line);
+      }
+
+      .before-after:first-of-type {
+        border-top: 0;
+      }
+
+      .before-after span {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .before-after strong {
+        display: block;
+        margin-top: 3px;
+        font-size: 18px;
+      }
+
+      .arrow {
+        color: var(--brand-strong);
+        font-weight: 850;
+      }
+
+      .delta {
+        color: var(--ok);
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .signal-list {
+        display: grid;
+        gap: 8px;
+        margin-top: 8px;
+      }
+
+      .signal-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        padding-top: 8px;
+        border-top: 1px solid var(--line);
+        font-size: 13px;
+      }
+
+      .signal-row strong {
+        color: var(--text);
+      }
+
       .content-grid {
         display: grid;
         grid-template-columns: minmax(0, 1.25fr) minmax(320px, 0.75fr);
@@ -795,7 +931,13 @@
         }
 
         .meo-grid,
-        .three-col {
+        .three-col,
+        .strategy-grid,
+        .target-grid,
+        .feature-grid,
+        .insight-grid,
+        .measurement-grid,
+        .plan-grid {
           grid-template-columns: 1fr;
         }
       }
@@ -821,8 +963,21 @@
 
         .metrics,
         .two-col,
-        .three-col {
+        .three-col,
+        .target-grid,
+        .feature-grid,
+        .insight-grid,
+        .measurement-grid,
+        .plan-grid {
           grid-template-columns: 1fr;
+        }
+
+        .before-after {
+          grid-template-columns: 1fr;
+        }
+
+        .arrow {
+          display: none;
         }
       }
     </style>
@@ -857,9 +1012,9 @@
         <section class="topbar">
           <div>
             <p class="eyebrow">GOOGLE REVIEW OPERATIONS</p>
-            <h1>低評価レビューを見逃さず、返信と改善まで回す</h1>
+            <h1>レビュー返信からMEO改善、レビュー獲得まで回す</h1>
             <p class="lead">
-              Googleレビューを取り込み、リスク判定、返信案生成、管理者通知、店舗改善タスク化までをローカルで試せるMVPです。
+              Googleレビューを取り込み、返信案生成、管理者通知、GBP最適化、HP/SNS導線、レビュー獲得施策、効果測定までを試せる飲食店向けMVPです。
             </p>
           </div>
           <div class="actions">
@@ -893,6 +1048,60 @@
         </section>
 
         <section id="view-dashboard" data-view class="content-grid">
+          <div class="panel span-all">
+            <div class="panel-header">
+              <div>
+                <h2>売る相手と導入価値</h2>
+                <p>繁華街でMEOが伸び悩む少人数店舗に、Before/Afterで価値を伝える営業画面です。</p>
+              </div>
+              <button class="btn small" data-view-button="meo">効果測定を見る</button>
+            </div>
+            <div class="panel-body">
+              <div class="strategy-grid">
+                <div>
+                  <div class="strategy-note">
+                    <div class="chips">
+                      <span class="chip brand">ICP</span>
+                      <span class="chip">競合過多の繁華街</span>
+                      <span class="chip">単独店舗</span>
+                      <span class="chip">店長が兼務</span>
+                    </div>
+                    <p>
+                      hanareのようにBefore時点で強い店舗は、効果比較の素材ではなく上位店ベンチマークと無料モニターに回します。
+                      営業では「検索順位・返信率・GBP整備・導線」が弱い店舗の改善ケースを見せます。
+                    </p>
+                  </div>
+                  <div class="target-grid" id="targetSegments"></div>
+                </div>
+                <div class="case-grid" id="caseStudies"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel span-all">
+            <div class="panel-header">
+              <div>
+                <h2>最低限必要な機能</h2>
+                <p>GMB/GBP返信、評判分析、HP/SNS導線、GBP最適化、効果測定を提供価値として整理します。</p>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="feature-grid" id="mustHaveFeatures"></div>
+            </div>
+          </div>
+
+          <div class="panel span-all">
+            <div class="panel-header">
+              <div>
+                <h2>評価されている部分・そうでない部分</h2>
+                <p>レビュー本文から、伸ばす強みと潰す弱みを店舗別に抽出します。</p>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="insight-grid" id="reputationInsights"></div>
+            </div>
+          </div>
+
           <div class="panel">
             <div class="panel-header">
               <div>
@@ -1033,6 +1242,11 @@
               <div class="panel-body">
                 <div class="service-patterns" id="servicePatterns"></div>
 
+                <div class="detail-section">
+                  <h3>提供パッケージ案</h3>
+                  <div class="plan-grid" id="pricingPlans"></div>
+                </div>
+
                 <div class="score-card">
                   <div class="score-row">
                     <div>
@@ -1045,6 +1259,11 @@
                     <span id="meoScoreBar" style="width: 0%"></span>
                   </div>
                   <div class="chips" id="meoScoreChips"></div>
+                </div>
+
+                <div class="detail-section">
+                  <h3>効果測定</h3>
+                  <div class="measurement-grid" id="effectMetrics"></div>
                 </div>
 
                 <div class="detail-section">
@@ -1068,6 +1287,11 @@
                 </div>
 
                 <div class="detail-section">
+                  <h3>HP/SNS/グルメサイト連携</h3>
+                  <div class="channel-list" id="channelLinks"></div>
+                </div>
+
+                <div class="detail-section">
                   <h3>サイテーション/NAP監査</h3>
                   <div class="audit-list" id="citationAudit"></div>
                 </div>
@@ -1085,6 +1309,11 @@
                 <div class="detail-section" style="margin-top: 0; padding-top: 0; border-top: 0">
                   <h3>競合比較</h3>
                   <div class="competitor-list" id="competitorList"></div>
+                </div>
+
+                <div class="detail-section">
+                  <h3>レビュー獲得導線</h3>
+                  <div class="review-growth-list" id="reviewGrowthLoops"></div>
                 </div>
 
                 <div class="detail-section">
@@ -1191,7 +1420,7 @@
     <div class="toast hidden" id="toast" role="status"></div>
 
     <script>
-      const STORAGE_KEY = "reviewchef-mvp-state-v1";
+      const STORAGE_KEY = "reviewchef-mvp-state-v2";
 
       const issueMap = [
         { key: "健康被害", terms: ["食中毒", "腹痛", "下痢", "嘔吐", "病院", "救急", "体調", "吐き気"] },
@@ -1296,6 +1525,89 @@
               features: ["GBP最適化", "外部対策", "店舗別施策", "費用対効果レポート"],
             },
           ],
+          targetSegments: [
+            {
+              title: "競合が多い繁華街の店舗",
+              fit: "最優先",
+              body: "地図検索で上位店に埋もれ、写真・投稿・口コミ返信まで手が回っていない店舗。",
+            },
+            {
+              title: "単独店舗・小規模チーム",
+              fit: "高",
+              body: "本部や専任担当がなく、店長がGBP、SNS、口コミ対応を兼務している店舗。",
+            },
+            {
+              title: "レビュー数が伸びない店舗",
+              fit: "高",
+              body: "評価は悪くないがレビュー依頼の導線がなく、MEOの伸びしろを取り切れていない店舗。",
+            },
+          ],
+          caseStudies: [
+            {
+              title: "繁華街の単独居酒屋モデル",
+              note: "営業用の仮説デモ値。強い店舗は比較素材にせず、伸び悩み店の改善幅を見せる。",
+              metrics: [
+                { label: "主要キーワード平均順位", before: "12位", after: "4位", delta: "8ランク改善" },
+                { label: "口コミ返信率", before: "18%", after: "92%", delta: "+74pt" },
+                { label: "GBP情報充足度", before: "52%", after: "91%", delta: "+39pt" },
+                { label: "経路/電話/サイト導線", before: "100", after: "146", delta: "+46%" },
+              ],
+            },
+          ],
+          mustHaveFeatures: [
+            {
+              title: "GMB/GBP返信文の自動作成",
+              status: "MVP実装",
+              body: "レビュー要約、リスク判定、自然な短文返信、ネガティブ時の承認制を1画面で扱う。",
+            },
+            {
+              title: "返信対応・投稿管理",
+              status: "本番API接続で拡張",
+              body: "低評価は店長確認、高評価は半自動返信。投稿後は監査ログとリマインドを残す。",
+            },
+            {
+              title: "評価/不満ポイント分析",
+              status: "MVP実装",
+              body: "評価されている料理・接客・雰囲気と、改善すべき待ち時間・清潔さなどを集計する。",
+            },
+            {
+              title: "HP/SNSとの連携と誘導",
+              status: "設計反映",
+              body: "GBP投稿、レビュー返信、公式HP、Instagram、グルメサイトの導線と表記ズレを管理する。",
+            },
+            {
+              title: "GBP最適化コンサル",
+              status: "設計反映",
+              body: "カテゴリ、検索キーワード、メニュー、営業時間、写真、多言語対応を初期診断で整える。",
+            },
+            {
+              title: "効果測定",
+              status: "MVP実装",
+              body: "順位、返信率、GBP整備率、導線クリック、レビュー獲得数をBefore/Afterで追う。",
+            },
+          ],
+          pricingPlans: [
+            {
+              title: "ライト",
+              price: "月額 10,000円",
+              body: "AI返信案、低評価通知、月次ミニレポート。まず現場の面倒を減らす入口プラン。",
+            },
+            {
+              title: "MEO運用セット",
+              price: "月額 20,000円",
+              body: "口コミ返信、GBP情報更新、投稿管理の3点セット。議事録で出た売りやすい中核プラン。",
+            },
+            {
+              title: "伴走改善",
+              price: "月額 29,800円",
+              body: "初期診断、キーワード選定、競合比較、多言語/メニュー整備、効果測定まで含める運用代行寄りプラン。",
+            },
+            {
+              title: "初期診断",
+              price: "無料 / 6か月契約条件",
+              body: "GBP・口コミ・メニュー・SNS導線を無料診断し、最低6か月の運用契約につなげる営業導線。",
+            },
+          ],
           keywords: [
             {
               id: "kw-001",
@@ -1341,12 +1653,42 @@
           ],
           profileItems: [
             { id: "profile-category", title: "主要カテゴリ・追加カテゴリを見直す", area: "プロフィール", priority: "P1", done: true },
+            { id: "profile-keyword", title: "検索キーワードを選定し説明文・投稿へ反映する", area: "キーワード", priority: "P1", done: false },
             { id: "profile-hours", title: "祝日・臨時営業時間を更新する", area: "プロフィール", priority: "P0", done: false },
             { id: "profile-menu", title: "人気メニューと価格を最新化する", area: "メニュー", priority: "P1", done: false },
+            { id: "profile-language", title: "英語メニューとインバウンド向け説明を整える", area: "多言語", priority: "P2", done: false },
             { id: "profile-photo", title: "料理・外観・店内写真を10枚追加する", area: "写真", priority: "P1", done: false },
             { id: "profile-post", title: "週1回のGoogle投稿を予約する", area: "投稿", priority: "P2", done: false },
             { id: "profile-qa", title: "Q&Aの未回答を確認する", area: "Q&A", priority: "P2", done: true },
             { id: "profile-nap", title: "店名・住所・電話番号の表記ゆれを確認する", area: "外部施策", priority: "P2", done: false },
+          ],
+          channels: [
+            { id: "website", name: "公式HP", status: "ok", goal: "予約・メニュー確認", action: "GBP投稿と返信文から予約ページへ誘導する", kpi: "サイトクリック" },
+            { id: "instagram", name: "Instagram", status: "warn", goal: "写真で来店意欲を作る", action: "勝ち写真をGBP投稿にも転用し、表記を統一する", kpi: "プロフィール遷移" },
+            { id: "gourmet", name: "グルメサイト", status: "bad", goal: "メニュー情報のズレをなくす", action: "価格・営業時間・人気メニューの差異を検知して修正する", kpi: "情報一致率" },
+          ],
+          effectMetrics: [
+            { label: "主要KW平均順位", before: "12位", current: "7位", target: "3位以内", action: "カテゴリと投稿文に検索意図を反映" },
+            { label: "口コミ返信率", before: "18%", current: "44%", target: "90%", action: "高評価は半自動、低評価は承認制で処理" },
+            { label: "月間レビュー獲得数", before: "3件", current: "5件", target: "8件以上", action: "会計前アンケートとQR導線を追加" },
+            { label: "HP/SNS導線クリック", before: "100", current: "118", target: "150", action: "GBP投稿と返信文のCTAを最適化" },
+          ],
+          reviewGrowthLoops: [
+            {
+              title: "会計前の星評価チェック",
+              body: "モバイルオーダーや会計導線で満足度を聞き、高評価の顧客にGoogleレビュー投稿を自然に依頼する。",
+              kpi: "月8件以上のレビュー増",
+            },
+            {
+              title: "Googleアカウント連携の将来構想",
+              body: "LINEではなくGoogleアカウント起点にすると、注文体験とGoogle口コミを結びつけやすい。",
+              kpi: "レビュー依頼承認率",
+            },
+            {
+              title: "離れモニター運用",
+              body: "hanare/離れはBefore/After実績ではなく、現場UX・返信品質・導線の無料モニターとして使う。",
+              kpi: "現場フィードバック数",
+            },
           ],
           citations: [
             { id: "google", medium: "Google Business Profile", status: "ok", name: "ReviewChef食堂 渋谷店", phone: "一致", address: "一致" },
@@ -1372,6 +1714,10 @@
         replyCount: document.getElementById("replyCount"),
         taskCount: document.getElementById("taskCount"),
         openTaskCount: document.getElementById("openTaskCount"),
+        targetSegments: document.getElementById("targetSegments"),
+        caseStudies: document.getElementById("caseStudies"),
+        mustHaveFeatures: document.getElementById("mustHaveFeatures"),
+        reputationInsights: document.getElementById("reputationInsights"),
         priorityReviews: document.getElementById("priorityReviews"),
         dashboardTasks: document.getElementById("dashboardTasks"),
         reviewList: document.getElementById("reviewList"),
@@ -1381,14 +1727,18 @@
         meoScoreBar: document.getElementById("meoScoreBar"),
         meoScoreChips: document.getElementById("meoScoreChips"),
         servicePatterns: document.getElementById("servicePatterns"),
+        pricingPlans: document.getElementById("pricingPlans"),
+        effectMetrics: document.getElementById("effectMetrics"),
         rankHeatmap: document.getElementById("rankHeatmap"),
         keywordInput: document.getElementById("keywordInput"),
         areaInput: document.getElementById("areaInput"),
         addKeywordBtn: document.getElementById("addKeywordBtn"),
         keywordTable: document.getElementById("keywordTable"),
         profileChecklist: document.getElementById("profileChecklist"),
+        channelLinks: document.getElementById("channelLinks"),
         citationAudit: document.getElementById("citationAudit"),
         competitorList: document.getElementById("competitorList"),
+        reviewGrowthLoops: document.getElementById("reviewGrowthLoops"),
         postPlan: document.getElementById("postPlan"),
         creativeTests: document.getElementById("creativeTests"),
         operationCalendar: document.getElementById("operationCalendar"),
@@ -1436,9 +1786,16 @@
             ...defaults.meo,
             ...(saved.meo || {}),
             servicePatterns: saved.meo?.servicePatterns || defaults.meo.servicePatterns,
+            targetSegments: saved.meo?.targetSegments || defaults.meo.targetSegments,
+            caseStudies: saved.meo?.caseStudies || defaults.meo.caseStudies,
+            mustHaveFeatures: saved.meo?.mustHaveFeatures || defaults.meo.mustHaveFeatures,
+            pricingPlans: saved.meo?.pricingPlans || defaults.meo.pricingPlans,
             keywords: saved.meo?.keywords || defaults.meo.keywords,
             competitors: saved.meo?.competitors || defaults.meo.competitors,
             profileItems: saved.meo?.profileItems || defaults.meo.profileItems,
+            channels: saved.meo?.channels || defaults.meo.channels,
+            effectMetrics: saved.meo?.effectMetrics || defaults.meo.effectMetrics,
+            reviewGrowthLoops: saved.meo?.reviewGrowthLoops || defaults.meo.reviewGrowthLoops,
             citations: saved.meo?.citations || defaults.meo.citations,
             creativeTests: saved.meo?.creativeTests || defaults.meo.creativeTests,
           },
@@ -1578,6 +1935,7 @@
         renderViews();
         renderStoreFilters();
         renderMetrics();
+        renderBusinessStrategy();
         renderDashboard();
         renderReviews();
         renderDetail();
@@ -1625,6 +1983,139 @@
         els.replyCount.textContent = `返信済み ${replied}件`;
         els.taskCount.textContent = tasks.length;
         els.openTaskCount.textContent = `未完了 ${openTasks}件`;
+      }
+
+      function renderBusinessStrategy() {
+        renderTargetSegments();
+        renderCaseStudies();
+        renderMustHaveFeatures();
+        renderReputationInsights();
+      }
+
+      function renderTargetSegments() {
+        els.targetSegments.innerHTML = (state.meo.targetSegments || [])
+          .map(
+            (segment) => `<div class="target-card">
+              <div class="chips">
+                <span class="chip brand">${escapeHtml(segment.fit)}</span>
+              </div>
+              <h3>${escapeHtml(segment.title)}</h3>
+              <p>${escapeHtml(segment.body)}</p>
+            </div>`,
+          )
+          .join("");
+      }
+
+      function renderCaseStudies() {
+        els.caseStudies.innerHTML = (state.meo.caseStudies || [])
+          .map(
+            (study) => `<div class="case-card">
+              <div class="chips">
+                <span class="chip brand">Before/After</span>
+                <span class="chip">仮説デモ値</span>
+              </div>
+              <h3>${escapeHtml(study.title)}</h3>
+              <p>${escapeHtml(study.note)}</p>
+              ${(study.metrics || [])
+                .map(
+                  (metric) => `<div class="before-after">
+                    <div>
+                      <span>${escapeHtml(metric.label)} Before</span>
+                      <strong>${escapeHtml(metric.before)}</strong>
+                    </div>
+                    <div class="arrow">→</div>
+                    <div>
+                      <span>After</span>
+                      <strong>${escapeHtml(metric.after)}</strong>
+                      <div class="delta">${escapeHtml(metric.delta)}</div>
+                    </div>
+                  </div>`,
+                )
+                .join("")}
+            </div>`,
+          )
+          .join("");
+      }
+
+      function renderMustHaveFeatures() {
+        els.mustHaveFeatures.innerHTML = (state.meo.mustHaveFeatures || [])
+          .map(
+            (feature) => `<div class="feature-card">
+              <div class="chips">
+                <span class="chip ${feature.status.includes("実装") ? "ok" : "brand"}">${escapeHtml(feature.status)}</span>
+              </div>
+              <h3>${escapeHtml(feature.title)}</h3>
+              <p>${escapeHtml(feature.body)}</p>
+            </div>`,
+          )
+          .join("");
+      }
+
+      function renderReputationInsights() {
+        const insights = buildReputationInsights();
+        els.reputationInsights.innerHTML = [
+          renderInsightCard("評価されている部分", insights.positive, "ok"),
+          renderInsightCard("そうでない部分", insights.negative, "p1"),
+        ].join("");
+      }
+
+      function renderInsightCard(title, items, tone) {
+        const rows = items.length
+          ? items
+              .map(
+                (item) => `<div class="signal-row">
+                  <span>${escapeHtml(item.label)}</span>
+                  <strong>${item.count}件</strong>
+                </div>`,
+              )
+              .join("")
+          : `<p>まだ十分なレビューがありません。</p>`;
+        return `<div class="insight-card">
+          <div class="chips">
+            <span class="chip ${tone}">${escapeHtml(title)}</span>
+          </div>
+          <div class="signal-list">${rows}</div>
+        </div>`;
+      }
+
+      function buildReputationInsights() {
+        const reviews = enrichReviews().filter((review) => state.selectedStore === "all" || review.store === state.selectedStore);
+        const positive = new Map();
+        const negative = new Map();
+
+        reviews.forEach((review) => {
+          if (review.rating >= 4 && review.analysis.sentiment === "好意的") {
+            derivePositiveSignals(review.comment).forEach((signal) => incrementMap(positive, signal));
+            return;
+          }
+          review.analysis.issues
+            .filter((issue) => !["好意的な体験", "要確認"].includes(issue))
+            .forEach((issue) => incrementMap(negative, issue));
+        });
+
+        return {
+          positive: sortInsightMap(positive),
+          negative: sortInsightMap(negative),
+        };
+      }
+
+      function derivePositiveSignals(comment) {
+        const signals = [];
+        if (["美味", "おいし", "料理", "ハンバーグ", "デザート"].some((term) => comment.includes(term))) signals.push("料理品質");
+        if (["接客", "スタッフ", "丁寧", "親切"].some((term) => comment.includes(term))) signals.push("接客");
+        if (["雰囲気", "店内", "空間"].some((term) => comment.includes(term))) signals.push("雰囲気");
+        return signals.length ? signals : ["来店満足度"];
+      }
+
+      function incrementMap(map, key) {
+        map.set(key, (map.get(key) || 0) + 1);
+      }
+
+      function sortInsightMap(map) {
+        return Array.from(map.entries())
+          .map(([label, count]) => ({ label, count }))
+          .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label))
+          .slice(0, 5);
       }
 
       function renderDashboard() {
@@ -1791,11 +2282,15 @@
         `;
 
         renderServicePatterns();
+        renderPricingPlans();
+        renderEffectMetrics();
         renderRankHeatmap(keywordRows);
         renderKeywordTable(keywordRows);
         renderProfileChecklist(profileItems);
+        renderChannelLinks();
         renderCitationAudit();
         renderCompetitors();
+        renderReviewGrowthLoops();
         renderPostPlan();
         renderCreativeTests();
         renderOperationCalendar();
@@ -1820,6 +2315,45 @@
                   ${state.selectedServicePattern === pattern.id ? "選択中" : "この型で見る"}
                 </button>
               </div>
+            </div>`,
+          )
+          .join("");
+      }
+
+      function renderPricingPlans() {
+        els.pricingPlans.innerHTML = (state.meo.pricingPlans || [])
+          .map(
+            (plan) => `<div class="plan-card">
+              <div class="chips">
+                <span class="chip brand">${escapeHtml(plan.price)}</span>
+              </div>
+              <h3>${escapeHtml(plan.title)}</h3>
+              <p>${escapeHtml(plan.body)}</p>
+            </div>`,
+          )
+          .join("");
+      }
+
+      function renderEffectMetrics() {
+        els.effectMetrics.innerHTML = (state.meo.effectMetrics || [])
+          .map(
+            (metric) => `<div class="measurement-card">
+              <div class="chips">
+                <span class="chip brand">${escapeHtml(metric.label)}</span>
+                <span class="chip">目標 ${escapeHtml(metric.target)}</span>
+              </div>
+              <div class="before-after">
+                <div>
+                  <span>Before</span>
+                  <strong>${escapeHtml(metric.before)}</strong>
+                </div>
+                <div class="arrow">→</div>
+                <div>
+                  <span>現在</span>
+                  <strong>${escapeHtml(metric.current)}</strong>
+                </div>
+              </div>
+              <p>${escapeHtml(metric.action)}</p>
             </div>`,
           )
           .join("");
@@ -1880,10 +2414,10 @@
         const pattern = state.selectedServicePattern;
         const operations = [
           { day: "月", title: "順位・競合チェック", body: pattern === "dash" ? "多地点順位と競合順位を確認し、落ちた地点を抽出。" : "主要キーワードの順位を確認。" },
-          { day: "火", title: "GBP情報更新", body: pattern === "epress" ? "媒体連携を前提に、営業時間・メニュー・NAPを一括確認。" : "営業時間、メニュー、カテゴリを更新。" },
-          { day: "水", title: "口コミ返信", body: "低評価は承認制、高評価はテンプレートで短時間処理。" },
-          { day: "木", title: "投稿・写真改善", body: pattern === "dash" ? "ABテストの勝ち案を反映して投稿・写真を更新。" : "おすすめメニューと来店シーンを投稿。" },
-          { day: "金", title: "外部施策・レポート", body: pattern === "white-link" ? "サイテーションと外部評価を確認し、店舗別の改善提案を作成。" : "週次レポートと次週アクションを作成。" },
+          { day: "火", title: "GBP情報・検索KW更新", body: pattern === "epress" ? "媒体連携を前提に、営業時間・メニュー・NAP・検索キーワードを一括確認。" : "営業時間、メニュー、カテゴリ、検索キーワードを更新。" },
+          { day: "水", title: "口コミ返信・レビュー獲得", body: "低評価は承認制、高評価は短文返信。会計前QRやモバイルオーダー導線でレビュー依頼を確認。" },
+          { day: "木", title: "投稿・写真・多言語改善", body: pattern === "dash" ? "ABテストの勝ち案を反映して投稿・写真・英語メニュー説明を更新。" : "おすすめメニュー、来店シーン、インバウンド向け説明を投稿。" },
+          { day: "金", title: "外部施策・効果測定", body: pattern === "white-link" ? "サイテーションと外部評価を確認し、店舗別の改善提案とBefore/Afterを作成。" : "週次レポートと次週アクションを作成。" },
         ];
         els.operationCalendar.innerHTML = operations
           .map(
@@ -1993,9 +2527,25 @@
                     ${item.done ? "未完了に戻す" : "完了にする"}
                   </button>
                 </div>`,
-              )
-              .join("")
+          )
+          .join("")
           : `<div class="empty">GBP改善項目がありません。</div>`;
+      }
+
+      function renderChannelLinks() {
+        els.channelLinks.innerHTML = (state.meo.channels || [])
+          .map(
+            (channel) => `<div class="channel-card">
+              <div class="chips">
+                <span class="chip ${channel.status === "ok" ? "ok" : channel.status === "warn" ? "p2" : "p1"}">${citationStatusLabel(channel.status)}</span>
+                <span class="chip brand">${escapeHtml(channel.name)}</span>
+                <span class="chip">KPI ${escapeHtml(channel.kpi)}</span>
+              </div>
+              <h3>${escapeHtml(channel.goal)}</h3>
+              <p>${escapeHtml(channel.action)}</p>
+            </div>`,
+          )
+          .join("");
       }
 
       function renderCompetitors() {
@@ -2022,6 +2572,20 @@
               <p>差分: 口コミ +${reviewGap}件 / 写真 +${photoGap}枚 / 評価差 +${ratingGap}</p>
             </div>`;
           })
+          .join("");
+      }
+
+      function renderReviewGrowthLoops() {
+        els.reviewGrowthLoops.innerHTML = (state.meo.reviewGrowthLoops || [])
+          .map(
+            (loop) => `<div class="review-growth-card">
+              <div class="chips">
+                <span class="chip brand">${escapeHtml(loop.kpi)}</span>
+              </div>
+              <h3>${escapeHtml(loop.title)}</h3>
+              <p>${escapeHtml(loop.body)}</p>
+            </div>`,
+          )
           .join("");
       }
 
@@ -2152,8 +2716,10 @@
       function profileSuggestion(id) {
         const suggestions = {
           "profile-category": "業態と検索意図に近いカテゴリを選び、不要なカテゴリを増やしすぎないようにします。",
+          "profile-keyword": "商圏、利用シーン、料理名を分解し、狙う検索キーワードをGBP説明文・投稿・写真説明へ自然に入れます。",
           "profile-hours": "祝日・臨時休業・ランチ/ディナーの時間を更新し、来店前の不一致を減らします。",
           "profile-menu": "価格、写真、人気メニュー名を揃え、検索語句と来店判断に効く情報を増やします。",
+          "profile-language": "英語メニュー、支払い、予約、アレルギー対応を整え、インバウンド客が不安なく来店できる状態にします。",
           "profile-photo": "料理、外観、入口、席、スタッフの写真を追加し、競合より情報量を増やします。",
           "profile-post": "季節メニュー、空席、イベント、改善報告を週1で投稿します。",
           "profile-qa": "予約、個室、子連れ、支払い、アレルギー対応などの質問を確認します。",
