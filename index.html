@@ -531,6 +531,11 @@
         background: #f7fcfb;
       }
 
+      .review-card.replied {
+        border-color: #9ad8b8;
+        background: #f3fbf6;
+      }
+
       .review-top {
         display: flex;
         justify-content: space-between;
@@ -557,6 +562,18 @@
 
       .rating {
         flex: 0 0 auto;
+        font-weight: 800;
+      }
+
+      .reply-stamp {
+        display: inline-flex;
+        align-items: center;
+        margin-top: 6px;
+        padding: 4px 8px;
+        border-radius: 999px;
+        background: var(--ok-soft);
+        color: var(--ok);
+        font-size: 12px;
         font-weight: 800;
       }
 
@@ -1136,6 +1153,66 @@
         background: #f7fbfa;
       }
 
+      .receive-strip {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 12px;
+        padding: 12px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel-strong);
+      }
+
+      .receive-strip p {
+        margin: 4px 0 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
+      .risk-box {
+        display: grid;
+        gap: 8px;
+        padding: 13px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #ffffff;
+      }
+
+      .risk-box.p0,
+      .risk-box.p1 {
+        border-color: #efb2a9;
+        background: #fff7f5;
+      }
+
+      .risk-box.p2 {
+        border-color: #f4d58a;
+        background: #fffaf0;
+      }
+
+      .risk-box.p3 {
+        border-color: #9ad8b8;
+        background: #f0fbf5;
+      }
+
+      .risk-box span {
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .risk-box strong {
+        display: block;
+        margin-top: 3px;
+        font-size: 18px;
+      }
+
+      .risk-box p {
+        margin-bottom: 0;
+      }
+
       .toast {
         position: fixed;
         right: 18px;
@@ -1196,7 +1273,8 @@
 
         .topbar,
         .panel-header,
-        .detail-title {
+        .detail-title,
+        .receive-strip {
           display: grid;
         }
 
@@ -1244,10 +1322,10 @@
         </div>
 
         <nav class="nav" aria-label="主要画面">
-          <button class="active" data-view-button="dashboard">ダッシュボード</button>
-          <button data-view-button="reviews">レビュー受信箱</button>
+          <button class="active" data-view-button="reviews">レビュー受信箱</button>
           <button data-view-button="tasks">改善タスク</button>
           <button data-view-button="meo">MEO施策</button>
+          <button data-view-button="gbp-posts">GBP投稿</button>
           <button data-view-button="notifications">通知キュー</button>
           <button data-view-button="settings">設定</button>
         </nav>
@@ -1270,6 +1348,7 @@
           <div class="actions">
             <button class="btn" id="resetDemoBtn">デモデータに戻す</button>
             <button class="btn" data-view-button="meo">MEO施策を見る</button>
+            <button class="btn" data-view-button="gbp-posts">GBP投稿を作る</button>
             <button class="btn primary" data-view-button="reviews">レビューを処理する</button>
           </div>
         </section>
@@ -1297,100 +1376,43 @@
           </div>
         </section>
 
-        <section id="view-dashboard" data-view class="content-grid">
-          <div class="panel span-all">
+        <section id="view-reviews" data-view class="content-grid review-workspace">
+          <div class="panel">
             <div class="panel-header">
               <div>
-                <h2>売る相手と導入価値</h2>
-                <p>繁華街でMEOが伸び悩む少人数店舗に、Before/Afterで価値を伝える営業画面です。</p>
+                <h2>受信レビュー</h2>
+                <p>Googleレビューを受信し、未返信のものから順に処理します。</p>
               </div>
-              <button class="btn small" data-view-button="meo">効果測定を見る</button>
             </div>
             <div class="panel-body">
-              <div class="strategy-grid">
+              <div class="receive-strip">
                 <div>
-                  <div class="strategy-note">
-                    <div class="chips">
-                      <span class="chip brand">ICP</span>
-                      <span class="chip">競合過多の繁華街</span>
-                      <span class="chip">単独店舗</span>
-                      <span class="chip">店長が兼務</span>
-                    </div>
-                    <p>
-                      hanareのようにBefore時点で強い店舗は、効果比較の素材ではなく上位店ベンチマークと無料モニターに回します。
-                      営業では「検索順位・返信率・GBP整備・導線」が弱い店舗の改善ケースを見せます。
-                    </p>
-                  </div>
-                  <div class="target-grid" id="targetSegments"></div>
+                  <strong>レビュー受信</strong>
+                  <p>本番はGoogle Business Profile APIで自動取得。MVPではCSVで取り込み確認できます。</p>
                 </div>
-                <div class="case-grid" id="caseStudies"></div>
+                <label class="btn small" for="csvInput">CSVを取り込む</label>
+                <input class="hidden" id="csvInput" type="file" accept=".csv,text/csv" />
               </div>
-            </div>
-          </div>
 
-          <div class="panel span-all">
-            <div class="panel-header">
-              <div>
-                <h2>最低限必要な機能</h2>
-                <p>GMB/GBP返信、評判分析、HP/SNS導線、GBP最適化、効果測定を提供価値として整理します。</p>
-              </div>
-            </div>
-            <div class="panel-body">
-              <div class="feature-grid" id="mustHaveFeatures"></div>
-            </div>
-          </div>
-
-          <div class="panel span-all">
-            <div class="panel-header">
-              <div>
-                <h2>評価されている部分・そうでない部分</h2>
-                <p>レビュー本文から、伸ばす強みと潰す弱みを店舗別に抽出します。</p>
-              </div>
-            </div>
-            <div class="panel-body">
-              <div class="insight-grid" id="reputationInsights"></div>
-            </div>
-          </div>
-
-          <div class="panel">
-            <div class="panel-header">
-              <div>
-                <h2>優先レビュー</h2>
-                <p>危険度の高い順に、今日見るべきレビューを並べています。</p>
-              </div>
-              <button class="btn small" data-view-button="reviews">すべて見る</button>
-            </div>
-            <div class="panel-body">
-              <div class="review-list" id="priorityReviews"></div>
-            </div>
-          </div>
-
-          <div class="panel">
-            <div class="panel-header">
-              <div>
-                <h2>本日の運用メモ</h2>
-                <p>レビューから自動生成された改善ポイントです。</p>
-              </div>
-            </div>
-            <div class="panel-body">
-              <div class="task-list" id="dashboardTasks"></div>
-            </div>
-          </div>
-        </section>
-
-        <section id="view-reviews" data-view class="content-grid hidden">
-          <div class="panel">
-            <div class="panel-header">
-              <div>
-                <h2>レビュー受信箱</h2>
-                <p>CSV取り込み、手動追加、返信案の確認ができます。</p>
-              </div>
-            </div>
-            <div class="panel-body">
               <div class="toolbar">
                 <input class="input" id="searchInput" placeholder="レビュー本文・投稿者・店舗名で検索" />
+                <select class="select" id="dateFilter" aria-label="投稿日">
+                  <option value="all">すべての期間</option>
+                  <option value="24h">過去24時間</option>
+                  <option value="7d">過去7日</option>
+                  <option value="30d">過去30日</option>
+                </select>
+                <select class="select" id="ratingFilter" aria-label="星評価">
+                  <option value="all">すべての星数</option>
+                  <option value="5">星5</option>
+                  <option value="4">星4</option>
+                  <option value="3">星3</option>
+                  <option value="2">星2</option>
+                  <option value="1">星1</option>
+                  <option value="low">星1-2</option>
+                </select>
                 <select class="select" id="priorityFilter" aria-label="優先度">
-                  <option value="all">すべての優先度</option>
+                  <option value="all">すべてのリスク</option>
                   <option value="P0">P0 即時対応</option>
                   <option value="P1">P1 当日対応</option>
                   <option value="P2">P2 通常対応</option>
@@ -1405,63 +1427,15 @@
                 </select>
               </div>
 
-              <div class="import-box">
-                <strong>CSV取り込み</strong>
-                <p class="lead">
-                  列名は <code>store,rating,author,comment,createdAt</code> に対応しています。Google API接続前でも運用フローを試せます。
-                </p>
-                <input class="input" id="csvInput" type="file" accept=".csv,text/csv" />
-              </div>
-
-              <div class="detail-section">
-                <h3>手動でレビューを追加</h3>
-                <div class="form-grid">
-                  <div class="two-col">
-                    <div class="field">
-                      <label for="manualStore">店舗</label>
-                      <input class="input" id="manualStore" value="渋谷店" />
-                    </div>
-                    <div class="field">
-                      <label for="manualRating">星評価</label>
-                      <select class="select" id="manualRating">
-                        <option value="5">5</option>
-                        <option value="4">4</option>
-                        <option value="3">3</option>
-                        <option value="2">2</option>
-                        <option value="1">1</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="two-col">
-                    <div class="field">
-                      <label for="manualAuthor">投稿者</label>
-                      <input class="input" id="manualAuthor" value="ゲスト" />
-                    </div>
-                    <div class="field">
-                      <label for="manualDate">投稿日</label>
-                      <input class="input" id="manualDate" type="date" />
-                    </div>
-                  </div>
-                  <div class="field">
-                    <label for="manualComment">レビュー本文</label>
-                    <textarea class="textarea" id="manualComment" placeholder="レビュー本文を入力"></textarea>
-                  </div>
-                  <button class="btn primary" id="addReviewBtn">レビューを追加して分析</button>
-                </div>
-              </div>
-
-              <div class="detail-section">
-                <h3>一覧</h3>
-                <div class="review-list" id="reviewList"></div>
-              </div>
+              <div class="review-list" id="reviewList"></div>
             </div>
           </div>
 
           <div class="panel" id="detailPanel">
             <div class="panel-header">
               <div>
-                <h2>レビュー詳細</h2>
-                <p>返信案を編集し、承認・返信済みにできます。</p>
+                <h2>返信作成</h2>
+                <p>AI案を確認し、必要なら手動編集して承認投稿します。</p>
               </div>
             </div>
             <div class="panel-body" id="reviewDetail"></div>
@@ -1626,20 +1600,106 @@
           </div>
         </section>
 
+        <section id="view-gbp-posts" data-view class="content-grid hidden">
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <h2>GBP投稿作成</h2>
+                <p>店舗投稿を半自動で作成し、承認後にGoogleビジネスプロフィールへ公開します。</p>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="form-grid">
+                <div class="two-col">
+                  <div class="field">
+                    <label for="gbpPostStore">店舗</label>
+                    <select class="select" id="gbpPostStore"></select>
+                  </div>
+                  <div class="field">
+                    <label for="gbpPostTopic">投稿タイプ</label>
+                    <select class="select" id="gbpPostTopic">
+                      <option value="STANDARD">最新情報</option>
+                      <option value="EVENT">イベント</option>
+                      <option value="OFFER">オファー</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label for="gbpPostTitle">投稿テーマ</label>
+                  <input class="input" id="gbpPostTitle" placeholder="例: 今週のおすすめランチ / 空席案内 / 期間限定メニュー" />
+                </div>
+
+                <div class="field">
+                  <label for="gbpPostSummary">投稿本文</label>
+                  <textarea class="textarea" id="gbpPostSummary" placeholder="現場から届いた素材や、投稿したい内容を入力"></textarea>
+                </div>
+
+                <div class="two-col">
+                  <div class="field">
+                    <label for="gbpPostActionType">CTA</label>
+                    <select class="select" id="gbpPostActionType">
+                      <option value="LEARN_MORE">詳細</option>
+                      <option value="BOOK">予約</option>
+                      <option value="ORDER">注文</option>
+                      <option value="CALL">電話</option>
+                      <option value="NONE">なし</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label for="gbpPostUrl">リンク先URL</label>
+                    <input class="input" id="gbpPostUrl" placeholder="https://example.com/reserve" />
+                  </div>
+                </div>
+
+                <div class="two-col">
+                  <div class="field">
+                    <label for="gbpPostStartDate">開始日</label>
+                    <input class="input" id="gbpPostStartDate" type="date" />
+                  </div>
+                  <div class="field">
+                    <label for="gbpPostEndDate">終了日</label>
+                    <input class="input" id="gbpPostEndDate" type="date" />
+                  </div>
+                </div>
+
+                <div class="reply-actions">
+                  <button class="btn" data-action="polish-gbp-post">AIで投稿案を整える</button>
+                  <button class="btn" data-action="save-gbp-draft">下書き保存</button>
+                  <button class="btn primary" data-action="request-gbp-publish">承認して公開準備</button>
+                </div>
+                <p class="review-meta">本番では公開準備後に `/api/gbp/posts` からGoogle Business Profile LocalPosts APIへ送信します。</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <h2>投稿キュー</h2>
+                <p>管理者作成分と、LINEから届いた現場素材をここで承認します。</p>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="post-list" id="gbpPostList"></div>
+            </div>
+          </div>
+        </section>
+
         <section id="view-staff" data-view class="hidden">
           <div class="client-meo-stack">
             <div class="panel">
               <div class="panel-header">
                 <div>
-                  <h2>現場者画面</h2>
-                  <p>スマホでレビュー確認、店長共有、現場確認済みの報告だけを行う画面です。</p>
+                  <h2>LINE現場者画面プレビュー</h2>
+                  <p>本番ではWeb画面ではなく、LINE上の通知カードでレビュー確認・店長共有・現場確認済みを行います。</p>
                 </div>
-                <button class="btn small" id="staffAdminLoginToggle">管理者画面へ</button>
+                <button class="btn small" id="staffAdminLoginToggle">管理者ログイン</button>
               </div>
               <div class="panel-body">
                 <div class="import-box hidden" id="staffAdminLoginPanel">
                   <strong>管理者権限チェック</strong>
-                  <p class="phone-note">本番ではGoogleログインや店舗アカウント権限で判定します。MVPではデモPINで管理者画面に戻れます。</p>
+                  <p class="phone-note">本番ではLINEの「管理者ログイン」ボタンからSafariなどのスマホブラウザでWeb管理者画面を開き、Googleログインと店舗ロールで判定します。MVPではデモPINで確認できます。</p>
                   <div class="toolbar">
                     <input class="input" id="staffAdminPin" inputmode="numeric" placeholder="デモPIN: 0000" />
                     <button class="btn primary" id="staffAdminLoginBtn">ログインして管理者画面へ</button>
@@ -1658,6 +1718,27 @@
                 </div>
                 <div class="panel-body">
                   <div class="simple-list" id="staffTasks"></div>
+
+                  <div class="detail-section">
+                    <h3>GBP投稿素材を送る</h3>
+                    <p class="phone-note">LINEで現場から送る想定です。公開は管理者画面で承認してから行います。</p>
+                    <div class="form-grid">
+                      <div class="field">
+                        <label for="fieldPostIdeaType">素材タイプ</label>
+                        <select class="select" id="fieldPostIdeaType">
+                          <option value="今日のおすすめ">今日のおすすめ</option>
+                          <option value="空席案内">空席案内</option>
+                          <option value="臨時営業時間">臨時営業時間</option>
+                          <option value="イベント">イベント</option>
+                        </select>
+                      </div>
+                      <div class="field">
+                        <label for="fieldPostIdeaInput">現場メモ</label>
+                        <textarea class="textarea" id="fieldPostIdeaInput" placeholder="例: 今日は和牛ハンバーグが残り少なめ。19時以降は2名席に空きあり。"></textarea>
+                      </div>
+                      <button class="btn primary" id="fieldPostIdeaBtn">管理者へ投稿案として送る</button>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -1665,11 +1746,11 @@
                 <div class="panel-header">
                   <div>
                     <h2>LINE通知プレビュー</h2>
-                    <p>LINEやSlackで届く想定の軽い確認画面です。</p>
+                    <p>LINEに届く通知カードの動作確認です。管理者ログインだけ外部ブラウザのWeb管理者画面へ進みます。</p>
                   </div>
                 </div>
                 <div class="panel-body">
-                  <p class="phone-note">本番ではLINE Messaging APIやSlackに接続し、ここで押した内容を管理者画面へ戻します。</p>
+                  <p class="phone-note">本番ではLINE Messaging APIで送信し、postbackの結果を管理者画面へ戻します。</p>
                   <div class="phone-shell" aria-label="現場者画面">
                     <div class="phone-header">
                       <div>
@@ -1758,15 +1839,17 @@
 
               <div class="setting-card">
                 <h3>LINE実機確認</h3>
-                <p>LINE DevelopersのWebhook URLに以下を設定し、Cloudflare PagesにLINEの環境変数を保存します。</p>
+                <p>現場者画面はLINE上で完結します。管理者権限があるユーザーだけ、LINEの「管理者ログイン」からスマホブラウザでWeb管理者画面へ進みます。</p>
                 <div class="chips">
                   <span class="chip brand">Webhook</span>
                   <span class="chip">/api/line/webhook</span>
                   <span class="chip brand">テスト文言</span>
                   <span class="chip">レビュー</span>
+                  <span class="chip brand">管理者URL</span>
+                  <span class="chip">/?view=reviews</span>
                 </div>
                 <p style="margin-top: 10px">
-                  現場者画面URL: <code>https://reviewchef-ai.pages.dev/?view=staff</code>
+                  検証用プレビュー: <code>https://reviewchef-ai.pages.dev/?view=staff</code>
                 </p>
               </div>
 
@@ -1780,7 +1863,7 @@
     <div class="toast hidden" id="toast" role="status"></div>
 
     <script>
-      const STORAGE_KEY = "reviewchef-mvp-state-v2";
+      const STORAGE_KEY = "reviewchef-mvp-state-v3";
 
       const issueMap = [
         { key: "健康被害", terms: ["食中毒", "腹痛", "下痢", "嘔吐", "病院", "救急", "体調", "吐き気"] },
@@ -1808,7 +1891,7 @@
         },
         selectedStore: "all",
         selectedReviewId: "r-001",
-        currentView: "dashboard",
+        currentView: "reviews",
         selectedServicePattern: "epress",
         reviews: [
           {
@@ -1817,7 +1900,7 @@
             rating: 1,
             author: "M.K.",
             comment: "昨日の夜に利用しました。料理に髪の毛のような異物が入っていて、スタッフに伝えても対応が雑でした。正直かなり残念です。",
-            createdAt: "2026-06-14",
+            createdAt: "2026-06-17T10:20:00+09:00",
             status: "needs_approval",
           },
           {
@@ -1826,7 +1909,7 @@
             rating: 5,
             author: "佐藤",
             comment: "ランチで行きました。ハンバーグが美味しく、スタッフさんも丁寧でした。また行きます。",
-            createdAt: "2026-06-13",
+            createdAt: "2026-06-17T08:40:00+09:00",
             status: "drafted",
           },
           {
@@ -1835,7 +1918,7 @@
             rating: 2,
             author: "Aoi",
             comment: "予約していたのに30分以上待ちました。料理は良かったですが、案内が遅くて残念でした。",
-            createdAt: "2026-06-12",
+            createdAt: "2026-06-16T19:25:00+09:00",
             status: "needs_approval",
           },
           {
@@ -1845,7 +1928,8 @@
             author: "Local Guide",
             comment: "雰囲気がよく、デザートまで全部おいしかったです。",
             createdAt: "2026-06-12",
-            status: "new",
+            status: "replied",
+            repliedAt: "2026-06-13T11:10:00+09:00",
           },
           {
             id: "r-005",
@@ -1858,6 +1942,20 @@
           },
         ],
         tasks: [],
+        gbpPosts: [
+          {
+            id: "gp-001",
+            store: "渋谷店",
+            topicType: "STANDARD",
+            title: "19時以降の空席案内",
+            summary: "本日19時以降、2名様席に少し空きがあります。渋谷で落ち着いて夕食を楽しみたい方は、ハンバーグと季節野菜のセットがおすすめです。",
+            actionType: "BOOK",
+            url: "https://example.com/reserve",
+            status: "approval",
+            source: "field",
+            createdAt: "2026-06-17T15:00:00+09:00",
+          },
+        ],
         meo: {
           servicePatterns: [
             {
@@ -1874,7 +1972,7 @@
               source: "MEO Dash!",
               focus: "順位計測・多地点分析・ABテスト",
               body: "順位取得、競合比較、商圏エリアの多地点順位、クリエイティブ改善を重視する運用型。",
-              features: ["順位ダッシュボード", "多地点ヒートマップ", "競合順位比較", "クリエイティブABテスト"],
+              features: ["順位管理", "多地点ヒートマップ", "競合順位比較", "クリエイティブABテスト"],
             },
             {
               id: "white-link",
@@ -2074,12 +2172,6 @@
         replyCount: document.getElementById("replyCount"),
         taskCount: document.getElementById("taskCount"),
         openTaskCount: document.getElementById("openTaskCount"),
-        targetSegments: document.getElementById("targetSegments"),
-        caseStudies: document.getElementById("caseStudies"),
-        mustHaveFeatures: document.getElementById("mustHaveFeatures"),
-        reputationInsights: document.getElementById("reputationInsights"),
-        priorityReviews: document.getElementById("priorityReviews"),
-        dashboardTasks: document.getElementById("dashboardTasks"),
         reviewList: document.getElementById("reviewList"),
         reviewDetail: document.getElementById("reviewDetail"),
         taskList: document.getElementById("taskList"),
@@ -2106,6 +2198,15 @@
         creativeTests: document.getElementById("creativeTests"),
         operationCalendar: document.getElementById("operationCalendar"),
         meoActionList: document.getElementById("meoActionList"),
+        gbpPostStore: document.getElementById("gbpPostStore"),
+        gbpPostTopic: document.getElementById("gbpPostTopic"),
+        gbpPostTitle: document.getElementById("gbpPostTitle"),
+        gbpPostSummary: document.getElementById("gbpPostSummary"),
+        gbpPostActionType: document.getElementById("gbpPostActionType"),
+        gbpPostUrl: document.getElementById("gbpPostUrl"),
+        gbpPostStartDate: document.getElementById("gbpPostStartDate"),
+        gbpPostEndDate: document.getElementById("gbpPostEndDate"),
+        gbpPostList: document.getElementById("gbpPostList"),
         staffTasks: document.getElementById("staffTasks"),
         staffPhoneStatus: document.getElementById("staffPhoneStatus"),
         staffPhoneFeed: document.getElementById("staffPhoneFeed"),
@@ -2113,17 +2214,16 @@
         staffAdminLoginPanel: document.getElementById("staffAdminLoginPanel"),
         staffAdminPin: document.getElementById("staffAdminPin"),
         staffAdminLoginBtn: document.getElementById("staffAdminLoginBtn"),
+        fieldPostIdeaType: document.getElementById("fieldPostIdeaType"),
+        fieldPostIdeaInput: document.getElementById("fieldPostIdeaInput"),
+        fieldPostIdeaBtn: document.getElementById("fieldPostIdeaBtn"),
         notificationList: document.getElementById("notificationList"),
         searchInput: document.getElementById("searchInput"),
+        dateFilter: document.getElementById("dateFilter"),
+        ratingFilter: document.getElementById("ratingFilter"),
         priorityFilter: document.getElementById("priorityFilter"),
         statusFilter: document.getElementById("statusFilter"),
         csvInput: document.getElementById("csvInput"),
-        manualStore: document.getElementById("manualStore"),
-        manualRating: document.getElementById("manualRating"),
-        manualAuthor: document.getElementById("manualAuthor"),
-        manualDate: document.getElementById("manualDate"),
-        manualComment: document.getElementById("manualComment"),
-        addReviewBtn: document.getElementById("addReviewBtn"),
         resetDemoBtn: document.getElementById("resetDemoBtn"),
         businessName: document.getElementById("businessName"),
         replyTone: document.getElementById("replyTone"),
@@ -2151,6 +2251,7 @@
           ...defaults,
           ...saved,
           settings: { ...defaults.settings, ...(saved.settings || {}) },
+          gbpPosts: saved.gbpPosts || defaults.gbpPosts,
           selectedServicePattern: saved.selectedServicePattern || defaults.selectedServicePattern,
           meo: {
             ...defaults.meo,
@@ -2170,8 +2271,8 @@
             creativeTests: saved.meo?.creativeTests || defaults.meo.creativeTests,
           },
         };
-        const viewIds = new Set(["dashboard", "reviews", "tasks", "meo", "staff", "notifications", "settings"]);
-        if (!viewIds.has(merged.currentView)) merged.currentView = "dashboard";
+        const viewIds = new Set(["reviews", "tasks", "meo", "gbp-posts", "staff", "notifications", "settings"]);
+        if (!viewIds.has(merged.currentView)) merged.currentView = "reviews";
         return merged;
       }
 
@@ -2180,9 +2281,15 @@
       }
 
       function applyInitialView(initialState) {
-        const view = new URLSearchParams(window.location.search).get("view");
-        const viewIds = new Set(["dashboard", "reviews", "tasks", "meo", "staff", "notifications", "settings"]);
-        return viewIds.has(view) ? { ...initialState, currentView: view } : initialState;
+        const params = new URLSearchParams(window.location.search);
+        const view = params.get("view");
+        const reviewId = params.get("review");
+        const viewIds = new Set(["reviews", "tasks", "meo", "gbp-posts", "staff", "notifications", "settings"]);
+        const nextState = viewIds.has(view) ? { ...initialState, currentView: view } : { ...initialState };
+        if (reviewId && nextState.reviews?.some((review) => review.id === reviewId)) {
+          nextState.selectedReviewId = reviewId;
+        }
+        return nextState;
       }
 
       function analyzeReview(review) {
@@ -2287,10 +2394,14 @@
 
       function getFilteredReviews() {
         const query = (els.searchInput.value || "").trim().toLowerCase();
+        const dateRange = els.dateFilter.value;
+        const rating = els.ratingFilter.value;
         const priority = els.priorityFilter.value;
         const status = els.statusFilter.value;
         return enrichReviews()
           .filter((review) => state.selectedStore === "all" || review.store === state.selectedStore)
+          .filter((review) => reviewMatchesDateFilter(review, dateRange))
+          .filter((review) => reviewMatchesRatingFilter(review, rating))
           .filter((review) => priority === "all" || review.analysis.priority === priority)
           .filter((review) => status === "all" || review.status === status)
           .filter((review) => {
@@ -2299,6 +2410,56 @@
             return haystack.includes(query);
           })
           .sort((a, b) => priorityWeight(a.analysis.priority) - priorityWeight(b.analysis.priority));
+      }
+
+      function reviewMatchesDateFilter(review, dateRange) {
+        if (dateRange === "all") return true;
+        const createdAt = parseReviewDate(review.createdAt);
+        if (!createdAt) return false;
+        const now = new Date();
+        const hours = { "24h": 24, "7d": 24 * 7, "30d": 24 * 30 }[dateRange];
+        if (!hours) return true;
+        return now.getTime() - createdAt.getTime() <= hours * 60 * 60 * 1000;
+      }
+
+      function reviewMatchesRatingFilter(review, ratingFilter) {
+        if (ratingFilter === "all") return true;
+        const rating = Number(review.rating);
+        if (ratingFilter === "low") return rating <= 2;
+        return rating === Number(ratingFilter);
+      }
+
+      function parseReviewDate(value) {
+        if (!value) return null;
+        const normalized = String(value).trim();
+        const date = normalized.includes("T") ? new Date(normalized) : new Date(`${normalized}T00:00:00`);
+        return Number.isNaN(date.getTime()) ? null : date;
+      }
+
+      function formatReviewDate(value) {
+        const date = parseReviewDate(value);
+        if (!date) return value || "";
+        const hasTime = String(value || "").includes("T");
+        return hasTime
+          ? new Intl.DateTimeFormat("ja-JP", {
+              month: "numeric",
+              day: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+            }).format(date)
+          : new Intl.DateTimeFormat("ja-JP", { year: "numeric", month: "numeric", day: "numeric" }).format(date);
+      }
+
+      function formatReplyDate(value) {
+        if (!value) return "日時未記録";
+        const date = parseReviewDate(value);
+        if (!date) return value;
+        return new Intl.DateTimeFormat("ja-JP", {
+          month: "numeric",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        }).format(date);
       }
 
       function priorityWeight(priority) {
@@ -2311,12 +2472,11 @@
         renderViews();
         renderStoreFilters();
         renderMetrics();
-        renderBusinessStrategy();
-        renderDashboard();
         renderReviews();
         renderDetail();
         renderTasks();
         renderMeo();
+        renderGbpPosts();
         renderStaffView();
         renderNotifications();
         renderSettings();
@@ -2324,7 +2484,7 @@
 
       function renderViews() {
         document.querySelectorAll("[data-view]").forEach((view) => view.classList.add("hidden"));
-        const activeView = document.getElementById(`view-${state.currentView}`) || document.getElementById("view-dashboard");
+        const activeView = document.getElementById(`view-${state.currentView}`) || document.getElementById("view-reviews");
         activeView.classList.remove("hidden");
         document.querySelector(".app").classList.toggle("staff-mode", state.currentView === "staff");
         document.querySelectorAll("[data-view-button]").forEach((button) => {
@@ -2363,157 +2523,6 @@
         els.openTaskCount.textContent = `未完了 ${openTasks}件`;
       }
 
-      function renderBusinessStrategy() {
-        renderTargetSegments();
-        renderCaseStudies();
-        renderMustHaveFeatures();
-        renderReputationInsights();
-      }
-
-      function renderTargetSegments() {
-        els.targetSegments.innerHTML = (state.meo.targetSegments || [])
-          .map(
-            (segment) => `<div class="target-card">
-              <div class="chips">
-                <span class="chip brand">${escapeHtml(segment.fit)}</span>
-              </div>
-              <h3>${escapeHtml(segment.title)}</h3>
-              <p>${escapeHtml(segment.body)}</p>
-            </div>`,
-          )
-          .join("");
-      }
-
-      function renderCaseStudies() {
-        els.caseStudies.innerHTML = (state.meo.caseStudies || [])
-          .map(
-            (study) => `<div class="case-card">
-              <div class="chips">
-                <span class="chip brand">Before/After</span>
-                <span class="chip">仮説デモ値</span>
-              </div>
-              <h3>${escapeHtml(study.title)}</h3>
-              <p>${escapeHtml(study.note)}</p>
-              ${(study.metrics || [])
-                .map(
-                  (metric) => `<div class="before-after">
-                    <div>
-                      <span>${escapeHtml(metric.label)} Before</span>
-                      <strong>${escapeHtml(metric.before)}</strong>
-                    </div>
-                    <div class="arrow">→</div>
-                    <div>
-                      <span>After</span>
-                      <strong>${escapeHtml(metric.after)}</strong>
-                      <div class="delta">${escapeHtml(metric.delta)}</div>
-                    </div>
-                  </div>`,
-                )
-                .join("")}
-            </div>`,
-          )
-          .join("");
-      }
-
-      function renderMustHaveFeatures() {
-        els.mustHaveFeatures.innerHTML = (state.meo.mustHaveFeatures || [])
-          .map(
-            (feature) => `<div class="feature-card">
-              <div class="chips">
-                <span class="chip ${feature.status.includes("実装") ? "ok" : "brand"}">${escapeHtml(feature.status)}</span>
-              </div>
-              <h3>${escapeHtml(feature.title)}</h3>
-              <p>${escapeHtml(feature.body)}</p>
-            </div>`,
-          )
-          .join("");
-      }
-
-      function renderReputationInsights() {
-        const insights = buildReputationInsights();
-        els.reputationInsights.innerHTML = [
-          renderInsightCard("評価されている部分", insights.positive, "ok"),
-          renderInsightCard("そうでない部分", insights.negative, "p1"),
-        ].join("");
-      }
-
-      function renderInsightCard(title, items, tone) {
-        const rows = items.length
-          ? items
-              .map(
-                (item) => `<div class="signal-row">
-                  <span>${escapeHtml(item.label)}</span>
-                  <strong>${item.count}件</strong>
-                </div>`,
-              )
-              .join("")
-          : `<p>まだ十分なレビューがありません。</p>`;
-        return `<div class="insight-card">
-          <div class="chips">
-            <span class="chip ${tone}">${escapeHtml(title)}</span>
-          </div>
-          <div class="signal-list">${rows}</div>
-        </div>`;
-      }
-
-      function buildReputationInsights() {
-        const reviews = enrichReviews().filter((review) => state.selectedStore === "all" || review.store === state.selectedStore);
-        const positive = new Map();
-        const negative = new Map();
-
-        reviews.forEach((review) => {
-          if (review.rating >= 4 && review.analysis.sentiment === "好意的") {
-            derivePositiveSignals(review.comment).forEach((signal) => incrementMap(positive, signal));
-            return;
-          }
-          review.analysis.issues
-            .filter((issue) => !["好意的な体験", "要確認"].includes(issue))
-            .forEach((issue) => incrementMap(negative, issue));
-        });
-
-        return {
-          positive: sortInsightMap(positive),
-          negative: sortInsightMap(negative),
-        };
-      }
-
-      function derivePositiveSignals(comment) {
-        const signals = [];
-        if (["美味", "おいし", "料理", "ハンバーグ", "デザート"].some((term) => comment.includes(term))) signals.push("料理品質");
-        if (["接客", "スタッフ", "丁寧", "親切"].some((term) => comment.includes(term))) signals.push("接客");
-        if (["雰囲気", "店内", "空間"].some((term) => comment.includes(term))) signals.push("雰囲気");
-        return signals.length ? signals : ["来店満足度"];
-      }
-
-      function incrementMap(map, key) {
-        map.set(key, (map.get(key) || 0) + 1);
-      }
-
-      function sortInsightMap(map) {
-        return Array.from(map.entries())
-          .map(([label, count]) => ({ label, count }))
-          .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label))
-          .slice(0, 5);
-      }
-
-      function renderDashboard() {
-        const priorityReviews = enrichReviews()
-          .filter((review) => state.selectedStore === "all" || review.store === state.selectedStore)
-          .filter((review) => review.status !== "replied")
-          .sort((a, b) => priorityWeight(a.analysis.priority) - priorityWeight(b.analysis.priority))
-          .slice(0, 5);
-
-        els.priorityReviews.innerHTML = priorityReviews.length
-          ? priorityReviews.map(renderReviewCard).join("")
-          : `<div class="empty">要対応レビューはありません。</div>`;
-
-        const tasks = buildTasks()
-          .filter((task) => state.selectedStore === "all" || task.store === state.selectedStore)
-          .filter((task) => !task.done)
-          .slice(0, 4);
-        els.dashboardTasks.innerHTML = tasks.length ? tasks.map(renderTask).join("") : `<div class="empty">未完了タスクはありません。</div>`;
-      }
-
       function renderReviews() {
         const reviews = getFilteredReviews();
         els.reviewList.innerHTML = reviews.length ? reviews.map(renderReviewCard).join("") : `<div class="empty">条件に合うレビューはありません。</div>`;
@@ -2522,11 +2531,12 @@
       function renderReviewCard(review) {
         const isActive = state.selectedReviewId === review.id;
         const { priority, sentiment, issues, autoEligible } = review.analysis;
-        return `<button class="review-card ${isActive ? "active" : ""}" data-review-id="${review.id}">
+        return `<button class="review-card ${isActive ? "active" : ""} ${review.status === "replied" ? "replied" : ""}" data-review-id="${review.id}">
           <div class="review-top">
             <div class="review-title">
               <strong>${escapeHtml(review.store)} / ${escapeHtml(review.author)}</strong>
-              <div class="review-meta">${escapeHtml(review.createdAt)}・${statusLabel(review.status)}</div>
+              <div class="review-meta">${escapeHtml(formatReviewDate(review.createdAt))}・${statusLabel(review.status)}</div>
+              ${review.status === "replied" ? `<span class="reply-stamp">返信済み ${escapeHtml(formatReplyDate(review.repliedAt))}</span>` : ""}
             </div>
             <div class="rating">${"★".repeat(Number(review.rating))}${"☆".repeat(5 - Number(review.rating))}</div>
           </div>
@@ -2536,6 +2546,7 @@
             <span class="chip">${sentiment}</span>
             ${issues.slice(0, 2).map((issue) => `<span class="chip brand">${escapeHtml(issue)}</span>`).join("")}
             ${review.staffStatus ? `<span class="chip ${review.staffStatus === "confirmed" ? "ok" : "p1"}">${staffStatusLabel(review.staffStatus)}</span>` : ""}
+            ${review.status === "replied" ? `<span class="chip ok">返信済み</span>` : ""}
             ${autoEligible ? `<span class="chip ok">自動返信候補</span>` : ""}
           </div>
         </button>`;
@@ -2554,7 +2565,8 @@
           <div class="detail-title">
             <div>
               <h3>${escapeHtml(review.store)} / ${escapeHtml(review.author)}</h3>
-              <div class="review-meta">${escapeHtml(review.createdAt)}・星${review.rating}・${statusLabel(review.status)}</div>
+              <div class="review-meta">${escapeHtml(formatReviewDate(review.createdAt))}・星${review.rating}・${statusLabel(review.status)}</div>
+              ${review.status === "replied" ? `<span class="reply-stamp">返信済み ${escapeHtml(formatReplyDate(review.repliedAt))}</span>` : ""}
             </div>
             <span class="chip ${analysis.priority.toLowerCase()}">${priorityLabel(analysis.priority)}</span>
           </div>
@@ -2562,31 +2574,32 @@
           <div class="chips">
             <span class="chip">${analysis.sentiment}</span>
             ${analysis.issues.map((issue) => `<span class="chip brand">${escapeHtml(issue)}</span>`).join("")}
-            ${review.staffStatus ? `<span class="chip ${review.staffStatus === "confirmed" ? "ok" : "p1"}">${staffStatusLabel(review.staffStatus)}</span>` : ""}
             ${analysis.autoEligible ? `<span class="chip ok">自動返信候補</span>` : ""}
           </div>
 
           <div class="detail-section">
-            <h3>AI要約</h3>
-            <p>${escapeHtml(analysis.summary)}</p>
-            <p>${escapeHtml(analysis.riskReason)}</p>
-          </div>
-
-          <div class="detail-section">
-            <h3>返信案</h3>
-            <textarea class="textarea" id="replyEditor">${escapeHtml(review.replyDraft || analysis.replyDraft)}</textarea>
-            <div class="reply-actions">
-              <button class="btn" data-action="copy-reply" data-id="${review.id}">返信文をコピー</button>
-              <button class="btn" data-action="save-draft" data-id="${review.id}">下書き保存</button>
-              <button class="btn primary" data-action="mark-replied" data-id="${review.id}">承認して返信済みにする</button>
-              <button class="btn danger" data-action="needs-approval" data-id="${review.id}">承認待ちに戻す</button>
+            <h3>AI要約・リスク測定</h3>
+            <div class="risk-box ${analysis.priority.toLowerCase()}">
+              <div>
+                <span>リスク判定</span>
+                <strong>${priorityLabel(analysis.priority)}</strong>
+              </div>
+              <p>${escapeHtml(analysis.summary)}</p>
+              <p>${escapeHtml(analysis.riskReason)}</p>
             </div>
           </div>
 
           <div class="detail-section">
-            <h3>通知文</h3>
-            <p>${escapeHtml(analysis.notificationText).replaceAll("\n", "<br>")}</p>
-            <button class="btn small" data-action="copy-notification" data-id="${review.id}">通知文をコピー</button>
+            <h3>返信文</h3>
+            <textarea class="textarea" id="replyEditor">${escapeHtml(review.replyDraft || analysis.replyDraft)}</textarea>
+            <div class="reply-actions">
+              <button class="btn" data-action="regenerate-reply" data-id="${review.id}">AI返信案を再作成</button>
+              <button class="btn" data-action="save-draft" data-id="${review.id}">下書き保存</button>
+              <button class="btn primary" data-action="mark-replied" data-id="${review.id}">承認してGoogleに投稿</button>
+              <button class="btn" data-action="copy-reply" data-id="${review.id}">コピー</button>
+              <button class="btn danger" data-action="needs-approval" data-id="${review.id}">承認待ちに戻す</button>
+            </div>
+            <p class="review-meta">本番では承認時にGoogle Business Profile APIへ返信を投稿し、監査ログを保存します。</p>
           </div>
         `;
       }
@@ -3124,6 +3137,125 @@
           : `<div class="empty">優先施策はありません。</div>`;
       }
 
+      function renderGbpPosts() {
+        renderGbpStoreOptions();
+        const posts = [...(state.gbpPosts || [])].sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+        els.gbpPostList.innerHTML = posts.length
+          ? posts.map(renderGbpPostCard).join("")
+          : `<div class="empty">GBP投稿の下書きはまだありません。</div>`;
+      }
+
+      function renderGbpStoreOptions() {
+        const current = els.gbpPostStore.value;
+        const stores = getActiveStores();
+        els.gbpPostStore.innerHTML = stores.map((store) => `<option value="${escapeHtml(store)}">${escapeHtml(store)}</option>`).join("");
+        if (stores.includes(current)) els.gbpPostStore.value = current;
+      }
+
+      function renderGbpPostCard(post) {
+        return `<div class="post-card">
+          <div class="chips">
+            <span class="chip ${post.status === "published" ? "ok" : post.status === "approval" ? "p2" : "brand"}">${gbpPostStatusLabel(post.status)}</span>
+            <span class="chip brand">${escapeHtml(post.store)}</span>
+            <span class="chip">${gbpTopicLabel(post.topicType)}</span>
+            <span class="chip">${post.source === "field" ? "LINE現場素材" : "管理者作成"}</span>
+          </div>
+          <h3>${escapeHtml(post.title)}</h3>
+          <p>${escapeHtml(post.summary)}</p>
+          <p class="review-meta">
+            CTA: ${escapeHtml(gbpActionLabel(post.actionType))}${post.url ? ` / ${escapeHtml(post.url)}` : ""}${
+              post.publishedAt ? ` / 公開 ${escapeHtml(formatReplyDate(post.publishedAt))}` : ""
+            }
+          </p>
+          <div class="reply-actions">
+            <button class="btn small" data-action="edit-gbp-post" data-id="${post.id}">編集に入れる</button>
+            ${
+              post.status !== "published"
+                ? `<button class="btn small primary" data-action="publish-gbp-post" data-id="${post.id}">公開済みにする</button>`
+                : ""
+            }
+          </div>
+        </div>`;
+      }
+
+      function readGbpPostForm(status) {
+        const title = els.gbpPostTitle.value.trim();
+        const rawSummary = els.gbpPostSummary.value.trim();
+        const topicType = els.gbpPostTopic.value;
+        const summary = rawSummary || buildGbpPostText(title, topicType);
+        return {
+          id: `gp-${Date.now()}`,
+          store: els.gbpPostStore.value || getActiveStores()[0] || "未設定店舗",
+          topicType,
+          title: title || gbpTopicLabel(topicType),
+          summary,
+          actionType: els.gbpPostActionType.value,
+          url: els.gbpPostUrl.value.trim(),
+          startDate: els.gbpPostStartDate.value,
+          endDate: els.gbpPostEndDate.value,
+          status,
+          source: "admin",
+          createdAt: new Date().toISOString(),
+        };
+      }
+
+      function fillGbpPostForm(post) {
+        els.gbpPostStore.value = post.store;
+        els.gbpPostTopic.value = post.topicType || "STANDARD";
+        els.gbpPostTitle.value = post.title || "";
+        els.gbpPostSummary.value = post.summary || "";
+        els.gbpPostActionType.value = post.actionType || "LEARN_MORE";
+        els.gbpPostUrl.value = post.url || "";
+        els.gbpPostStartDate.value = post.startDate || "";
+        els.gbpPostEndDate.value = post.endDate || "";
+      }
+
+      function clearGbpPostForm() {
+        els.gbpPostTitle.value = "";
+        els.gbpPostSummary.value = "";
+        els.gbpPostUrl.value = "";
+        els.gbpPostStartDate.value = "";
+        els.gbpPostEndDate.value = "";
+      }
+
+      function buildGbpPostText(title, topicType) {
+        const store = els.gbpPostStore.value || "店舗";
+        const theme = title || gbpTopicLabel(topicType);
+        if (topicType === "EVENT") {
+          return `${store}からイベントのお知らせです。${theme}について、日時や対象メニューを確認のうえ、写真付きで投稿します。`;
+        }
+        if (topicType === "OFFER") {
+          return `${store}の期間限定オファーです。${theme}を、来店前に伝わる短い案内文として投稿します。`;
+        }
+        return `${store}からのお知らせです。${theme}を、料理名・利用シーン・予約導線が自然に伝わる投稿文に整えます。`;
+      }
+
+      function gbpPostStatusLabel(status) {
+        return {
+          draft: "下書き",
+          approval: "承認待ち",
+          published: "公開済み",
+        }[status] || status;
+      }
+
+      function gbpTopicLabel(topicType) {
+        return {
+          STANDARD: "最新情報",
+          EVENT: "イベント",
+          OFFER: "オファー",
+        }[topicType] || "最新情報";
+      }
+
+      function gbpActionLabel(actionType) {
+        return {
+          LEARN_MORE: "詳細",
+          BOOK: "予約",
+          ORDER: "注文",
+          CALL: "電話",
+          NONE: "なし",
+        }[actionType] || actionType || "なし";
+      }
+
       function renderStaffView() {
         const reviews = buildStaffReviews();
         const pendingCount = reviews.filter((review) => !review.staffStatus).length;
@@ -3223,7 +3355,7 @@
           <p>星${review.rating} / ${escapeHtml(review.author)}さん<br>${escapeHtml(shortenText(review.comment, 92))}</p>
           <p>${escapeHtml(staffTaskBody(issue))}</p>
           <div class="phone-actions">
-            <button class="btn" data-action="staff-open-review" data-id="${review.id}">詳細を見る</button>
+            <button class="btn" data-action="staff-admin-login" data-id="${review.id}">管理者ログイン</button>
             <button class="btn danger" data-action="staff-escalate" data-id="${review.id}">店長に共有</button>
             <button class="btn primary" data-action="staff-confirm" data-id="${review.id}">現場確認済み</button>
           </div>
@@ -3590,6 +3722,15 @@
           const editor = document.getElementById("replyEditor");
           copyText(editor?.value || review?.replyDraft || review?.analysis.replyDraft || "");
         }
+        if (action.dataset.action === "regenerate-reply") {
+          state.reviews = state.reviews.map((review) => {
+            if (review.id !== id) return review;
+            const analysis = analyzeReview(review);
+            return { ...review, status: "drafted", replyDraft: analysis.replyDraft };
+          });
+          showToast("AI返信案を再作成しました。");
+          render();
+        }
         if (action.dataset.action === "save-draft") {
           const editor = document.getElementById("replyEditor");
           state.reviews = state.reviews.map((review) =>
@@ -3619,10 +3760,11 @@
           const review = enrichReviews().find((item) => item.id === id);
           copyText(review.analysis.notificationText);
         }
-        if (action.dataset.action === "staff-open-review") {
+        if (action.dataset.action === "staff-admin-login") {
           state.selectedReviewId = id;
-          state.currentView = "reviews";
-          render();
+          els.staffAdminLoginPanel.classList.remove("hidden");
+          els.staffAdminPin.focus();
+          showToast("管理者ログインを開きました。");
         }
         if (action.dataset.action === "staff-confirm") {
           state.reviews = state.reviews.map((review) =>
@@ -3677,9 +3819,43 @@
           const test = (state.meo.creativeTests || []).find((item) => item.id === id);
           copyText(`${test.title}: 勝ち案${test.winner}\n${test.winner === "A" ? test.a : test.b}\n指標: ${test.metric} ${test.lift}`);
         }
+        if (action.dataset.action === "polish-gbp-post") {
+          els.gbpPostSummary.value = buildGbpPostText(els.gbpPostTitle.value.trim(), els.gbpPostTopic.value);
+          showToast("投稿案を整えました。");
+        }
+        if (action.dataset.action === "save-gbp-draft") {
+          const post = readGbpPostForm("draft");
+          state.gbpPosts = [post, ...(state.gbpPosts || [])];
+          clearGbpPostForm();
+          showToast("GBP投稿の下書きを保存しました。");
+          render();
+        }
+        if (action.dataset.action === "request-gbp-publish") {
+          const post = readGbpPostForm("approval");
+          state.gbpPosts = [post, ...(state.gbpPosts || [])];
+          clearGbpPostForm();
+          showToast("公開準備に入れました。本番ではGoogle投稿APIへ送信します。");
+          render();
+        }
+        if (action.dataset.action === "edit-gbp-post") {
+          const post = (state.gbpPosts || []).find((item) => item.id === id);
+          if (post) {
+            fillGbpPostForm(post);
+            state.currentView = "gbp-posts";
+            showToast("投稿案を編集フォームに入れました。");
+            render();
+          }
+        }
+        if (action.dataset.action === "publish-gbp-post") {
+          state.gbpPosts = (state.gbpPosts || []).map((post) =>
+            post.id === id ? { ...post, status: "published", publishedAt: new Date().toISOString() } : post,
+          );
+          showToast("公開済みにしました。本番ではGoogle APIの成功後に更新します。");
+          render();
+        }
       });
 
-      [els.searchInput, els.priorityFilter, els.statusFilter].forEach((el) => {
+      [els.searchInput, els.dateFilter, els.ratingFilter, els.priorityFilter, els.statusFilter].forEach((el) => {
         el.addEventListener("input", render);
       });
 
@@ -3694,24 +3870,31 @@
         render();
       });
 
-      els.addReviewBtn.addEventListener("click", () => {
-        const comment = els.manualComment.value.trim();
-        if (!comment) {
-          showToast("レビュー本文を入力してください。");
+      els.fieldPostIdeaBtn.addEventListener("click", () => {
+        const memo = els.fieldPostIdeaInput.value.trim();
+        if (!memo) {
+          showToast("現場メモを入力してください。");
           return;
         }
-        addReviews([
+        const type = els.fieldPostIdeaType.value;
+        const store = state.selectedStore === "all" ? getActiveStores()[0] || "未設定店舗" : state.selectedStore;
+        state.gbpPosts = [
           {
-            store: els.manualStore.value.trim() || "未設定店舗",
-            rating: els.manualRating.value,
-            author: els.manualAuthor.value.trim() || "ゲスト",
-            comment,
-            createdAt: els.manualDate.value || new Date().toISOString().slice(0, 10),
+            id: `gp-${Date.now()}`,
+            store,
+            topicType: type === "イベント" ? "EVENT" : "STANDARD",
+            title: type,
+            summary: `${memo}\n\n管理者確認後、Googleビジネスプロフィール向けの短い投稿文に整えて公開します。`,
+            actionType: type === "空席案内" ? "BOOK" : "LEARN_MORE",
+            url: "",
+            status: "approval",
+            source: "field",
+            createdAt: new Date().toISOString(),
           },
-        ]);
-        els.manualComment.value = "";
-        state.currentView = "reviews";
-        showToast("レビューを追加しました。");
+          ...(state.gbpPosts || []),
+        ];
+        els.fieldPostIdeaInput.value = "";
+        showToast("管理者画面のGBP投稿キューに送りました。");
         render();
       });
 
@@ -3750,7 +3933,7 @@
           showToast("管理者権限を確認できませんでした。");
           return;
         }
-        state.currentView = "dashboard";
+        state.currentView = "reviews";
         els.staffAdminPin.value = "";
         showToast("管理者画面に切り替えました。");
         render();
@@ -3776,7 +3959,6 @@
         render();
       });
 
-      els.manualDate.value = new Date().toISOString().slice(0, 10);
       autoDraftNewReviews();
       render();
     </script>

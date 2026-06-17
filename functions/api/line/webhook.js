@@ -39,7 +39,9 @@ export async function onRequestGet({ request, env }) {
     webhookUrl: `${url.origin}/api/line/webhook`,
     lineChannelSecretConfigured: Boolean(env.LINE_CHANNEL_SECRET),
     lineChannelAccessTokenConfigured: Boolean(env.LINE_CHANNEL_ACCESS_TOKEN),
-    staffViewUrl: `${url.origin}/?view=staff`,
+    fieldInterface: "LINE Flex Message + postback",
+    staffPreviewUrl: `${url.origin}/?view=staff`,
+    adminLoginUrl: `${url.origin}/?view=reviews&source=line-admin-login`,
   });
 }
 
@@ -96,7 +98,7 @@ async function handleLineEvent(event, accessToken, origin) {
     return replyMessage(accessToken, event.replyToken, [
       {
         type: "text",
-        text: "ReviewChef AIと連携しました。\n「レビュー」と送ると、現場者画面で確認するレビューをLINE上で確認できます。",
+        text: "ReviewChef AIと連携しました。\n「レビュー」と送ると現場確認カードをLINE上で確認できます。\n管理者はカード内の「管理者ログイン」からWeb管理者画面へ進みます。",
       },
     ]);
   }
@@ -107,10 +109,12 @@ async function handleLineEvent(event, accessToken, origin) {
   const messages =
     text.includes("レビュー") || text.includes("確認")
       ? buildReviewMessages(origin)
+      : text.includes("管理者")
+        ? buildAdminLoginMessages(origin)
       : [
           {
             type: "text",
-            text: "「レビュー」と送ると、未確認レビューの確認依頼を表示します。",
+            text: "「レビュー」と送ると未確認レビューの確認カードを表示します。「管理者」と送ると管理者ログインURLを表示します。",
           },
         ];
 
@@ -182,12 +186,37 @@ function buildReviewMessages(origin) {
               type: "button",
               action: {
                 type: "uri",
-                label: "現場者画面を開く",
-                uri: `${origin}/?view=staff`,
+                label: "管理者ログイン",
+                uri: `${origin}/?view=reviews&source=line-admin-login&review=${encodeURIComponent(review.id)}`,
               },
             },
           ],
         },
+      },
+    },
+  ];
+}
+
+function buildAdminLoginMessages(origin) {
+  return [
+    {
+      type: "text",
+      text: "管理者権限がある方は、以下からWeb管理者画面を開いてください。本番ではGoogleログインと店舗ロールで判定します。",
+    },
+    {
+      type: "template",
+      altText: "ReviewChef AI 管理者ログイン",
+      template: {
+        type: "buttons",
+        title: "ReviewChef AI",
+        text: "レビュー受信箱をスマホブラウザで開きます。",
+        actions: [
+          {
+            type: "uri",
+            label: "管理者ログイン",
+            uri: `${origin}/?view=reviews&source=line-admin-login`,
+          },
+        ],
       },
     },
   ];
