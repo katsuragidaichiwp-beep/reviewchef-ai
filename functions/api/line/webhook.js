@@ -42,8 +42,8 @@ export async function onRequestGet({ request, env }) {
     lineChannelSecretConfigured: Boolean(env.LINE_CHANNEL_SECRET),
     lineChannelAccessTokenConfigured: Boolean(env.LINE_CHANNEL_ACCESS_TOKEN),
     fieldInterface: "LINE Flex Message + postback",
-    staffPreviewUrl: `${url.origin}/?view=staff`,
-    adminLoginUrl: `${url.origin}/?view=reviews&source=line-admin-login`,
+    staffPreviewUrl: `${url.origin}/app.html?view=staff`,
+    adminLoginUrl: `${url.origin}/app.html?view=reviews&source=line-admin-login`,
     supportedCommands: ["レビュー", "確認", "管理者", "投稿素材", "おすすめ", "空席", "ヘルプ"],
   });
 }
@@ -198,7 +198,7 @@ function buildReviewMessages(origin) {
               action: {
                 type: "uri",
                 label: "管理者ログイン",
-                uri: `${origin}/?view=reviews&source=line-admin-login&review=${encodeURIComponent(review.id)}`,
+                uri: `${origin}/app.html?view=reviews&source=line-admin-login&review=${encodeURIComponent(review.id)}`,
               },
             },
           ],
@@ -256,7 +256,7 @@ function buildAdminLoginMessages(origin) {
           {
             type: "uri",
             label: "管理者ログイン",
-            uri: `${origin}/?view=reviews&source=line-admin-login`,
+            uri: `${origin}/app.html?view=reviews&source=line-admin-login`,
           },
         ],
       },
@@ -274,7 +274,7 @@ function buildHelpMessages(origin) {
         "・投稿素材: GBP投稿に使う素材を送信",
         "・管理者: 管理者画面を開く",
         "",
-        `現場者画面プレビュー: ${origin}/?view=staff`,
+        `現場者画面プレビュー: ${origin}/app.html?view=staff`,
       ].join("\n"),
       quickReply: buildQuickReply(),
     },

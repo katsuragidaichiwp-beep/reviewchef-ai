@@ -4,13 +4,13 @@
 
 ## 使い方
 
-1. `index.html` をブラウザで開きます。
-2. デモレビューが自動で表示されます。
+1. `index.html` を開くと公開HPを確認できます。
+2. `app.html?view=reviews` を開くと管理者画面を確認できます。
 3. `レビュー受信箱` でCSV取り込み、期間・星数・キーワード絞り込み、AI要約、リスク測定、返信案編集、承認投稿、完全自動返信の確認を試せます。
 4. `改善タスク` で低評価レビューから生成された店舗改善タスクを確認できます。
 5. AI返信案は再生成するたびに新しい下書きとして保存され、必要に応じて前案へ戻せます。
 6. `GBP投稿` で店舗投稿の下書き、AI整形、承認待ち、公開済み管理を試せます。GBP投稿案も再生成ごとに新しい下書きになり、前案へ戻せます。
-7. `MEO施策` で提供パッケージ案、効果測定、HP/SNS連携、レビュー獲得導線を確認できます。現在の説明では通知キュータブとMEOの「今週やること」は置かず、レビュー返信、改善タスク、GBP投稿に操作を集約します。
+7. `MEO施策` で効果測定、HP/SNS連携、レビュー獲得導線を確認できます。現在の説明では通知キュータブとMEOの「今週やること」は置かず、レビュー返信、改善タスク、GBP投稿に操作を集約します。
 8. 現場者はLINE上でレビュー確認・店長共有・現場確認済み処理を行い、管理者だけがLINEの `管理者ログイン` からWeb管理者画面へ進む想定です。
 
 ## CSV形式
@@ -55,7 +55,6 @@ store,rating,author,comment,createdAt
 - LINE上で完結する現場者向けレビュー確認フロー
 - LINEの管理者ログインからスマホブラウザで管理者画面へ進む導線
 - 管理者画面/現場者LINE素材からのGBP投稿下書き作成
-- 提供パッケージ案
 - 効果測定
 - レビュー獲得導線の設計
 - 多言語/インバウンド対応チェック
@@ -120,8 +119,8 @@ Cloudflare Pages FunctionsでLINE Webhookを受ける実装を追加していま
 
 - Webhook URL: `https://reviewchef-ai.pages.dev/api/line/webhook`
 - 現場者画面: LINE上のFlex Messageとpostback
-- 管理者ログインURL: `https://reviewchef-ai.pages.dev/?view=reviews`
-- 検証用プレビューURL: `https://reviewchef-ai.pages.dev/?view=staff`
+- 管理者ログインURL: `https://reviewchef-ai.pages.dev/app.html?view=reviews`
+- 検証用プレビューURL: `https://reviewchef-ai.pages.dev/app.html?view=staff`
 - LINEで送るテスト文言: `レビュー`
 
 Cloudflare Pagesの環境変数に以下を設定します。値はGitHubへコミットしません。
