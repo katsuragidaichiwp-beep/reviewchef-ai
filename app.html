@@ -318,43 +318,16 @@
         grid-column: 1 / -1;
       }
 
-      .strategy-grid {
-        display: grid;
-        grid-template-columns: minmax(0, 1.12fr) minmax(320px, 0.88fr);
-        gap: 12px;
-      }
-
-      .target-grid,
-      .case-grid,
-      .feature-grid,
-      .insight-grid,
-      .measurement-grid,
-      .channel-list,
-      .review-growth-list,
-      .plan-grid {
+      .measurement-grid {
         display: grid;
         gap: 10px;
       }
 
-      .target-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-
-      .feature-grid,
-      .insight-grid,
-      .measurement-grid,
-      .plan-grid {
+      .measurement-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
-      .strategy-note,
-      .target-card,
-      .case-card,
-      .feature-card,
-      .insight-card,
       .measurement-card,
-      .channel-card,
-      .review-growth-card,
       .plan-card {
         padding: 13px;
         border: 1px solid var(--line);
@@ -362,21 +335,7 @@
         background: #ffffff;
       }
 
-      .strategy-note {
-        display: grid;
-        gap: 9px;
-        margin-bottom: 10px;
-        background: var(--panel-strong);
-      }
-
-      .strategy-note p,
-      .target-card p,
-      .case-card p,
-      .feature-card p,
-      .insight-card p,
       .measurement-card p,
-      .channel-card p,
-      .review-growth-card p,
       .plan-card p {
         margin-bottom: 8px;
         color: var(--muted);
@@ -384,13 +343,7 @@
         line-height: 1.55;
       }
 
-      .target-card h3,
-      .case-card h3,
-      .feature-card h3,
-      .insight-card h3,
       .measurement-card h3,
-      .channel-card h3,
-      .review-growth-card h3,
       .plan-card h3 {
         margin-bottom: 6px;
         font-size: 15px;
@@ -888,13 +841,6 @@
         gap: 10px;
       }
 
-      .meo-grid {
-        display: grid;
-        grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
-        gap: 14px;
-        align-items: start;
-      }
-
       .client-meo-stack {
         display: grid;
         gap: 14px;
@@ -972,14 +918,141 @@
       }
 
       .advanced-meo summary {
-        padding: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        padding: 18px 20px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #083f3b 0%, #0f766e 100%);
+        color: #ffffff;
         cursor: pointer;
-        font-weight: 850;
+        font-size: 17px;
+        font-weight: 900;
+        list-style: none;
+      }
+
+      .advanced-meo summary::-webkit-details-marker {
+        display: none;
+      }
+
+      .advanced-meo summary::after {
+        content: "開く";
+        min-width: 58px;
+        padding: 7px 10px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.16);
+        color: #dcfaf5;
+        text-align: center;
+        font-size: 12px;
+        font-weight: 900;
+      }
+
+      .advanced-meo[open] summary::after {
+        content: "閉じる";
+      }
+
+      .advanced-meo summary small {
+        display: block;
+        margin-top: 4px;
+        color: #bdece4;
+        font-size: 12px;
+        font-weight: 750;
       }
 
       .advanced-meo-body {
-        padding: 15px;
+        display: grid;
+        gap: 14px;
+        padding: 16px;
         border-top: 1px solid var(--line);
+        background: linear-gradient(180deg, #f5fbf9 0%, #ffffff 100%);
+      }
+
+      .ops-overview {
+        display: grid;
+        grid-template-columns: minmax(0, 0.9fr) minmax(360px, 1.1fr);
+        gap: 14px;
+      }
+
+      .ops-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .ops-section {
+        margin-top: 0;
+        padding-top: 0;
+        border-top: 0;
+        border: 1px solid var(--line-strong);
+        border-radius: 10px;
+        background: #ffffff;
+      }
+
+      .ops-section-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+
+      .ops-section-title span {
+        color: var(--brand-strong);
+        font-size: 12px;
+        font-weight: 900;
+        letter-spacing: 0.05em;
+      }
+
+      .ops-section-title strong {
+        font-size: 20px;
+        font-weight: 900;
+      }
+
+      .ops-section .toolbar {
+        grid-template-columns: minmax(0, 1fr) minmax(180px, 0.7fr) auto;
+        margin-bottom: 12px;
+      }
+
+      .ops-section .data-table th {
+        background: #eff8f6;
+        color: #25443f;
+        font-size: 12px;
+      }
+
+      .ops-section .data-table td {
+        font-size: 13px;
+      }
+
+      .ops-section .checklist,
+      .ops-section .competitor-list,
+      .ops-section .post-list,
+      .ops-section .task-list {
+        gap: 10px;
+      }
+
+      .ops-section .check-item,
+      .ops-section .competitor-card,
+      .ops-section .post-card,
+      .ops-section .task {
+        border-color: #c9ddd8;
+        background: #f9fcfb;
+      }
+
+      .ops-section .check-item h3,
+      .ops-section .competitor-card h3,
+      .ops-section .post-card h3,
+      .ops-section .task h3 {
+        font-size: 15px;
+        font-weight: 900;
+      }
+
+      .ops-section .check-item p,
+      .ops-section .competitor-card p,
+      .ops-section .post-card p,
+      .ops-section .task p {
+        font-size: 13px;
+        line-height: 1.55;
       }
 
       .role-grid {
@@ -1127,9 +1200,11 @@
         display: grid;
         gap: 10px;
         padding: 15px;
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        background: var(--panel-strong);
+        border: 1px solid #9fd3ca;
+        border-radius: 10px;
+        background:
+          radial-gradient(circle at 92% 0%, rgba(255, 255, 255, 0.42), transparent 36%),
+          linear-gradient(135deg, #e9faf6 0%, #cdeee8 100%);
       }
 
       .score-row {
@@ -1140,8 +1215,9 @@
       }
 
       .score {
-        font-size: 34px;
-        font-weight: 850;
+        color: #083f3b;
+        font-size: 46px;
+        font-weight: 950;
         line-height: 1;
       }
 
@@ -1156,7 +1232,7 @@
         display: block;
         height: 100%;
         border-radius: inherit;
-        background: var(--brand);
+        background: linear-gradient(90deg, #0f766e 0%, #36c4ae 100%);
       }
 
       .data-table {
@@ -1200,29 +1276,18 @@
 
       .checklist,
       .post-list,
-      .competitor-list,
-      .service-patterns,
-      .audit-list,
-      .operation-list {
+      .competitor-list {
         display: grid;
         gap: 10px;
       }
 
       .check-item,
       .post-card,
-      .competitor-card,
-      .service-card,
-      .audit-card,
-      .operation-card {
+      .competitor-card {
         padding: 13px;
         border: 1px solid var(--line-strong);
         border-radius: 8px;
         background: #ffffff;
-      }
-
-      .service-card.active {
-        border-color: #7bb8ae;
-        background: #f4fbf9;
       }
 
       .check-item.done {
@@ -1231,63 +1296,18 @@
 
       .check-item h3,
       .post-card h3,
-      .competitor-card h3,
-      .service-card h3,
-      .audit-card h3,
-      .operation-card h3 {
+      .competitor-card h3 {
         margin-bottom: 6px;
         font-size: 15px;
       }
 
       .check-item p,
       .post-card p,
-      .competitor-card p,
-      .service-card p,
-      .audit-card p,
-      .operation-card p {
+      .competitor-card p {
         margin-bottom: 9px;
         color: var(--muted);
         font-size: 13px;
         line-height: 1.55;
-      }
-
-      .heatmap {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 8px;
-      }
-
-      .heat-cell {
-        min-height: 78px;
-        padding: 10px;
-        border-radius: 8px;
-        border: 1px solid var(--line);
-        background: #ffffff;
-      }
-
-      .heat-cell.good {
-        background: var(--ok-soft);
-        border-color: #9ad8b8;
-      }
-
-      .heat-cell.warn {
-        background: var(--warn-soft);
-        border-color: #f4d58a;
-      }
-
-      .heat-cell.bad {
-        background: var(--danger-soft);
-        border-color: #efb2a9;
-      }
-
-      .heat-cell strong {
-        display: block;
-        margin-bottom: 6px;
-      }
-
-      .heat-cell span {
-        color: var(--muted);
-        font-size: 12px;
       }
 
       .import-box {
@@ -1397,17 +1417,13 @@
           grid-template-columns: 1fr;
         }
 
-        .meo-grid,
+        .ops-overview,
+        .ops-grid,
         .three-col,
-        .strategy-grid,
         .role-grid,
         .staff-grid,
         .meo-status-grid,
-        .target-grid,
-        .feature-grid,
-        .insight-grid,
-        .measurement-grid,
-        .plan-grid {
+        .measurement-grid {
           grid-template-columns: 1fr;
         }
       }
@@ -1435,14 +1451,20 @@
         .metrics,
         .two-col,
         .three-col,
+        .ops-overview,
+        .ops-grid,
         .role-grid,
         .staff-grid,
         .meo-status-grid,
-        .target-grid,
-        .feature-grid,
-        .insight-grid,
-        .measurement-grid,
-        .plan-grid {
+        .measurement-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .advanced-meo summary {
+          display: grid;
+        }
+
+        .ops-section .toolbar {
           grid-template-columns: 1fr;
         }
 
@@ -1647,87 +1669,83 @@
             </div>
 
             <details class="panel advanced-meo">
-              <summary>運用担当者向けの詳細を見る</summary>
+              <summary>
+                <span>
+                  運用担当者向けの詳細を見る
+                  <small>順位、GBP整備、競合、投稿案だけに絞って確認します。</small>
+                </span>
+              </summary>
               <div class="advanced-meo-body">
-                <div class="meo-grid">
-                  <div>
-                    <div class="service-patterns" id="servicePatterns"></div>
-
-                    <div class="score-card">
-                      <div class="score-row">
-                        <div>
-                          <h3>MEO運用スコア</h3>
-                          <p>プロフィール充実度、返信率、順位ギャップから算出した優先度です。</p>
-                        </div>
-                        <div class="score" id="meoScore">-</div>
+                <div class="ops-overview">
+                  <div class="score-card">
+                    <div class="score-row">
+                      <div>
+                        <h3>MEO運用スコア</h3>
+                        <p>返信率、GBP整備、検索順位を1つの状態にまとめます。</p>
                       </div>
-                      <div class="progress" aria-label="MEO運用スコア">
-                        <span id="meoScoreBar" style="width: 0%"></span>
-                      </div>
-                      <div class="chips" id="meoScoreChips"></div>
+                      <div class="score" id="meoScore">-</div>
                     </div>
-
-                    <div class="detail-section">
-                      <h3>多地点順位ヒートマップ</h3>
-                      <div class="heatmap" id="rankHeatmap"></div>
+                    <div class="progress" aria-label="MEO運用スコア">
+                      <span id="meoScoreBar" style="width: 0%"></span>
                     </div>
-
-                    <div class="detail-section">
-                      <h3>キーワード順位トラッキング</h3>
-                      <div class="toolbar">
-                        <input class="input" id="keywordInput" placeholder="例: 渋谷 ランチ ハンバーグ" />
-                        <input class="input" id="areaInput" placeholder="計測エリア 例: 渋谷駅" />
-                        <button class="btn primary" id="addKeywordBtn">キーワード追加</button>
-                      </div>
-                      <div id="keywordTable"></div>
-                    </div>
-
-                    <div class="detail-section">
-                      <h3>GBP改善チェック</h3>
-                      <div class="checklist" id="profileChecklist"></div>
-                    </div>
-
-                    <div class="detail-section">
-                      <h3>HP/SNS/グルメサイト連携</h3>
-                      <div class="channel-list" id="channelLinks"></div>
-                    </div>
-
-                    <div class="detail-section">
-                      <h3>サイテーション/NAP監査</h3>
-                      <div class="audit-list" id="citationAudit"></div>
-                    </div>
+                    <div class="chips" id="meoScoreChips"></div>
                   </div>
 
-                  <div>
-                    <div class="detail-section" style="margin-top: 0; padding-top: 0; border-top: 0">
-                      <h3>競合比較</h3>
-                      <div class="competitor-list" id="competitorList"></div>
+                  <div class="detail-section ops-section">
+                    <div class="ops-section-title">
+                      <div>
+                        <span>PRIORITY</span>
+                        <strong>次にやること</strong>
+                      </div>
                     </div>
+                    <div class="task-list" id="meoActionList"></div>
+                  </div>
+                </div>
 
-                    <div class="detail-section">
-                      <h3>レビュー獲得導線</h3>
-                      <div class="review-growth-list" id="reviewGrowthLoops"></div>
+                <div class="ops-grid">
+                  <div class="detail-section ops-section">
+                    <div class="ops-section-title">
+                      <div>
+                        <span>RANK</span>
+                        <strong>検索順位</strong>
+                      </div>
                     </div>
+                    <div class="toolbar">
+                      <input class="input" id="keywordInput" placeholder="例: 渋谷 ランチ ハンバーグ" />
+                      <input class="input" id="areaInput" placeholder="エリア" />
+                      <button class="btn primary" id="addKeywordBtn">追加</button>
+                    </div>
+                    <div id="keywordTable"></div>
+                  </div>
 
-                    <div class="detail-section">
-                      <h3>今週のGoogle投稿案</h3>
-                      <div class="post-list" id="postPlan"></div>
+                  <div class="detail-section ops-section">
+                    <div class="ops-section-title">
+                      <div>
+                        <span>GBP</span>
+                        <strong>整備チェック</strong>
+                      </div>
                     </div>
+                    <div class="checklist" id="profileChecklist"></div>
+                  </div>
 
-                    <div class="detail-section">
-                      <h3>クリエイティブABテスト</h3>
-                      <div class="post-list" id="creativeTests"></div>
+                  <div class="detail-section ops-section">
+                    <div class="ops-section-title">
+                      <div>
+                        <span>COMPETITOR</span>
+                        <strong>競合比較</strong>
+                      </div>
                     </div>
+                    <div class="competitor-list" id="competitorList"></div>
+                  </div>
 
-                    <div class="detail-section">
-                      <h3>運用代行カレンダー</h3>
-                      <div class="operation-list" id="operationCalendar"></div>
+                  <div class="detail-section ops-section">
+                    <div class="ops-section-title">
+                      <div>
+                        <span>POST</span>
+                        <strong>今週のGoogle投稿案</strong>
+                      </div>
                     </div>
-
-                    <div class="detail-section">
-                      <h3>優先施策</h3>
-                      <div class="task-list" id="meoActionList"></div>
-                    </div>
+                    <div class="post-list" id="postPlan"></div>
                   </div>
                 </div>
               </div>
@@ -2051,7 +2069,6 @@
           priority: "all",
           issue: "all",
         },
-        selectedServicePattern: "epress",
         gbpComposerPreviousSummary: "",
         gbpComposerDraftVersion: 0,
         reviews: [
@@ -2118,93 +2135,6 @@
           },
         ],
         meo: {
-          servicePatterns: [
-            {
-              id: "epress",
-              name: "EPRESS MEO型",
-              source: "EPRESS MEO",
-              focus: "一元管理・口コミ・サイテーション",
-              body: "GBP運用、口コミ対策、外部媒体連携、データ分析をまとめて管理する運用パッケージ。",
-              features: ["GBP一括管理", "口コミ対策", "Yext/媒体連携", "サイテーション監査"],
-            },
-            {
-              id: "dash",
-              name: "MEO Dash!型",
-              source: "MEO Dash!",
-              focus: "順位計測・多地点分析・ABテスト",
-              body: "順位取得、競合比較、商圏エリアの多地点順位、クリエイティブ改善を重視する運用型。",
-              features: ["順位管理", "多地点ヒートマップ", "競合順位比較", "クリエイティブABテスト"],
-            },
-            {
-              id: "white-link",
-              name: "ホワイトリンク型",
-              source: "ホワイトリンク",
-              focus: "GBP最適化・外部施策・店舗別支援",
-              body: "SEOや広告運用の知見を活かし、店舗ごとの特徴に合わせてGBPと外部評価を改善する型。",
-              features: ["GBP最適化", "外部対策", "店舗別施策", "費用対効果レポート"],
-            },
-          ],
-          targetSegments: [
-            {
-              title: "競合が多い繁華街の店舗",
-              fit: "最優先",
-              body: "地図検索で上位店に埋もれ、写真・投稿・口コミ返信まで手が回っていない店舗。",
-            },
-            {
-              title: "単独店舗・小規模チーム",
-              fit: "高",
-              body: "本部や専任担当がなく、店長がGBP、SNS、口コミ対応を兼務している店舗。",
-            },
-            {
-              title: "レビュー数が伸びない店舗",
-              fit: "高",
-              body: "評価は悪くないがレビュー依頼の導線がなく、MEOの伸びしろを取り切れていない店舗。",
-            },
-          ],
-          caseStudies: [
-            {
-              title: "繁華街の単独居酒屋モデル",
-              note: "営業用の仮説デモ値。強い店舗は比較素材にせず、伸び悩み店の改善幅を見せる。",
-              metrics: [
-                { label: "主要キーワード平均順位", before: "12位", after: "4位", delta: "8ランク改善" },
-                { label: "口コミ返信率", before: "18%", after: "92%", delta: "+74pt" },
-                { label: "GBP情報充足度", before: "52%", after: "91%", delta: "+39pt" },
-                { label: "経路/電話/サイト導線", before: "100", after: "146", delta: "+46%" },
-              ],
-            },
-          ],
-          mustHaveFeatures: [
-            {
-              title: "GMB/GBP返信文の自動作成",
-              status: "MVP実装",
-              body: "レビュー要約、リスク判定、自然な短文返信、ネガティブ時の承認制を1画面で扱う。",
-            },
-            {
-              title: "返信対応・投稿管理",
-              status: "本番API接続で拡張",
-              body: "低評価は店長確認、高評価は半自動返信。投稿後は監査ログとリマインドを残す。",
-            },
-            {
-              title: "評価/不満ポイント分析",
-              status: "MVP実装",
-              body: "評価されている料理・接客・雰囲気と、改善すべき待ち時間・清潔さなどを集計する。",
-            },
-            {
-              title: "HP/SNSとの連携と誘導",
-              status: "設計反映",
-              body: "GBP投稿、レビュー返信、公式HP、Instagram、グルメサイトの導線と表記ズレを管理する。",
-            },
-            {
-              title: "GBP最適化コンサル",
-              status: "設計反映",
-              body: "カテゴリ、検索キーワード、メニュー、営業時間、写真、多言語対応を初期診断で整える。",
-            },
-            {
-              title: "効果測定",
-              status: "MVP実装",
-              body: "順位、返信率、GBP整備率、導線クリック、レビュー獲得数をBefore/Afterで追う。",
-            },
-          ],
           keywords: [
             {
               id: "kw-001",
@@ -2259,43 +2189,11 @@
             { id: "profile-qa", title: "Q&Aの未回答を確認する", area: "Q&A", priority: "P2", done: true },
             { id: "profile-nap", title: "店名・住所・電話番号の表記ゆれを確認する", area: "外部施策", priority: "P2", done: false },
           ],
-          channels: [
-            { id: "website", name: "公式HP", status: "ok", goal: "予約・メニュー確認", action: "GBP投稿と返信文から予約ページへ誘導する", kpi: "サイトクリック" },
-            { id: "instagram", name: "Instagram", status: "warn", goal: "写真で来店意欲を作る", action: "勝ち写真をGBP投稿にも転用し、表記を統一する", kpi: "プロフィール遷移" },
-            { id: "gourmet", name: "グルメサイト", status: "bad", goal: "メニュー情報のズレをなくす", action: "価格・営業時間・人気メニューの差異を検知して修正する", kpi: "情報一致率" },
-          ],
           effectMetrics: [
             { label: "主要KW平均順位", before: "12位", current: "7位", target: "3位以内", action: "カテゴリと投稿文に検索意図を反映" },
             { label: "口コミ返信率", before: "18%", current: "44%", target: "90%", action: "高評価は半自動、低評価は承認制で処理" },
             { label: "月間レビュー獲得数", before: "3件", current: "5件", target: "8件以上", action: "会計前アンケートとQR導線を追加" },
             { label: "HP/SNS導線クリック", before: "100", current: "118", target: "150", action: "GBP投稿と返信文のCTAを最適化" },
-          ],
-          reviewGrowthLoops: [
-            {
-              title: "会計前の星評価チェック",
-              body: "モバイルオーダーや会計導線で満足度を聞き、高評価の顧客にGoogleレビュー投稿を自然に依頼する。",
-              kpi: "月8件以上のレビュー増",
-            },
-            {
-              title: "Googleアカウント連携の将来構想",
-              body: "LINEではなくGoogleアカウント起点にすると、注文体験とGoogle口コミを結びつけやすい。",
-              kpi: "レビュー依頼承認率",
-            },
-            {
-              title: "離れモニター運用",
-              body: "hanare/離れはBefore/After実績ではなく、現場UX・返信品質・導線の無料モニターとして使う。",
-              kpi: "現場フィードバック数",
-            },
-          ],
-          citations: [
-            { id: "google", medium: "Google Business Profile", status: "ok", name: "ミセコエ食堂 渋谷店", phone: "一致", address: "一致" },
-            { id: "site", medium: "公式サイト", status: "ok", name: "ミセコエ食堂", phone: "一致", address: "一致" },
-            { id: "instagram", medium: "Instagram", status: "warn", name: "Misekoe Shokudo", phone: "未掲載", address: "一致" },
-            { id: "gourmet", medium: "グルメサイト", status: "bad", name: "Review Chef 食堂", phone: "旧番号", address: "表記ゆれ" },
-          ],
-          creativeTests: [
-            { id: "ab-photo", title: "料理写真ABテスト", metric: "投稿クリック率", a: "ハンバーグ寄り写真", b: "店内＋料理の利用シーン写真", winner: "B", lift: "+18%" },
-            { id: "ab-post", title: "投稿文ABテスト", metric: "経路検索タップ", a: "メニュー訴求", b: "混雑しにくい時間帯訴求", winner: "B", lift: "+11%" },
           ],
         },
       };
@@ -2325,21 +2223,14 @@
         meoScore: document.getElementById("meoScore"),
         meoScoreBar: document.getElementById("meoScoreBar"),
         meoScoreChips: document.getElementById("meoScoreChips"),
-        servicePatterns: document.getElementById("servicePatterns"),
         effectMetrics: document.getElementById("effectMetrics"),
-        rankHeatmap: document.getElementById("rankHeatmap"),
         keywordInput: document.getElementById("keywordInput"),
         areaInput: document.getElementById("areaInput"),
         addKeywordBtn: document.getElementById("addKeywordBtn"),
         keywordTable: document.getElementById("keywordTable"),
         profileChecklist: document.getElementById("profileChecklist"),
-        channelLinks: document.getElementById("channelLinks"),
-        citationAudit: document.getElementById("citationAudit"),
         competitorList: document.getElementById("competitorList"),
-        reviewGrowthLoops: document.getElementById("reviewGrowthLoops"),
         postPlan: document.getElementById("postPlan"),
-        creativeTests: document.getElementById("creativeTests"),
-        operationCalendar: document.getElementById("operationCalendar"),
         meoActionList: document.getElementById("meoActionList"),
         gbpPostStore: document.getElementById("gbpPostStore"),
         gbpPostTopic: document.getElementById("gbpPostTopic"),
@@ -2401,22 +2292,13 @@
           taskFilters: { ...defaults.taskFilters, ...(saved.taskFilters || {}) },
           gbpComposerPreviousSummary: saved.gbpComposerPreviousSummary || "",
           gbpComposerDraftVersion: saved.gbpComposerDraftVersion || 0,
-          selectedServicePattern: saved.selectedServicePattern || defaults.selectedServicePattern,
           meo: {
             ...defaults.meo,
             ...(saved.meo || {}),
-            servicePatterns: saved.meo?.servicePatterns || defaults.meo.servicePatterns,
-            targetSegments: saved.meo?.targetSegments || defaults.meo.targetSegments,
-            caseStudies: saved.meo?.caseStudies || defaults.meo.caseStudies,
-            mustHaveFeatures: saved.meo?.mustHaveFeatures || defaults.meo.mustHaveFeatures,
             keywords: saved.meo?.keywords || defaults.meo.keywords,
             competitors: saved.meo?.competitors || defaults.meo.competitors,
             profileItems: saved.meo?.profileItems || defaults.meo.profileItems,
-            channels: saved.meo?.channels || defaults.meo.channels,
             effectMetrics: saved.meo?.effectMetrics || defaults.meo.effectMetrics,
-            reviewGrowthLoops: saved.meo?.reviewGrowthLoops || defaults.meo.reviewGrowthLoops,
-            citations: saved.meo?.citations || defaults.meo.citations,
-            creativeTests: saved.meo?.creativeTests || defaults.meo.creativeTests,
           },
         };
         merged.settings.autoReplyRatings = normalizeAutoReplyRatings(merged.settings);
@@ -3039,18 +2921,11 @@
           <span class="chip">GBP ${doneCount}/${profileItems.length}</span>
         `;
 
-        renderServicePatterns();
         renderEffectMetrics();
-        renderRankHeatmap(keywordRows);
         renderKeywordTable(keywordRows);
         renderProfileChecklist(profileItems);
-        renderChannelLinks();
-        renderCitationAudit();
         renderCompetitors();
-        renderReviewGrowthLoops();
         renderPostPlan();
-        renderCreativeTests();
-        renderOperationCalendar();
         renderMeoActions(score, keywordRows, profileItems);
       }
 
@@ -3097,29 +2972,6 @@
           .join("");
       }
 
-      function renderServicePatterns() {
-        els.servicePatterns.innerHTML = (state.meo.servicePatterns || [])
-          .map(
-            (pattern) => `<div class="service-card ${state.selectedServicePattern === pattern.id ? "active" : ""}">
-              <div class="chips">
-                <span class="chip brand">参考: ${escapeHtml(pattern.source)}</span>
-                <span class="chip">${escapeHtml(pattern.focus)}</span>
-              </div>
-              <h3>${escapeHtml(pattern.name)}</h3>
-              <p>${escapeHtml(pattern.body)}</p>
-              <div class="chips">
-                ${pattern.features.map((feature) => `<span class="chip">${escapeHtml(feature)}</span>`).join("")}
-              </div>
-              <div class="reply-actions">
-                <button class="btn small" data-action="select-service-pattern" data-id="${pattern.id}">
-                  ${state.selectedServicePattern === pattern.id ? "選択中" : "この型で見る"}
-                </button>
-              </div>
-            </div>`,
-          )
-          .join("");
-      }
-
       function renderEffectMetrics() {
         els.effectMetrics.innerHTML = (state.meo.effectMetrics || [])
           .map(
@@ -3140,79 +2992,6 @@
                 </div>
               </div>
               <p>${escapeHtml(metric.action)}</p>
-            </div>`,
-          )
-          .join("");
-      }
-
-      function renderRankHeatmap(rows) {
-        const selected = rows[0] || { keyword: "追跡キーワード", current: 12 };
-        const points = ["北西", "北", "北東", "西", "中心", "東", "南西", "南", "南東"];
-        els.rankHeatmap.innerHTML = points
-          .map((point, index) => {
-            const offset = [3, 1, 4, 2, 0, 3, 5, 2, 4][index];
-            const rank = Math.min(20, Math.max(1, selected.current + offset - (selected.delta > 0 ? 1 : 0)));
-            const tone = rank <= 3 ? "good" : rank <= 8 ? "warn" : "bad";
-            return `<div class="heat-cell ${tone}">
-              <strong>${rank}位</strong>
-              <span>${escapeHtml(point)} / ${escapeHtml(selected.area)}</span>
-            </div>`;
-          })
-          .join("");
-      }
-
-      function renderCitationAudit() {
-        els.citationAudit.innerHTML = (state.meo.citations || [])
-          .map(
-            (item) => `<div class="audit-card">
-              <div class="chips">
-                <span class="chip ${item.status === "ok" ? "ok" : item.status === "warn" ? "p2" : "p1"}">${citationStatusLabel(item.status)}</span>
-                <span class="chip brand">${escapeHtml(item.medium)}</span>
-              </div>
-              <h3>${escapeHtml(item.name)}</h3>
-              <p>電話番号: ${escapeHtml(item.phone)} / 住所: ${escapeHtml(item.address)}</p>
-              <button class="btn small" data-action="fix-citation" data-id="${item.id}">
-                ${item.status === "ok" ? "確認済み" : "修正済みにする"}
-              </button>
-            </div>`,
-          )
-          .join("");
-      }
-
-      function renderCreativeTests() {
-        els.creativeTests.innerHTML = (state.meo.creativeTests || [])
-          .map(
-            (test) => `<div class="post-card">
-              <div class="chips">
-                <span class="chip brand">${escapeHtml(test.metric)}</span>
-                <span class="chip ok">勝ち案 ${escapeHtml(test.winner)}</span>
-                <span class="chip">${escapeHtml(test.lift)}</span>
-              </div>
-              <h3>${escapeHtml(test.title)}</h3>
-              <p>A: ${escapeHtml(test.a)} / B: ${escapeHtml(test.b)}</p>
-              <button class="btn small" data-action="copy-ab-test" data-id="${test.id}">勝ち案を投稿案にする</button>
-            </div>`,
-          )
-          .join("");
-      }
-
-      function renderOperationCalendar() {
-        const pattern = state.selectedServicePattern;
-        const operations = [
-          { day: "月", title: "順位・競合チェック", body: pattern === "dash" ? "多地点順位と競合順位を確認し、落ちた地点を抽出。" : "主要キーワードの順位を確認。" },
-          { day: "火", title: "GBP情報・検索KW更新", body: pattern === "epress" ? "媒体連携を前提に、営業時間・メニュー・NAP・検索キーワードを一括確認。" : "営業時間、メニュー、カテゴリ、検索キーワードを更新。" },
-          { day: "水", title: "口コミ返信・レビュー獲得", body: "低評価は承認制、高評価は短文返信。会計前QRやモバイルオーダー導線でレビュー依頼を確認。" },
-          { day: "木", title: "投稿・写真・多言語改善", body: pattern === "dash" ? "ABテストの勝ち案を反映して投稿・写真・英語メニュー説明を更新。" : "おすすめメニュー、来店シーン、インバウンド向け説明を投稿。" },
-          { day: "金", title: "外部施策・効果測定", body: pattern === "white-link" ? "サイテーションと外部評価を確認し、店舗別の改善提案とBefore/Afterを作成。" : "週次レポートと次週アクションを作成。" },
-        ];
-        els.operationCalendar.innerHTML = operations
-          .map(
-            (item) => `<div class="operation-card">
-              <div class="chips">
-                <span class="chip brand">${escapeHtml(item.day)}曜</span>
-              </div>
-              <h3>${escapeHtml(item.title)}</h3>
-              <p>${escapeHtml(item.body)}</p>
             </div>`,
           )
           .join("");
@@ -3318,22 +3097,6 @@
           : `<div class="empty">GBP改善項目がありません。</div>`;
       }
 
-      function renderChannelLinks() {
-        els.channelLinks.innerHTML = (state.meo.channels || [])
-          .map(
-            (channel) => `<div class="channel-card">
-              <div class="chips">
-                <span class="chip ${channel.status === "ok" ? "ok" : channel.status === "warn" ? "p2" : "p1"}">${citationStatusLabel(channel.status)}</span>
-                <span class="chip brand">${escapeHtml(channel.name)}</span>
-                <span class="chip">KPI ${escapeHtml(channel.kpi)}</span>
-              </div>
-              <h3>${escapeHtml(channel.goal)}</h3>
-              <p>${escapeHtml(channel.action)}</p>
-            </div>`,
-          )
-          .join("");
-      }
-
       function renderCompetitors() {
         const reviews = enrichReviews().filter((review) => state.selectedStore === "all" || review.store === state.selectedStore);
         const avgRating = reviews.length
@@ -3358,20 +3121,6 @@
               <p>差分: 口コミ +${reviewGap}件 / 写真 +${photoGap}枚 / 評価差 +${ratingGap}</p>
             </div>`;
           })
-          .join("");
-      }
-
-      function renderReviewGrowthLoops() {
-        els.reviewGrowthLoops.innerHTML = (state.meo.reviewGrowthLoops || [])
-          .map(
-            (loop) => `<div class="review-growth-card">
-              <div class="chips">
-                <span class="chip brand">${escapeHtml(loop.kpi)}</span>
-              </div>
-              <h3>${escapeHtml(loop.title)}</h3>
-              <p>${escapeHtml(loop.body)}</p>
-            </div>`,
-          )
           .join("");
       }
 
@@ -4295,11 +4044,6 @@
           showToast("タスク状態を更新しました。");
           render();
         }
-        if (action.dataset.action === "select-service-pattern") {
-          state.selectedServicePattern = id;
-          showToast("参考パターンを切り替えました。");
-          render();
-        }
         if (action.dataset.action === "remove-keyword") {
           state.meo.keywords = (state.meo.keywords || []).filter((keyword) => keyword.id !== id);
           showToast("追跡キーワードを削除しました。");
@@ -4312,20 +4056,9 @@
           showToast("GBP改善チェックを更新しました。");
           render();
         }
-        if (action.dataset.action === "fix-citation") {
-          state.meo.citations = (state.meo.citations || []).map((item) =>
-            item.id === id ? { ...item, status: "ok", phone: "一致", address: "一致" } : item,
-          );
-          showToast("NAP監査項目を修正済みにしました。");
-          render();
-        }
         if (action.dataset.action === "copy-post") {
           const post = buildPostPlan().find((item) => item.id === id);
           copyText(`${post.title}\n${post.body}`);
-        }
-        if (action.dataset.action === "copy-ab-test") {
-          const test = (state.meo.creativeTests || []).find((item) => item.id === id);
-          copyText(`${test.title}: 勝ち案${test.winner}\n${test.winner === "A" ? test.a : test.b}\n指標: ${test.metric} ${test.lift}`);
         }
         if (action.dataset.action === "polish-gbp-post") {
           state.gbpComposerPreviousSummary = els.gbpPostSummary.value;
