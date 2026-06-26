@@ -3,7 +3,9 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>ReviewChef AI - 飲食店レビュー運用MVP</title>
+    <title>ミセコエ - 口コミ返信とMEO改善</title>
+    <link rel="icon" type="image/png" href="assets/favicon.png" />
+    <link rel="apple-touch-icon" href="assets/misekoe-icon-192.png" />
     <style>
       :root {
         color-scheme: light;
@@ -91,14 +93,20 @@
       }
 
       .logo-mark {
-        display: grid;
         width: 36px;
         height: 36px;
-        place-items: center;
         border-radius: 8px;
-        background: var(--brand);
-        color: white;
-        font-weight: 800;
+        background: #f7fffc;
+        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.24);
+        overflow: hidden;
+        flex: 0 0 auto;
+      }
+
+      .logo-mark img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
       }
 
       .logo strong {
@@ -829,6 +837,45 @@
         font-weight: 800;
       }
 
+      .rating-check-grid {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .rating-check {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        min-height: 40px;
+        padding: 8px 10px;
+        border: 1px solid var(--line-strong);
+        border-radius: 8px;
+        background: #f8fbfa;
+        color: #243733;
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      .rating-check input {
+        width: 16px;
+        height: 16px;
+        accent-color: var(--brand);
+      }
+
+      .automation-note {
+        margin-top: 10px;
+        padding: 10px 12px;
+        border: 1px solid #acd9d1;
+        border-radius: 8px;
+        background: #effbf8;
+        color: #28524c;
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 1.55;
+      }
+
       .two-col {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1412,11 +1459,13 @@
   <body>
     <div class="app">
       <aside class="sidebar">
-        <div class="logo" aria-label="ReviewChef AI">
-          <div class="logo-mark">R</div>
+        <div class="logo" aria-label="ミセコエ">
+          <div class="logo-mark">
+            <img src="assets/misekoe-icon-192.png" alt="" />
+          </div>
           <div>
-            <strong>ReviewChef AI</strong>
-            <span>飲食店レビュー運用MVP</span>
+            <strong>ミセコエ</strong>
+            <span>口コミ返信とMEO改善</span>
           </div>
         </div>
 
@@ -1439,9 +1488,6 @@
           <div>
             <p class="eyebrow">GOOGLE REVIEW OPERATIONS</p>
             <h1>レビュー返信からMEO改善、レビュー獲得まで回す</h1>
-            <p class="lead">
-              Googleレビューを取り込み、返信案生成、管理者通知、GBP最適化、HP/SNS導線、レビュー獲得施策、効果測定までを試せる飲食店向けMVPです。
-            </p>
           </div>
         </section>
 
@@ -1473,7 +1519,6 @@
             <div class="panel-header">
               <div>
                 <h2>受信レビュー</h2>
-                <p>Googleレビューを受信し、未返信のものから順に処理します。</p>
               </div>
             </div>
             <div class="panel-body">
@@ -1508,12 +1553,14 @@
                   <option value="P0">P0 即時対応</option>
                   <option value="P1">P1 当日対応</option>
                   <option value="P2">P2 通常対応</option>
-                  <option value="P3">P3 自動返信候補</option>
+                  <option value="P3">P3 低リスク</option>
                 </select>
                 <select class="select" id="statusFilter" aria-label="状態">
                   <option value="all">すべての状態</option>
                   <option value="new">未対応</option>
                   <option value="drafted">返信案あり</option>
+                  <option value="auto_scheduled">自動返信予定</option>
+                  <option value="needs_check">要チェック</option>
                   <option value="needs_approval">承認待ち</option>
                   <option value="replied">返信済み</option>
                 </select>
@@ -1546,7 +1593,6 @@
           <div class="panel-header">
             <div>
               <h2>店舗改善タスク</h2>
-              <p>低評価レビューの論点を、現場で潰せるタスクに変換します。</p>
             </div>
           </div>
           <div class="panel-body">
@@ -1566,7 +1612,7 @@
                   <option value="P0">P0 即時対応</option>
                   <option value="P1">P1 当日対応</option>
                   <option value="P2">P2 通常対応</option>
-                  <option value="P3">P3 自動返信候補</option>
+                  <option value="P3">P3 低リスク</option>
                 </select>
                 <select class="select" id="taskIssueFilter" aria-label="タスク論点">
                   <option value="all">すべての論点</option>
@@ -1583,7 +1629,6 @@
               <div class="panel-header">
                 <div>
                   <h2>クライアント向けMEOレポート</h2>
-                  <p>Googleマップで「見つかる・信頼される・来店につながる」状態を、シンプルに確認できます。</p>
                 </div>
               </div>
               <div class="panel-body">
@@ -1594,7 +1639,6 @@
               <div class="panel-header">
                 <div>
                   <h2>効果測定</h2>
-                  <p>Before/Afterは、検索順位・返信率・レビュー獲得・導線クリックだけ見ます。</p>
                 </div>
               </div>
               <div class="panel-body">
@@ -1774,7 +1818,6 @@
             <div class="panel-header">
               <div>
                 <h2>投稿キュー</h2>
-                <p>管理者作成分と、LINEから届いた現場素材をここで承認します。</p>
               </div>
             </div>
             <div class="panel-body">
@@ -1851,7 +1894,7 @@
                   <div class="phone-shell" aria-label="現場者画面">
                     <div class="phone-header">
                       <div>
-                        <strong>ReviewChef通知</strong>
+                        <strong>ミセコエ通知</strong>
                         <span id="staffPhoneStatus">未確認レビュー</span>
                       </div>
                       <span>LINE想定</span>
@@ -1894,22 +1937,36 @@
 
               <div class="setting-card">
                 <h3>自動返信ルール</h3>
-                <p>本番ではGoogle APIへ投稿する前に、店舗の明示的な同意と監査ログを残します。</p>
+                <p>選択した星数に該当する未返信レビューを全件対象にし、レビューごとに返信文を自動生成して承認なしでGoogleへ投稿します。</p>
                 <div class="two-col">
                   <div class="field">
-                    <label for="autoReplyEnabled">低リスク自動返信</label>
+                    <label for="autoReplyEnabled">完全自動返信</label>
                     <select class="select" id="autoReplyEnabled">
                       <option value="false">無効</option>
                       <option value="true">有効</option>
                     </select>
                   </div>
                   <div class="field">
-                    <label for="autoReplyMinRating">自動返信の最低評価</label>
-                    <select class="select" id="autoReplyMinRating">
-                      <option value="5">星5のみ</option>
-                      <option value="4">星4以上</option>
-                    </select>
+                    <label for="autoReplyRunAt">自動返信を実施する時刻</label>
+                    <input class="input" id="autoReplyRunAt" type="time" />
                   </div>
+                </div>
+                <div class="field" style="margin-top: 12px">
+                  <label>完全自動返信する星数</label>
+                  <div class="rating-check-grid" id="autoReplyRatingGroup">
+                    <label class="rating-check"><input type="checkbox" data-auto-reply-rating value="5" />星5</label>
+                    <label class="rating-check"><input type="checkbox" data-auto-reply-rating value="4" />星4</label>
+                    <label class="rating-check"><input type="checkbox" data-auto-reply-rating value="3" />星3</label>
+                    <label class="rating-check"><input type="checkbox" data-auto-reply-rating value="2" />星2</label>
+                    <label class="rating-check"><input type="checkbox" data-auto-reply-rating value="1" />星1</label>
+                  </div>
+                </div>
+                <div class="field" style="margin-top: 12px">
+                  <label for="autoReplyCheckKeywords">要チェックキーワード</label>
+                  <textarea class="textarea" id="autoReplyCheckKeywords" rows="3"></textarea>
+                </div>
+                <div class="automation-note" id="autoReplyRuleSummary">
+                  星5の未返信レビューを23:00に完全自動返信。要チェック語がある場合だけ人の確認に回します。
                 </div>
               </div>
 
@@ -1924,7 +1981,7 @@
 
               <div class="setting-card">
                 <h3>Google/GBP連携</h3>
-                <p>実運用では、店舗オーナーまたは管理者権限を持つGoogleアカウントでOAuthログインし、ReviewChef AIにGBPのレビュー返信・店舗投稿権限を許可します。</p>
+                <p>実運用では、店舗オーナーまたは管理者権限を持つGoogleアカウントでOAuthログインし、ミセコエにGBPのレビュー返信・店舗投稿権限を許可します。</p>
                 <div class="chips">
                   <span class="chip p2">未連携</span>
                   <span class="chip brand">OAuth</span>
@@ -1976,7 +2033,7 @@
     <div class="toast hidden" id="toast" role="status"></div>
 
     <script>
-      const STORAGE_KEY = "reviewchef-mvp-state-v4";
+      const STORAGE_KEY = "misekoe-mvp-state-v1";
 
       const issueMap = [
         { key: "健康被害", terms: ["食中毒", "腹痛", "下痢", "嘔吐", "病院", "救急", "体調", "吐き気"] },
@@ -1993,13 +2050,42 @@
       const positiveTerms = ["美味", "おいし", "最高", "また", "丁寧", "親切", "満足", "おすすめ", "雰囲気", "良かっ"];
       const negativeTerms = ["最悪", "二度と", "ひど", "遅い", "まず", "汚", "失礼", "冷め", "高い", "残念"];
       const criticalIssues = new Set(["健康被害", "アレルギー", "異物混入", "法務・返金"]);
+      const defaultAutoReplyCheckKeywords = [
+        "食中毒",
+        "腹痛",
+        "下痢",
+        "嘔吐",
+        "病院",
+        "救急",
+        "体調",
+        "吐き気",
+        "アレルギー",
+        "異物",
+        "髪の毛",
+        "虫",
+        "ガラス",
+        "カビ",
+        "返金",
+        "弁護士",
+        "訴え",
+        "警察",
+        "保健所",
+        "詐欺",
+        "最悪",
+        "二度と",
+        "ひど",
+        "汚",
+        "失礼",
+      ];
 
       const demoState = {
         settings: {
-          businessName: "ReviewChef食堂",
+          businessName: "ミセコエ食堂",
           replyTone: "warm",
           autoReplyEnabled: false,
-          autoReplyMinRating: 5,
+          autoReplyRatings: [5],
+          autoReplyRunAt: "23:00",
+          autoReplyCheckKeywords: defaultAutoReplyCheckKeywords.join("、"),
           notificationWebhook: "",
         },
         selectedStore: "all",
@@ -2273,9 +2359,9 @@
             },
           ],
           citations: [
-            { id: "google", medium: "Google Business Profile", status: "ok", name: "ReviewChef食堂 渋谷店", phone: "一致", address: "一致" },
-            { id: "site", medium: "公式サイト", status: "ok", name: "ReviewChef食堂", phone: "一致", address: "一致" },
-            { id: "instagram", medium: "Instagram", status: "warn", name: "ReviewChef Shokudo", phone: "未掲載", address: "一致" },
+            { id: "google", medium: "Google Business Profile", status: "ok", name: "ミセコエ食堂 渋谷店", phone: "一致", address: "一致" },
+            { id: "site", medium: "公式サイト", status: "ok", name: "ミセコエ食堂", phone: "一致", address: "一致" },
+            { id: "instagram", medium: "Instagram", status: "warn", name: "Misekoe Shokudo", phone: "未掲載", address: "一致" },
             { id: "gourmet", medium: "グルメサイト", status: "bad", name: "Review Chef 食堂", phone: "旧番号", address: "表記ゆれ" },
           ],
           creativeTests: [
@@ -2356,7 +2442,10 @@
         businessName: document.getElementById("businessName"),
         replyTone: document.getElementById("replyTone"),
         autoReplyEnabled: document.getElementById("autoReplyEnabled"),
-        autoReplyMinRating: document.getElementById("autoReplyMinRating"),
+        autoReplyRatingChecks: Array.from(document.querySelectorAll("[data-auto-reply-rating]")),
+        autoReplyRunAt: document.getElementById("autoReplyRunAt"),
+        autoReplyCheckKeywords: document.getElementById("autoReplyCheckKeywords"),
+        autoReplyRuleSummary: document.getElementById("autoReplyRuleSummary"),
         notificationWebhook: document.getElementById("notificationWebhook"),
         saveSettingsBtn: document.getElementById("saveSettingsBtn"),
         toast: document.getElementById("toast"),
@@ -2404,6 +2493,10 @@
             creativeTests: saved.meo?.creativeTests || defaults.meo.creativeTests,
           },
         };
+        merged.settings.autoReplyRatings = normalizeAutoReplyRatings(merged.settings);
+        merged.settings.autoReplyRunAt = normalizeTimeValue(merged.settings.autoReplyRunAt || "23:00");
+        merged.settings.autoReplyCheckKeywords =
+          merged.settings.autoReplyCheckKeywords || defaultAutoReplyCheckKeywords.join("、");
         const viewIds = new Set(["reviews", "tasks", "meo", "gbp-posts", "staff", "settings"]);
         if (!viewIds.has(merged.currentView)) merged.currentView = "reviews";
         return merged;
@@ -2411,6 +2504,34 @@
 
       function saveState() {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      }
+
+      function normalizeAutoReplyRatings(settings = {}) {
+        const ratings = Array.isArray(settings.autoReplyRatings)
+          ? settings.autoReplyRatings.map(Number).filter((rating) => rating >= 1 && rating <= 5)
+          : [];
+        if (ratings.length) return [...new Set(ratings)].sort((a, b) => b - a);
+
+        const minRating = Number(settings.autoReplyMinRating || 5);
+        return [5, 4, 3, 2, 1].filter((rating) => rating >= minRating);
+      }
+
+      function normalizeTimeValue(value) {
+        const match = String(value || "").match(/^([01]\d|2[0-3]):([0-5]\d)$/);
+        return match ? `${match[1]}:${match[2]}` : "23:00";
+      }
+
+      function parseKeywordList(value) {
+        return [...new Set(String(value || "").split(/[、,\n]+/).map((keyword) => keyword.trim()).filter(Boolean))];
+      }
+
+      function getAutoReplyRatings(settings = state.settings) {
+        return normalizeAutoReplyRatings(settings);
+      }
+
+      function getAutoReplyCheckKeywords(settings = state.settings) {
+        const keywords = parseKeywordList(settings.autoReplyCheckKeywords);
+        return keywords.length ? keywords : defaultAutoReplyCheckKeywords;
       }
 
       function applyInitialView(initialState) {
@@ -2431,6 +2552,9 @@
         const hasCritical = issues.some((issue) => criticalIssues.has(issue));
         const hasNegative = negativeTerms.some((term) => text.includes(term));
         const hasPositive = positiveTerms.some((term) => text.includes(term));
+        const autoReplyRatings = getAutoReplyRatings();
+        const autoRatingSelected = autoReplyRatings.includes(Number(review.rating));
+        const matchedCheckKeywords = getAutoReplyCheckKeywords().filter((keyword) => text.includes(keyword));
 
         let priority = "P3";
         if (hasCritical) priority = "P0";
@@ -2440,17 +2564,17 @@
         const sentiment =
           review.rating >= 4 && !hasNegative ? "好意的" : review.rating <= 2 || hasNegative ? "不満" : "中立";
 
-        const autoEligible =
-          review.rating >= Number(state.settings.autoReplyMinRating) &&
-          priority === "P3" &&
-          !hasCritical &&
-          !hasNegative;
+        const autoRequiresCheck = autoRatingSelected && (hasCritical || matchedCheckKeywords.length > 0);
+        const autoEligible = autoRatingSelected && !autoRequiresCheck;
 
         return {
           priority,
           sentiment,
           issues: issues.length ? issues : [review.rating >= 4 ? "好意的な体験" : "要確認"],
           autoEligible,
+          autoRatingSelected,
+          autoRequiresCheck,
+          autoCheckKeywords: matchedCheckKeywords,
           summary: buildSummary(review, issues, priority, sentiment),
           riskReason: buildRiskReason(review, issues, priority),
           replyDraft: buildReplyDraft(review, issues, priority),
@@ -2476,9 +2600,10 @@
         if (priority === "P2") {
           return "内容は重大ではありませんが、返信文で改善姿勢を示すと印象回復につながります。";
         }
-        return review.rating >= Number(state.settings.autoReplyMinRating)
-          ? "低リスクの好意的レビューです。自動返信候補として扱えます。"
-          : "好意的ですが、自動返信の星評価条件を満たしていません。";
+        if (getAutoReplyRatings().includes(Number(review.rating))) {
+          return "完全自動返信の対象星数です。要チェックキーワードに該当しなければ、レビュー本文に合わせた返信文を自動生成して指定時刻に投稿します。";
+        }
+        return "完全自動返信の対象星数に含まれていません。手動または一括返信で対応します。";
       }
 
       function buildReplyDraft(review, issues, priority) {
@@ -2625,6 +2750,26 @@
         }).format(date);
       }
 
+      function formatAutoReplyTime(value) {
+        return normalizeTimeValue(value).replace(":", "時") + "分";
+      }
+
+      function buildAutoReplyScheduledAt(review, runAt) {
+        const createdAt = parseReviewDate(review.createdAt) || new Date();
+        const [hour, minute] = normalizeTimeValue(runAt).split(":").map(Number);
+        const scheduledAt = new Date(createdAt);
+        scheduledAt.setHours(hour, minute, 0, 0);
+        if (createdAt.getTime() > scheduledAt.getTime()) {
+          scheduledAt.setDate(scheduledAt.getDate() + 1);
+        }
+        return scheduledAt.toISOString();
+      }
+
+      function autoReplyIsDue(scheduledAt) {
+        const date = parseReviewDate(scheduledAt);
+        return Boolean(date && date.getTime() <= Date.now());
+      }
+
       function priorityWeight(priority) {
         return { P0: 0, P1: 1, P2: 2, P3: 3 }[priority] ?? 9;
       }
@@ -2713,6 +2858,8 @@
                 <strong>${escapeHtml(review.store)} / ${escapeHtml(review.author)}</strong>
                 <div class="review-meta">${escapeHtml(formatReviewDate(review.createdAt))}・${statusLabel(review.status)}</div>
                 ${review.status === "replied" ? `<span class="reply-stamp">返信済み ${escapeHtml(formatReplyDate(review.repliedAt))}</span>` : ""}
+                ${review.status === "auto_scheduled" ? `<span class="reply-stamp">完全自動返信予定 ${escapeHtml(formatReplyDate(review.autoReplyScheduledAt))}</span>` : ""}
+                ${review.status === "needs_check" ? `<span class="reply-stamp">要チェック ${escapeHtml(review.autoBlockedReason || "キーワード確認")}</span>` : ""}
               </div>
               <div class="rating">${"★".repeat(Number(review.rating))}${"☆".repeat(5 - Number(review.rating))}</div>
             </div>
@@ -2723,8 +2870,10 @@
               ${issues.slice(0, 2).map((issue) => `<span class="chip brand">${escapeHtml(issue)}</span>`).join("")}
               ${review.staffStatus ? `<span class="chip ${review.staffStatus === "confirmed" ? "ok" : "p1"}">${staffStatusLabel(review.staffStatus)}</span>` : ""}
               ${review.status === "replied" ? `<span class="chip ok">返信済み</span>` : ""}
+              ${review.status === "auto_scheduled" ? `<span class="chip ok">完全自動予定</span>` : ""}
+              ${review.status === "needs_check" ? `<span class="chip p1">自動返信保留</span>` : ""}
               ${review.apiResult === "pending_api" ? `<span class="chip p2">API再送待ち</span>` : ""}
-              ${autoEligible ? `<span class="chip ok">自動返信候補</span>` : ""}
+              ${autoEligible ? `<span class="chip ok">完全自動対象</span>` : ""}
             </div>
           </button>
         </div>`;
@@ -2740,7 +2889,7 @@
       }
 
       function reviewCanBulkReply(review) {
-        return review.status !== "replied" && review.analysis.priority !== "P0";
+        return !["replied", "auto_scheduled"].includes(review.status) && review.analysis.priority !== "P0";
       }
 
       function getBulkCandidateReviews() {
@@ -2768,6 +2917,8 @@
               <h3>${escapeHtml(review.store)} / ${escapeHtml(review.author)}</h3>
               <div class="review-meta">${escapeHtml(formatReviewDate(review.createdAt))}・星${review.rating}・${statusLabel(review.status)}</div>
               ${review.status === "replied" ? `<span class="reply-stamp">返信済み ${escapeHtml(formatReplyDate(review.repliedAt))}</span>` : ""}
+              ${review.status === "auto_scheduled" ? `<span class="reply-stamp">完全自動返信予定 ${escapeHtml(formatReplyDate(review.autoReplyScheduledAt))}</span>` : ""}
+              ${review.status === "needs_check" ? `<span class="reply-stamp">自動返信保留 ${escapeHtml(review.autoBlockedReason || "要チェック")}</span>` : ""}
             </div>
             <span class="chip ${analysis.priority.toLowerCase()}">${priorityLabel(analysis.priority)}</span>
           </div>
@@ -2775,7 +2926,8 @@
           <div class="chips">
             <span class="chip">${analysis.sentiment}</span>
             ${analysis.issues.map((issue) => `<span class="chip brand">${escapeHtml(issue)}</span>`).join("")}
-            ${analysis.autoEligible ? `<span class="chip ok">自動返信候補</span>` : ""}
+            ${analysis.autoEligible ? `<span class="chip ok">完全自動対象</span>` : ""}
+            ${analysis.autoCheckKeywords.length ? `<span class="chip p1">検知語: ${escapeHtml(analysis.autoCheckKeywords.join("・"))}</span>` : ""}
           </div>
 
           <div class="detail-section">
@@ -2787,6 +2939,8 @@
               </div>
               <p>${escapeHtml(analysis.summary)}</p>
               <p>${escapeHtml(analysis.riskReason)}</p>
+              ${review.status === "auto_scheduled" ? `<p>完全自動返信は ${escapeHtml(formatReplyDate(review.autoReplyScheduledAt))} に実行されます。ユーザー承認は不要です。</p>` : ""}
+              ${review.status === "needs_check" ? `<p>選択星数に該当しますが、${escapeHtml(review.autoBlockedReason || "要チェック語")} が含まれるため自動返信を停止しています。</p>` : ""}
             </div>
           </div>
 
@@ -2801,7 +2955,7 @@
               <button class="btn" data-action="copy-reply" data-id="${review.id}">コピー</button>
               <button class="btn danger" data-action="needs-approval" data-id="${review.id}">承認待ちに戻す</button>
             </div>
-            <p class="review-meta">本番では承認時にGoogle Business Profile APIへ返信を投稿し、監査ログを保存します。</p>
+            <p class="review-meta">本番では手動承認時または完全自動返信の実行時にGoogle Business Profile APIへ返信を投稿し、監査ログを保存します。</p>
             ${review.apiError ? `<p class="review-meta">API状態: ${escapeHtml(review.apiError)}</p>` : ""}
           </div>
         `;
@@ -2812,7 +2966,7 @@
         const grouped = new Map();
 
         enrichReviews().forEach((review) => {
-          if (review.analysis.autoEligible || review.analysis.priority === "P3") return;
+          if (review.analysis.priority === "P3") return;
           review.analysis.issues
             .filter((issue) => !["好意的な体験", "要確認"].includes(issue))
             .forEach((issue) => {
@@ -3752,7 +3906,17 @@
         els.businessName.value = state.settings.businessName;
         els.replyTone.value = state.settings.replyTone;
         els.autoReplyEnabled.value = String(state.settings.autoReplyEnabled);
-        els.autoReplyMinRating.value = String(state.settings.autoReplyMinRating);
+        const ratings = getAutoReplyRatings();
+        els.autoReplyRatingChecks.forEach((checkbox) => {
+          checkbox.checked = ratings.includes(Number(checkbox.value));
+        });
+        els.autoReplyRunAt.value = normalizeTimeValue(state.settings.autoReplyRunAt);
+        els.autoReplyCheckKeywords.value = state.settings.autoReplyCheckKeywords || defaultAutoReplyCheckKeywords.join("、");
+        const ratingLabel = ratings.length ? ratings.map((rating) => `星${rating}`).join("・") : "星数未選択";
+        const keywordCount = getAutoReplyCheckKeywords().length;
+        els.autoReplyRuleSummary.textContent = state.settings.autoReplyEnabled
+          ? `${ratingLabel}の未返信レビューを全件対象にし、各レビューに合わせた返信文を${formatAutoReplyTime(state.settings.autoReplyRunAt)}以降に承認なしで投稿します。要チェック語${keywordCount}件に該当するレビューだけ人の確認へ回します。`
+          : `${ratingLabel}を選択中。完全自動返信は現在無効です。`;
         els.notificationWebhook.value = state.settings.notificationWebhook;
       }
 
@@ -3812,17 +3976,63 @@
           }));
         state.reviews = [...reviews, ...state.reviews];
         if (reviews[0]) state.selectedReviewId = reviews[0].id;
-        autoDraftNewReviews();
+        applyAutoReplyRules();
       }
 
-      function autoDraftNewReviews() {
+      function applyAutoReplyRules() {
         state.reviews = state.reviews.map((review) => {
           const analysis = analyzeReview(review);
-          if (review.status !== "new") return review;
+          if (review.status === "replied") return review;
+          const replyDraft = review.replyDraft || analysis.replyDraft;
+
           if (state.settings.autoReplyEnabled && analysis.autoEligible) {
-            return { ...review, status: "replied", replyDraft: analysis.replyDraft, repliedAt: new Date().toISOString() };
+            const scheduledAt = review.autoReplyScheduledAt || buildAutoReplyScheduledAt(review, state.settings.autoReplyRunAt);
+            if (autoReplyIsDue(scheduledAt)) {
+              return {
+                ...review,
+                status: "replied",
+                replyDraft,
+                finalReply: replyDraft,
+                repliedAt: new Date().toISOString(),
+                autoReplyScheduledAt: scheduledAt,
+                autoReplyMode: "full_auto",
+                autoBlockedReason: "",
+              };
+            }
+            return {
+              ...review,
+              status: "auto_scheduled",
+              replyDraft,
+              autoReplyScheduledAt: scheduledAt,
+              autoReplyMode: "full_auto",
+              autoBlockedReason: "",
+            };
           }
-          return { ...review, status: analysis.autoEligible ? "drafted" : "needs_approval", replyDraft: analysis.replyDraft };
+
+          if (state.settings.autoReplyEnabled && analysis.autoRequiresCheck) {
+            return {
+              ...review,
+              status: "needs_check",
+              replyDraft,
+              autoReplyScheduledAt: "",
+              autoReplyMode: "blocked",
+              autoBlockedReason: analysis.autoCheckKeywords.length ? analysis.autoCheckKeywords.join("・") : "要チェック条件",
+            };
+          }
+
+          const nextStatus = review.status === "new" || ["auto_scheduled", "needs_check"].includes(review.status)
+            ? analysis.autoRatingSelected
+              ? "drafted"
+              : "needs_approval"
+            : review.status;
+          return {
+            ...review,
+            status: nextStatus,
+            replyDraft,
+            autoReplyScheduledAt: "",
+            autoReplyMode: "",
+            autoBlockedReason: "",
+          };
         });
       }
 
@@ -3836,6 +4046,8 @@
         return {
           new: "未対応",
           drafted: "返信案あり",
+          auto_scheduled: "完全自動返信予定",
+          needs_check: "要チェック",
           needs_approval: "承認待ち",
           replied: "返信済み",
         }[status] || status;
@@ -3854,7 +4066,7 @@
           P0: "P0 即時対応",
           P1: "P1 当日対応",
           P2: "P2 通常対応",
-          P3: "P3 自動返信候補",
+          P3: "P3 低リスク",
         }[priority] || priority;
       }
 
@@ -4379,20 +4591,34 @@
       });
 
       els.saveSettingsBtn.addEventListener("click", () => {
+        const autoReplyRatings = els.autoReplyRatingChecks
+          .filter((checkbox) => checkbox.checked)
+          .map((checkbox) => Number(checkbox.value))
+          .sort((a, b) => b - a);
         state.settings = {
-          businessName: els.businessName.value.trim() || "ReviewChef食堂",
+          businessName: els.businessName.value.trim() || "ミセコエ食堂",
           replyTone: els.replyTone.value,
           autoReplyEnabled: els.autoReplyEnabled.value === "true",
-          autoReplyMinRating: Number(els.autoReplyMinRating.value),
+          autoReplyRatings,
+          autoReplyRunAt: normalizeTimeValue(els.autoReplyRunAt.value),
+          autoReplyCheckKeywords: els.autoReplyCheckKeywords.value.trim() || defaultAutoReplyCheckKeywords.join("、"),
           notificationWebhook: els.notificationWebhook.value.trim(),
         };
-        autoDraftNewReviews();
+        applyAutoReplyRules();
         showToast("設定を保存しました。");
         render();
       });
 
-      autoDraftNewReviews();
+      applyAutoReplyRules();
       render();
+
+      window.setInterval(() => {
+        const due = state.reviews.some((review) => review.status === "auto_scheduled" && autoReplyIsDue(review.autoReplyScheduledAt));
+        if (!due) return;
+        applyAutoReplyRules();
+        showToast("指定時刻になったため、完全自動返信を実行しました。");
+        render();
+      }, 60 * 1000);
     </script>
   </body>
 </html>

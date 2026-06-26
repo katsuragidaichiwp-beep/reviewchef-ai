@@ -1,7 +1,7 @@
 export async function onRequestGet({ env }) {
   return jsonResponse({
     ok: true,
-    service: "ReviewChef AI",
+    service: "ミセコエ",
     checks: {
       line: {
         channelSecret: Boolean(env.LINE_CHANNEL_SECRET),

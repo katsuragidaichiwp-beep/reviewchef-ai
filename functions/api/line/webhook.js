@@ -37,7 +37,7 @@ export async function onRequestGet({ request, env }) {
   const url = new URL(request.url);
   return jsonResponse({
     ok: true,
-    service: "ReviewChef LINE webhook",
+    service: "ミセコエ LINE webhook",
     webhookUrl: `${url.origin}/api/line/webhook`,
     lineChannelSecretConfigured: Boolean(env.LINE_CHANNEL_SECRET),
     lineChannelAccessTokenConfigured: Boolean(env.LINE_CHANNEL_ACCESS_TOKEN),
@@ -101,7 +101,7 @@ async function handleLineEvent(event, accessToken, origin) {
     return replyMessage(accessToken, event.replyToken, [
       {
         type: "text",
-        text: "ReviewChef AIと連携しました。\n現場ではLINE上でレビュー確認と投稿素材共有を行えます。",
+        text: "ミセコエと連携しました。\n現場ではLINE上でレビュー確認と投稿素材共有を行えます。",
         quickReply: buildQuickReply(),
       },
       ...buildHelpMessages(origin),
@@ -149,7 +149,7 @@ function buildReviewMessages(origin) {
           type: "box",
           layout: "vertical",
           contents: [
-            { type: "text", text: "ReviewChef通知", weight: "bold", color: "#ffffff" },
+            { type: "text", text: "ミセコエ通知", weight: "bold", color: "#ffffff" },
             { type: "text", text: review.priority, size: "sm", color: "#d7f7f1" },
           ],
           backgroundColor: "#0f766e",
@@ -247,10 +247,10 @@ function buildAdminLoginMessages(origin) {
     },
     {
       type: "template",
-      altText: "ReviewChef AI 管理者ログイン",
+      altText: "ミセコエ 管理者ログイン",
       template: {
         type: "buttons",
-        title: "ReviewChef AI",
+        title: "ミセコエ",
         text: "レビュー受信箱をスマホブラウザで開きます。",
         actions: [
           {

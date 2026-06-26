@@ -2,7 +2,7 @@ export async function onRequestGet({ request, env }) {
   const url = new URL(request.url);
   return jsonResponse({
     ok: true,
-    service: "ReviewChef GBP posts",
+    service: "ミセコエ GBP posts",
     endpoint: `${url.origin}/api/gbp/posts`,
     googleBusinessProfileConfigured: Boolean(env.GBP_LOCATION_NAME && (env.GOOGLE_GBP_ACCESS_TOKEN || env.GOOGLE_GBP_REFRESH_TOKEN)),
     requiredForPublish: [
