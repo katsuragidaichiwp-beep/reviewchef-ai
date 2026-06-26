@@ -1911,14 +1911,12 @@
           <div class="panel-header">
             <div>
               <h2>運用設定</h2>
-              <p>返信トーン、自動返信条件、通知先の想定設定です。</p>
             </div>
           </div>
           <div class="panel-body">
             <div class="settings-grid">
               <div class="setting-card">
                 <h3>ブランドトーン</h3>
-                <p>返信案の文体に反映されます。</p>
                 <div class="two-col">
                   <div class="field">
                     <label for="businessName">ブランド名</label>
@@ -1937,7 +1935,6 @@
 
               <div class="setting-card">
                 <h3>自動返信ルール</h3>
-                <p>選択した星数に該当する未返信レビューを全件対象にし、レビューごとに返信文を自動生成して承認なしでGoogleへ投稿します。</p>
                 <div class="two-col">
                   <div class="field">
                     <label for="autoReplyEnabled">完全自動返信</label>
@@ -1971,56 +1968,15 @@
               </div>
 
               <div class="setting-card">
-                <h3>通知設定</h3>
-                <p>ここでは保存のみ行います。実送信はLINE Messaging APIやSlack Webhook接続後に有効化します。</p>
-                <div class="field">
-                  <label for="notificationWebhook">Webhook URL</label>
-                  <input class="input" id="notificationWebhook" placeholder="https://example.com/webhook" />
-                </div>
-              </div>
-
-              <div class="setting-card">
                 <h3>Google/GBP連携</h3>
-                <p>実運用では、店舗オーナーまたは管理者権限を持つGoogleアカウントでOAuthログインし、ミセコエにGBPのレビュー返信・店舗投稿権限を許可します。</p>
                 <div class="chips">
                   <span class="chip p2">未連携</span>
                   <span class="chip brand">OAuth</span>
-                  <span class="chip">business.manage</span>
                 </div>
                 <div class="reply-actions">
                   <a class="btn primary" href="/api/google/oauth/start?storeId=demo-store">GoogleでGBP連携を開始</a>
                   <a class="btn" href="/api/system/health">連携状態を確認</a>
                 </div>
-                <p class="review-meta">返信承認は <code>/api/reviews/:reviewId/reply</code>、GBP投稿公開は <code>/api/gbp/posts</code> に送信します。単独店舗MVPでは <code>GBP_LOCATION_NAME</code> とGoogle OAuthトークンをCloudflare環境変数に設定すると実投稿できます。</p>
-                <p class="review-meta">多店舗運用ではOAuth callbackで取得したrefresh tokenを暗号化保存し、店舗ごとのGBP locationと紐付けます。</p>
-              </div>
-
-              <div class="setting-card">
-                <h3>AI生成API</h3>
-                <p>返信文の再作成とGBP投稿案の整形は、ブラウザから直接AIキーを使わずCloudflare Functions経由で実行します。</p>
-                <div class="chips">
-                  <span class="chip brand">/api/ai/reply-draft</span>
-                  <span class="chip brand">/api/ai/gbp-post-draft</span>
-                  <span class="chip">OPENAI_API_KEY</span>
-                  <span class="chip">OPENAI_MODEL</span>
-                </div>
-                <p class="review-meta">APIキー未設定時はローカル下書きで動作し、設定後は同じボタンでOpenAI Responses APIへ接続します。</p>
-              </div>
-
-              <div class="setting-card">
-                <h3>LINE実機確認</h3>
-                <p>現場者画面はLINE上で完結します。管理者権限があるユーザーだけ、LINEの「管理者ログイン」からスマホブラウザでWeb管理者画面へ進みます。</p>
-                <div class="chips">
-                  <span class="chip brand">Webhook</span>
-                  <span class="chip">/api/line/webhook</span>
-                  <span class="chip brand">テスト文言</span>
-                  <span class="chip">レビュー</span>
-                  <span class="chip brand">管理者URL</span>
-                  <span class="chip">/?view=reviews</span>
-                </div>
-                <p style="margin-top: 10px">
-                  検証用プレビュー: <code>https://reviewchef-ai.pages.dev/?view=staff</code>
-                </p>
               </div>
 
               <button class="btn primary" id="saveSettingsBtn">設定を保存</button>
@@ -2446,7 +2402,6 @@
         autoReplyRunAt: document.getElementById("autoReplyRunAt"),
         autoReplyCheckKeywords: document.getElementById("autoReplyCheckKeywords"),
         autoReplyRuleSummary: document.getElementById("autoReplyRuleSummary"),
-        notificationWebhook: document.getElementById("notificationWebhook"),
         saveSettingsBtn: document.getElementById("saveSettingsBtn"),
         toast: document.getElementById("toast"),
       };
@@ -3917,7 +3872,6 @@
         els.autoReplyRuleSummary.textContent = state.settings.autoReplyEnabled
           ? `${ratingLabel}の未返信レビューを全件対象にし、各レビューに合わせた返信文を${formatAutoReplyTime(state.settings.autoReplyRunAt)}以降に承認なしで投稿します。要チェック語${keywordCount}件に該当するレビューだけ人の確認へ回します。`
           : `${ratingLabel}を選択中。完全自動返信は現在無効です。`;
-        els.notificationWebhook.value = state.settings.notificationWebhook;
       }
 
       function parseCsv(text) {
@@ -4602,7 +4556,7 @@
           autoReplyRatings,
           autoReplyRunAt: normalizeTimeValue(els.autoReplyRunAt.value),
           autoReplyCheckKeywords: els.autoReplyCheckKeywords.value.trim() || defaultAutoReplyCheckKeywords.join("、"),
-          notificationWebhook: els.notificationWebhook.value.trim(),
+          notificationWebhook: state.settings.notificationWebhook || "",
         };
         applyAutoReplyRules();
         showToast("設定を保存しました。");
