@@ -4,9 +4,9 @@
 
 - 推奨アカウント名: `ミセコエ 現場通知`
 - 用途: 飲食店スタッフがLINE上でレビュー確認、店長共有、現場確認済み、GBP投稿素材送信を行う
-- Webhook URL: `https://reviewchef-ai.pages.dev/api/line/webhook`
-- 管理者画面URL: `https://reviewchef-ai.pages.dev/app.html?view=reviews`
-- 現場者プレビューURL: `https://reviewchef-ai.pages.dev/app.html?view=staff`
+- Webhook URL: `https://misekoe.pages.dev/api/line/webhook`
+- 管理者画面URL: `https://misekoe.pages.dev/app.html?view=reviews`
+- 現場者プレビューURL: `https://misekoe.pages.dev/app.html?view=staff`
 
 ## LINE側で作るもの
 

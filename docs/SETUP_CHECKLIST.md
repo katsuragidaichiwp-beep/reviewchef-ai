@@ -34,7 +34,7 @@
 ## 3. LINE現場者画面
 
 - LINE DevelopersでMessaging APIチャネルを作成
-- Webhook URLを `https://reviewchef-ai.pages.dev/api/line/webhook` に設定
+- Webhook URLを `https://misekoe.pages.dev/api/line/webhook` に設定
 - Use webhookを有効化
 - `LINE_CHANNEL_SECRET` をCloudflare Pagesへ設定
 - `LINE_CHANNEL_ACCESS_TOKEN` をCloudflare Pagesへ設定
